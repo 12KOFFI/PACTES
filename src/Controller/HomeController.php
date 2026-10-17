@@ -118,7 +118,7 @@ class HomeController extends AbstractController
         }
 
         $sessionOuverte = $this->entityManager->getRepository(SessionRecrutement::class)->findActive();
-        $admissionsDisponibles = $sessionOuverte !== null;
+        $admissionsDisponibles = false;
 
         // Statistiques globales
         $stats = [
