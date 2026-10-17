@@ -531,7 +531,7 @@ class AdmisController extends AbstractController
         }
 
         // Check if registrations are open
-        if ((getenv('REGISTRATIONS_OPEN') ?? 'false') !== 'true') {
+        if ((getenv('REGISTRATIONS_OPEN') ?? 'true') !== 'true') {
             $this->addFlash('error', 'Les inscriptions sont actuellement fermées.');
             return $this->redirectToRoute('app_dashboard');
         }

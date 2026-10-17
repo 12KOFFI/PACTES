@@ -403,7 +403,14 @@ document.addEventListener('DOMContentLoaded', function() {
         let isValid = true;
 
         requiredFields.forEach(field => {
-            if (!field.value.trim()) {
+            if (field.type === 'checkbox') {
+                if (!field.checked) {
+                    field.classList.add('ring-2', 'ring-red-500');
+                    isValid = false;
+                } else {
+                    field.classList.remove('ring-2', 'ring-red-500');
+                }
+            } else if (!field.value.trim()) {
                 field.classList.add('border-red-500', 'focus:ring-red-500');
                 isValid = false;
             } else {
@@ -437,10 +444,15 @@ document.addEventListener('DOMContentLoaded', function() {
         return isValid;
     }
 
-    // Navigation suivante - blocked because registration is closed
+    // Navigation suivante
     nextBtn.addEventListener('click', function() {
-        // Show modal instead of proceeding
-        document.getElementById('registration-closed-modal').classList.remove('hidden');
+        if (validateStep(currentStep)) {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                updateSteps();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
     });
 
     // Navigation précédente
@@ -448,6 +460,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentStep > 0) {
             currentStep--;
             updateSteps();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     });
 
@@ -498,16 +511,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialisation
     updateSteps();
-    // Close modal
-    document.getElementById('modal-close-btn').addEventListener('click', function() {
-        document.getElementById('registration-closed-modal').classList.add('hidden');
-    });
-    // Close when clicking outside the modal content
-    document.getElementById('registration-closed-modal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.classList.add('hidden');
-        }
-    });
 });
 </script>
 
@@ -532,27 +535,4 @@ button[type="submit"]:disabled {
     transition: opacity 0.3s ease-in-out;
 }
 </style>
-{# Modal for registration closed #}
-<div id="registration-closed-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-gray-600 bg-opacity-50 overflow-x-hidden overflow-y-auto">
-  <div class="relative w-full max-w-2xl max-h-full">
-    <div class="relative bg-white rounded-lg shadow">
-      <div class="flex items-start p-6">
-        <div class="flex-shrink-0">
-          <i class="fas fa-exclamation-circle text-4xl text-indigo-600"></i>
-        </div>
-        <div class="ml-4 w-0 flex-1 space-y-2">
-          <h3 class="text-lg font-medium text-gray-900">Inscription fermée</h3>
-          <p class="text-sm text-gray-500">
-            La période d'inscription pour déposer une candidature est terminée. Vous ne pouvez plus créer de compte pour cette session.
-          </p>
-          <div class="mt-4 flex items-center justify-end">
-            <button type="button" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" id="modal-close-btn">
-              Fermer
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 {% endblock %}

@@ -97,15 +97,15 @@ class SeedPacteCommand extends Command
                     ->setNom(self::SESSION_NOM)
                     ->setAnnee(2026)
                     ->setNumeroVague(1)
-                    ->setDateOuverture(new \DateTime('2026-10-19 00:00:00'))
-                    ->setDateCloture(new \DateTime('2026-10-31 23:59:59'))
+                    ->setDateOuverture(new \DateTime('2026-10-01 00:00:00'))
+                    ->setDateCloture(new \DateTime('2026-12-31 23:59:59'))
                     ->setDateReferenceAge(new \DateTime('2026-12-31'))
                     ->setAgeMin(18)
                     ->setAgeMax(35)
-                    ->setStatut(SessionRecrutement::STATUT_BROUILLON)
-                    ->setActive(false);
+                    ->setStatut(SessionRecrutement::STATUT_OUVERTE)
+                    ->setActive(true);
                 $this->em->persist($session);
-                $io->text('Session créée (BROUILLON) : ' . self::SESSION_NOM);
+                $io->text('Session créée (OUVERTE) : ' . self::SESSION_NOM);
             }
 
             // Associations du premier métier uniquement
