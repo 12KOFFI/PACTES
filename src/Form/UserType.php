@@ -130,11 +130,6 @@ class UserType extends AbstractType
                     'maxlength' => '10'
                 ]
             ])
-            ->add('numextrait', TextType::class, [
-                'label' => 'Numéro d\'extrait',
-                'required' => false,
-                'attr' => ['placeholder' => 'Numéro de l\'extrait']
-            ])
             ->add('nationalite', CountryType::class, [
                 'label' => 'Nationalité',
                 'choice_translation_locale' => 'fr',

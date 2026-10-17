@@ -67,8 +67,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 22, nullable: true)]
     private ?string $contact = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $numextrait = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private ?string $nationalite = null;
@@ -253,16 +251,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getNumextrait(): ?string
-    {
-        return $this->numextrait;
-    }
-
-    public function setNumextrait(?string $numextrait): self
-    {
-        $this->numextrait = $numextrait;
-        return $this;
-    }
 
     public function getNationalite(): ?string
     {
