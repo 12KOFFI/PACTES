@@ -11,20 +11,6 @@
 
 {% block body %}
 
-{# ===== BANDEAU CENTRÉ : ADMISSIONS DISPONIBLES ===== #}
-{% if admissions_disponibles is defined and admissions_disponibles %}
-<div class="relative w-full py-3 text-white shadow-lg bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600">
-    <div class="flex items-center justify-center gap-2 px-4 mx-auto text-center">
-        <i class="fas fa-bullhorn animate-pulse"></i>
-        <span class="text-sm font-semibold sm:text-base">
-            🎉 Les résultats <span class="text-xl font-bold text-indigo-600">d'admission définitive</span> à la formation sont disponibles !
-        </span>
-        <a href="{{ path('app_verifier_statut') }}" class="font-bold underline transition hover:text-yellow-200">
-            Cliquez ici pour Vérifier votre statut →
-        </a>
-    </div>
-</div>
-{% endif %}
 
 <!-- ==================== HERO SECTION ==================== -->
 <section class="hero relative min-h-[600px] flex items-center justify-center bg-gradient-to-br from-indigo-700 via-purple-700 to-blue-700 py-16">
