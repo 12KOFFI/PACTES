@@ -1,0 +1,195 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}Localités | {{ parent() }}{% endblock %}
+
+{% block body %}
+
+{# ===== EN-TÊTE ===== #}
+<div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 md:p-8 mb-8 text-white relative overflow-hidden">
+    <div class="absolute -top-14 -right-14 w-52 h-52 rounded-full bg-white/5 pointer-events-none"></div>
+    <div class="absolute -bottom-20 left-1/3 w-72 h-72 rounded-full bg-white/[0.03] pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur border border-white/20 flex items-center justify-center text-2xl shrink-0">
+                <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold tracking-tight">Gestion des localités</h1>
+                <p class="text-white/70 text-sm mt-0.5">{{ localites|length }} localité(s) enregistrée(s)</p>
+            </div>
+        </div>
+        <a href="{{ path('app_localite_new') }}"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-indigo-600 hover:bg-indigo-50 border border-white text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 w-full md:w-auto justify-center">
+            <i class="fas fa-plus-circle"></i> Nouvelle localité
+        </a>
+    </div>
+</div>
+
+{% include 'partials/_flash_messages.html.twig' %}
+
+{# ===== TABLEAU ===== #}
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+
+    {# Toolbar #}
+    <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-slate-100 bg-slate-50/60">
+        <div class="flex items-center gap-2 text-sm text-slate-500 font-medium">
+            <span>Afficher</span>
+            <select id="pageSizeSelect"
+                    class="border border-slate-200 rounded-lg px-2 py-1 text-sm text-slate-700 bg-white cursor-pointer outline-none focus:border-indigo-400 font-medium">
+                <option value="10">10</option>
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+            <span>éléments</span>
+        </div>
+        <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
+            <i class="fas fa-search text-slate-400 text-xs"></i>
+            <input id="tableSearch" type="text" placeholder="Rechercher…"
+                   class="outline-none text-sm text-slate-700 placeholder-slate-300 w-44 bg-transparent">
+        </div>
+    </div>
+
+    {# Table #}
+    <div class="overflow-x-auto">
+        <table class="w-full min-w-[750px]">
+            <thead>
+                <tr class="bg-slate-100 border-b border-slate-100">
+                    <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400 w-14">N°</th>
+                    <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Nom</th>
+                    <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Type</th>
+                    <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Localité parente</th>
+                    <th class="px-5 py-3 text-right text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody" class="divide-y divide-slate-50">
+                {% for item in localites %}
+                <tr class="hover:bg-slate-100/70 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:relative hover:z-10 transition-all duration-200 cursor-default">
+                    <td class="px-5 py-4 text-sm text-slate-400 font-medium">{{ loop.index }}</td>
+                    <td class="px-5 py-4 text-sm font-semibold text-slate-800">{{ item.nom }}</td>
+                    <td class="px-5 py-4">
+                        {% set typeColors = {
+                            'ville':            'bg-purple-50 text-purple-700 border-purple-200',
+                            'departement':      'bg-blue-50 text-blue-700 border-blue-200',
+                            'region':           'bg-emerald-50 text-emerald-700 border-emerald-200',
+                            'commune':          'bg-amber-50 text-amber-700 border-amber-200',
+                            'sous-prefecture':  'bg-orange-50 text-orange-700 border-orange-200',
+                            'village':          'bg-teal-50 text-teal-700 border-teal-200'
+                        } %}
+                        {% set cls = typeColors[item.type] ?? 'bg-slate-100 text-slate-600 border-slate-200' %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[0.68rem] font-semibold border {{ cls }}">
+                            {{ item.type|replace({'-': ' '})|upper }}
+                        </span>
+                    </td>
+                    <td class="px-5 py-4 text-sm text-slate-500">{{ item.parent ? item.parent.nom : '–' }}</td>
+                    <td class="px-5 py-4">
+                        <div class="flex items-center justify-end gap-1.5">
+                            <a href="{{ path('app_localite_edit', {'id': item.id}) }}"
+                               title="Modifier"
+                               class="w-8 h-8 flex items-center justify-center rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white transition-all duration-150 hover:-translate-y-px text-sm">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <form method="post" action="{{ path('app_localite_delete', {'id': item.id}) }}"
+                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette localité ?');"
+                                  class="inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ item.id) }}">
+                                <button type="submit" title="Supprimer"
+                                        class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-150 hover:-translate-y-px text-sm">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="px-6 py-16 text-center">
+                        <div class="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center mx-auto mb-4 text-2xl text-indigo-400">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <p class="text-sm font-semibold text-slate-700 mb-1">Aucune localité trouvée</p>
+                        <p class="text-xs text-slate-400 mb-4">Commencez par créer votre première localité</p>
+                        <a href="{{ path('app_localite_new') }}"
+                           class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-xl hover:bg-indigo-700 transition">
+                            <i class="fas fa-plus-circle"></i> Créer une localité
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# Pagination #}
+    <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50/60">
+        <p id="paginationInfo" class="text-xs text-slate-400 font-medium"></p>
+        <nav id="paginationNav" class="flex items-center gap-1" aria-label="Pagination"></nav>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+(function () {
+    const tbody = document.getElementById('tableBody');
+    if (!tbody) return;
+    const allRows = Array.from(tbody.querySelectorAll('tr'));
+    const info = document.getElementById('paginationInfo');
+    const nav = document.getElementById('paginationNav');
+    const searchInput = document.getElementById('tableSearch');
+    const pageSizeSelect = document.getElementById('pageSizeSelect');
+    let pageSize = parseInt(pageSizeSelect.value), currentPage = 1, filtered = [...allRows];
+
+    function applyFilter(q) {
+        const term = q.toLowerCase().trim();
+        filtered = allRows.filter(r => !term || r.textContent.toLowerCase().includes(term));
+        currentPage = 1; render();
+    }
+
+    function render() {
+        const total = filtered.length, pages = Math.max(1, Math.ceil(total / pageSize));
+        currentPage = Math.min(currentPage, pages);
+        const start = (currentPage - 1) * pageSize, end = Math.min(start + pageSize, total);
+        allRows.forEach(r => r.style.display = 'none');
+        filtered.slice(start, end).forEach(r => r.style.display = '');
+        info.innerHTML = total === 0 ? 'Aucun résultat trouvé'
+            : `Affichage de <strong class="text-slate-600">${start+1}</strong> à <strong class="text-slate-600">${end}</strong> sur <strong class="text-slate-600">${total}</strong> élément(s)`;
+        buildPagination(pages);
+    }
+
+    function buildPagination(pages) {
+        nav.innerHTML = '';
+        const base = 'inline-flex items-center justify-center min-w-[34px] h-[34px] px-2 rounded-lg text-xs font-semibold border transition-colors duration-150 ';
+        const idle = base + 'bg-white border-slate-200 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 cursor-pointer';
+        const active = base + 'bg-indigo-600 border-indigo-600 text-white cursor-default pointer-events-none';
+        const disabled = base + 'bg-white border-slate-100 text-slate-300 cursor-not-allowed pointer-events-none opacity-40';
+        const makeBtn = (label, page, cls) => {
+            const el = document.createElement('button'); el.innerHTML = label; el.className = cls;
+            if (cls === idle) el.addEventListener('click', () => { currentPage = page; render(); });
+            return el;
+        };
+        nav.appendChild(makeBtn('<i class="fas fa-chevron-left" style="font-size:0.6rem"></i>', currentPage - 1, currentPage === 1 ? disabled : idle));
+        getPageRange(currentPage, pages).forEach(p => {
+            if (p === '...') { const el = document.createElement('span'); el.textContent = '···'; el.className = 'inline-flex items-center justify-center w-8 h-[34px] text-xs text-slate-300 font-bold tracking-wider select-none'; nav.appendChild(el); }
+            else nav.appendChild(makeBtn(p, p, p === currentPage ? active : idle));
+        });
+        nav.appendChild(makeBtn('<i class="fas fa-chevron-right" style="font-size:0.6rem"></i>', currentPage + 1, currentPage === pages ? disabled : idle));
+    }
+
+    function getPageRange(cur, total) {
+        if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+        const set = new Set([1, total, cur, cur-1, cur+1].filter(p => p >= 1 && p <= total));
+        const sorted = [...set].sort((a, b) => a - b), result = [];
+        sorted.forEach((p, i) => { if (i > 0 && p - sorted[i-1] > 1) result.push('...'); result.push(p); });
+        return result;
+    }
+
+    searchInput.addEventListener('input', e => applyFilter(e.target.value));
+    pageSizeSelect.addEventListener('change', e => { pageSize = parseInt(e.target.value); currentPage = 1; render(); });
+    render();
+})();
+</script>
+{% endblock %}

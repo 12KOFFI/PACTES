@@ -1,0 +1,921 @@
+{% extends is_granted('IS_AUTHENTICATED_FULLY') ? 'base_dashboard.html.twig' : 'base.html.twig' %}
+
+{% block title %}Impressions | {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="px-4 pb-16 mx-auto">
+    <!-- En-tête -->
+    <div class="p-8 mb-8 text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl">
+        <div class="flex items-center gap-4">
+            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-white/20">
+                <i class="text-3xl fas fa-print"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold">Impressions</h1>
+                <p class="text-white/80">Générez vos fiches, convocations et statistiques</p>
+            </div>
+        </div>
+    </div>
+
+    {% include 'partials/_flash_messages.html.twig' %}
+
+    <!-- Blocs en ligne verticale -->
+    <div class="flex flex-col space-y-6">
+        <!-- Fiche d'inscription -->
+        <div
+            class="overflow-hidden transition-all duration-300 bg-white border shadow-xl rounded-2xl border-slate-200 hover:shadow-2xl">
+            <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+                <h5 class="flex items-center text-lg font-semibold text-indigo-800">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 bg-indigo-100 rounded-lg">
+                        <i class="text-indigo-600 fas fa-id-card"></i>
+                    </div>
+                    Fiche d'inscription
+                </h5>
+            </div>
+            <div class="p-6">
+                <form action="{{ path('app_candidature_print') }}" method="get" target="_blank">
+                    <input type="hidden" name="type" value="fiche">
+
+                    <div class="flex flex-col gap-3 md:flex-row">
+                        <div class="flex-1">
+                            <input type="text" name="numero" required
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                                placeholder="Numéro d'inscription">
+                        </div>
+
+                        <button type="submit"
+                            class="md:w-auto w-full px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center">
+                            <i class="mr-2 fas fa-print"></i>
+                            Générer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Convocation -->
+        <div
+            class="overflow-hidden transition-all duration-300 bg-white border shadow-xl rounded-2xl border-slate-200 hover:shadow-2xl">
+            <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-green-50 to-emerald-50">
+                <h5 class="flex items-center text-lg font-semibold text-green-800">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 bg-green-100 rounded-lg">
+                        <i class="text-green-600 fas fa-envelope-open-text"></i>
+                    </div>
+                    Convocation
+                </h5>
+            </div>
+            <div class="p-6">
+                <form action="{{ path('app_candidature_print') }}" method="get" target="_blank">
+                    <input type="hidden" name="type" value="convocation">
+
+                    <div class="flex flex-col gap-3 md:flex-row">
+                        <div class="flex-1">
+                            <input type="text" name="numero" required
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                                placeholder="Numéro d'inscription">
+                        </div>
+
+                        <button type="submit"
+                            class="md:w-auto w-full px-6 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium rounded-lg hover:from-green-700 hover:to-emerald-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center">
+                            <i class="mr-2 fas fa-print"></i>
+                            Générer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if is_granted('ROLE_ENT') or is_granted('ROLE_ADMIN') %}
+<!-- Statistiques -->
+<div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden hover:shadow-2xl transition-all duration-300">
+    <div class="border-b border-slate-200 bg-gradient-to-r from-blue-50 to-cyan-50 px-6 py-4">
+        <h5 class="text-lg font-semibold text-blue-800 flex items-center">
+            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-chart-bar text-blue-600"></i>
+            </div>
+            Statistiques
+        </h5>
+    </div>
+    <div class="p-6">
+        <form action="{{ path('app_candidature_print') }}" method="get" target="_blank">
+            <input type="hidden" name="type" value="stat">
+            
+            <div class="flex flex-col md:flex-row gap-3">
+                <div class="flex-1">
+                    <select name="metier" 
+                            class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white">
+                        <option value="">Tous les métiers</option>
+                        {% for metier in metiers %}
+                            <option value="{{ metier.id }}">{{ metier.nom }}</option>
+                        {% else %}
+                            {% if is_granted('ROLE_ENT') %}
+                                <option value="" disabled>Aucun métier associé</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="md:w-48 w-full">
+                    <select name="stat_type" 
+                            class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white">
+                        <option value="stat">Tableau général</option>
+                        <option value="centre">Par centre</option>
+                    </select>
+                </div>
+                
+                <button type="submit" 
+                        class="md:w-auto w-full px-6 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-cyan-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center">
+                    <i class="fas fa-chart-pie mr-2"></i>
+                    Générer
+                </button>
+            </div>
+        </form>
+        
+        {# Message d'information pour les ENT sans métiers #}
+        {% if is_granted('ROLE_ENT') and metiers is empty %}
+        <div class="mt-4 p-3 bg-amber-50 rounded-lg text-sm text-amber-700">
+            <i class="fas fa-info-circle mr-2"></i>
+            Aucun métier n'est associé à votre établissement.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY') %}
+        {% set selectedEtablissement = app.request.request.get('etablissement_liste') %}
+        {% set selectedMetier = app.request.request.get('metier_liste') %}
+        <div
+            class="overflow-hidden transition-all duration-300 bg-white border shadow-xl rounded-2xl border-slate-200 hover:shadow-2xl">
+            <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-violet-50 to-fuchsia-50">
+                <h5 class="flex items-center text-lg font-semibold text-violet-800">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg bg-violet-100">
+                        <i class="fas fa-file-excel text-violet-600"></i>
+                    </div>
+                    Liste des candidatures enregistrées
+                </h5>
+            </div>
+            <div class="p-6">
+                <form action="{{ path('app_candidature_impressions') }}" method="post">
+                    <input type="hidden" name="action" value="export_liste_candidats_inscrits">
+
+                    <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <div>
+                            <select id="export-liste-etablissement" name="etablissement_liste" required
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition bg-white">
+                                <option value="">Sélectionner un établissement</option>
+                                {% for etablissement in etablissements %}
+                                <option value="{{ etablissement.id }}"
+                                    {% if selectedEtablissement == (etablissement.id ~ '') %}selected{% endif %}>
+                                    {{ etablissement.nom }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% else %}
+                        {% set etablissementLie = etablissements|first %}
+                        <input type="hidden" name="etablissement_liste"
+                            value="{{ etablissementLie ? etablissementLie.id : '' }}">
+                        <div>
+                            <input type="text"
+                                value="{{ etablissementLie ? etablissementLie.nom : 'Aucun établissement associé' }}"
+                                disabled
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-100 text-slate-600">
+                        </div>
+                        {% endif %}
+
+                        <div>
+                            <select id="export-liste-metier" name="metier_liste"
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition bg-white"
+                                {% if is_granted('ROLE_ADMIN') %}disabled{% endif %}>
+                                <option value="TOUS"
+                                    {% if selectedMetier is empty or selectedMetier == 'TOUS' %}selected{% endif %}>Tous
+                                    les métiers</option>
+                                {% if not is_granted('ROLE_ADMIN') %}
+                                {% for metier in metiers %}
+                                <option value="{{ metier.id }}"
+                                    {% if selectedMetier == (metier.id ~ '') %}selected{% endif %}>{{ metier.nom }}
+                                </option>
+                                {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-3 mt-1 md:col-span-3 md:grid-cols-2">
+                            <div>
+                                <label class="block mb-1 text-xs font-medium text-slate-500">Du (Inclus)</label>
+                                <input type="date" name="date_debut"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition bg-white">
+                            </div>
+                            <div>
+                                <label class="block mb-1 text-xs font-medium text-slate-500">Au (Inclus)</label>
+                                <input type="date" name="date_fin"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition bg-white">
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end mt-2 md:col-span-3">
+                            <button type="submit"
+                                class="md:w-auto w-full px-6 py-2.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-medium rounded-lg hover:from-violet-700 hover:to-fuchsia-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center">
+                                <i class="mr-2 fas fa-download"></i>
+                                Exporter Excel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+
+        <!-- Exportation des candidats en attente (etustatut IS NULL) -->
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY') %}
+        {% set selectedEtablissementAttente = app.request.request.get('etablissement_attente') %}
+        {% set selectedMetierAttente = app.request.request.get('metier_attente') %}
+        <div
+            class="overflow-hidden transition-all duration-300 bg-white border shadow-xl rounded-2xl border-slate-200 hover:shadow-2xl">
+            <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-yellow-50 to-amber-50">
+                <h5 class="flex items-center text-lg font-semibold text-amber-800">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 bg-amber-100 rounded-lg">
+                        <i class="fas fa-clock text-amber-600"></i>
+                    </div>
+                    Liste des candidats en attente d'étude de dossier
+                </h5>
+            </div>
+            <div class="p-6">
+                <form action="{{ path('app_candidature_impressions') }}" method="post">
+                    <input type="hidden" name="action" value="export_liste_attente">
+
+                    <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <div>
+                            <select id="export-attente-etablissement" name="etablissement_attente" required
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition bg-white">
+                                <option value="">Sélectionner un établissement</option>
+                                {% for etablissement in etablissements %}
+                                <option value="{{ etablissement.id }}"
+                                    {% if selectedEtablissementAttente == (etablissement.id ~ '') %}selected{% endif %}>
+                                    {{ etablissement.nom }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% else %}
+                        {% set etablissementLie = etablissements|first %}
+                        <input type="hidden" name="etablissement_attente"
+                            value="{{ etablissementLie ? etablissementLie.id : '' }}">
+                        <div>
+                            <input type="text"
+                                value="{{ etablissementLie ? etablissementLie.nom : 'Aucun établissement associé' }}"
+                                disabled
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-100 text-slate-600">
+                        </div>
+                        {% endif %}
+
+                        <div>
+                            <select id="export-attente-metier" name="metier_attente"
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition bg-white"
+                                {% if is_granted('ROLE_ADMIN') %}disabled{% endif %}>
+                                <option value="TOUS"
+                                    {% if selectedMetierAttente is empty or selectedMetierAttente == 'TOUS' %}selected{% endif %}>Tous
+                                    les métiers</option>
+                                {% if not is_granted('ROLE_ADMIN') %}
+                                {% for metier in metiers %}
+                                <option value="{{ metier.id }}"
+                                    {% if selectedMetierAttente == (metier.id ~ '') %}selected{% endif %}>{{ metier.nom }}
+                                </option>
+                                {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-3 mt-1 md:col-span-3 md:grid-cols-2">
+                            <div>
+                                <label class="block mb-1 text-xs font-medium text-slate-500">Du (Inclus)</label>
+                                <input type="date" name="date_debut"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition bg-white">
+                            </div>
+                            <div>
+                                <label class="block mb-1 text-xs font-medium text-slate-500">Au (Inclus)</label>
+                                <input type="date" name="date_fin"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition bg-white">
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end mt-2 md:col-span-3">
+                            <button type="submit"
+                                class="md:w-auto w-full px-6 py-2.5 bg-gradient-to-r from-amber-600 to-yellow-600 text-white font-medium rounded-lg hover:from-amber-700 hover:to-yellow-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center">
+                                <i class="mr-2 fas fa-download"></i>
+                                Exporter Excel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+
+        <!-- Exportation des candidats éligibles aux entretiens (etustatut = 2) -->
+{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY') %}
+{% set selectedEtablissementEligible = app.request.request.get('etablissement_eligible') %}
+{% set selectedMetierEligible = app.request.request.get('metier_eligible') %}
+<div class="overflow-hidden transition-all duration-300 bg-white border shadow-xl rounded-2xl border-slate-200 hover:shadow-2xl">
+    <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-amber-50 to-orange-50">
+        <h5 class="flex items-center text-lg font-semibold text-amber-800">
+            <div class="flex items-center justify-center w-8 h-8 mr-3 bg-amber-100 rounded-lg">
+                <i class="fas fa-user-check text-amber-600"></i>
+            </div>
+            Liste des candidats éligibles pour les tests d'entretien
+        </h5>
+    </div>
+    <div class="p-6">
+        <form action="{{ path('app_candidature_impressions') }}" method="post">
+            <input type="hidden" name="action" value="export_liste_eligibles">
+
+            <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                {% if is_granted('ROLE_ADMIN') %}
+                <div>
+                    <select id="export-eligible-etablissement" name="etablissement_eligible" required
+                        class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition bg-white">
+                        <option value="">Sélectionner un établissement</option>
+                        {% for etablissement in etablissements %}
+                        <option value="{{ etablissement.id }}"
+                            {% if selectedEtablissementEligible == (etablissement.id ~ '') %}selected{% endif %}>
+                            {{ etablissement.nom }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% else %}
+                {% set etablissementLie = etablissements|first %}
+                <input type="hidden" name="etablissement_eligible"
+                    value="{{ etablissementLie ? etablissementLie.id : '' }}">
+                <div>
+                    <input type="text"
+                        value="{{ etablissementLie ? etablissementLie.nom : 'Aucun établissement associé' }}"
+                        disabled
+                        class="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-100 text-slate-600">
+                </div>
+                {% endif %}
+
+                <div>
+                    <select id="export-eligible-metier" name="metier_eligible"
+                        class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition bg-white"
+                        {% if is_granted('ROLE_ADMIN') %}disabled{% endif %}>
+                        <option value="TOUS"
+                            {% if selectedMetierEligible is empty or selectedMetierEligible == 'TOUS' %}selected{% endif %}>Tous
+                            les métiers</option>
+                        {% if not is_granted('ROLE_ADMIN') %}
+                        {% for metier in metiers %}
+                        <option value="{{ metier.id }}"
+                            {% if selectedMetierEligible == (metier.id ~ '') %}selected{% endif %}>{{ metier.nom }}
+                        </option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 gap-3 mt-1 md:col-span-3 md:grid-cols-2">
+                    <div>
+                        <label class="block mb-1 text-xs font-medium text-slate-500">Du (Inclus)</label>
+                        <input type="date" name="date_debut"
+                            class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition bg-white">
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-xs font-medium text-slate-500">Au (Inclus)</label>
+                        <input type="date" name="date_fin"
+                            class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition bg-white">
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-2 md:col-span-3">
+                    <button type="submit"
+                        class="md:w-auto w-full px-6 py-2.5 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-medium rounded-lg hover:from-amber-700 hover:to-orange-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center">
+                        <i class="mr-2 fas fa-download"></i>
+                        Exporter Excel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<!-- Exportation des candidats évalués (etustatut = 2 et au moins une note saisie) -->
+{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY') %}
+{% set selectedEtablissementEvalue = app.request.request.get('etablissement_evalue') %}
+{% set selectedMetierEvalue = app.request.request.get('metier_evalue') %}
+<div class="overflow-hidden transition-all duration-300 bg-white border shadow-xl rounded-2xl border-slate-200 hover:shadow-2xl">
+    <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-sky-50 to-blue-50">
+        <h5 class="flex items-center text-lg font-semibold text-sky-800">
+            <div class="flex items-center justify-center w-8 h-8 mr-3 bg-sky-100 rounded-lg">
+                <i class="fas fa-clipboard-check text-sky-600"></i>
+            </div>
+            Liste des candidats évalués (entretien de sélection)
+        </h5>
+    </div>
+    <div class="p-6">
+        <form action="{{ path('app_candidature_impressions') }}" method="post">
+            <input type="hidden" name="action" value="export_liste_evalues">
+
+            <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                {% if is_granted('ROLE_ADMIN') %}
+                <div>
+                    <select id="export-evalue-etablissement" name="etablissement_evalue" required
+                        class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition bg-white">
+                        <option value="">Sélectionner un établissement</option>
+                        {% for etablissement in etablissements %}
+                        <option value="{{ etablissement.id }}"
+                            {% if selectedEtablissementEvalue == (etablissement.id ~ '') %}selected{% endif %}>
+                            {{ etablissement.nom }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% else %}
+                {% set etablissementLie = etablissements|first %}
+                <input type="hidden" name="etablissement_evalue"
+                    value="{{ etablissementLie ? etablissementLie.id : '' }}">
+                <div>
+                    <input type="text"
+                        value="{{ etablissementLie ? etablissementLie.nom : 'Aucun établissement associé' }}"
+                        disabled
+                        class="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-100 text-slate-600">
+                </div>
+                {% endif %}
+
+                <div>
+                    <select id="export-evalue-metier" name="metier_evalue"
+                        class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition bg-white"
+                        {% if is_granted('ROLE_ADMIN') %}disabled{% endif %}>
+                        <option value="TOUS"
+                            {% if selectedMetierEvalue is empty or selectedMetierEvalue == 'TOUS' %}selected{% endif %}>Tous
+                            les métiers</option>
+                        {% if not is_granted('ROLE_ADMIN') %}
+                        {% for metier in metiers %}
+                        <option value="{{ metier.id }}"
+                            {% if selectedMetierEvalue == (metier.id ~ '') %}selected{% endif %}>{{ metier.nom }}
+                        </option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 gap-3 mt-1 md:col-span-3 md:grid-cols-2">
+                    <div>
+                        <label class="block mb-1 text-xs font-medium text-slate-500">Du (Inclus)</label>
+                        <input type="date" name="date_debut"
+                            class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition bg-white">
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-xs font-medium text-slate-500">Au (Inclus)</label>
+                        <input type="date" name="date_fin"
+                            class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition bg-white">
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-2 md:col-span-3">
+                    <button type="submit"
+                        class="md:w-auto w-full px-6 py-2.5 bg-gradient-to-r from-sky-600 to-blue-600 text-white font-medium rounded-lg hover:from-sky-700 hover:to-blue-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center">
+                        <i class="mr-2 fas fa-download"></i>
+                        Exporter Excel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<!-- Exportation des candidats admissibles pour la visite médicale (entstatut = 2) -->
+{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY') %}
+{% set selectedEtablissementAdmissibleVisite = app.request.request.get('etablissement_admissible_visite') %}
+{% set selectedMetierAdmissibleVisite = app.request.request.get('metier_admissible_visite') %}
+<div class="overflow-hidden transition-all duration-300 bg-white border shadow-xl rounded-2xl border-slate-200 hover:shadow-2xl">
+    <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-teal-50 to-emerald-50">
+        <h5 class="flex items-center text-lg font-semibold text-teal-800">
+            <div class="flex items-center justify-center w-8 h-8 mr-3 bg-teal-100 rounded-lg">
+                <i class="fas fa-heartbeat text-teal-600"></i>
+            </div>
+            Liste des candidats admissibles pour la visite médicale
+        </h5>
+    </div>
+    <div class="p-6">
+        <form action="{{ path('app_candidature_impressions') }}" method="post">
+            <input type="hidden" name="action" value="export_liste_admissibles_visite">
+
+            <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                {% if is_granted('ROLE_ADMIN') %}
+                <div>
+                    <select id="export-admissible-visite-etablissement" name="etablissement_admissible_visite" required
+                        class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition bg-white">
+                        <option value="">Sélectionner un établissement</option>
+                        {% for etablissement in etablissements %}
+                        <option value="{{ etablissement.id }}"
+                            {% if selectedEtablissementAdmissibleVisite == (etablissement.id ~ '') %}selected{% endif %}>
+                            {{ etablissement.nom }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% else %}
+                {% set etablissementLie = etablissements|first %}
+                <input type="hidden" name="etablissement_admissible_visite"
+                    value="{{ etablissementLie ? etablissementLie.id : '' }}">
+                <div>
+                    <input type="text"
+                        value="{{ etablissementLie ? etablissementLie.nom : 'Aucun établissement associé' }}"
+                        disabled
+                        class="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-100 text-slate-600">
+                </div>
+                {% endif %}
+
+                <div>
+                    <select id="export-admissible-visite-metier" name="metier_admissible_visite"
+                        class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition bg-white"
+                        {% if is_granted('ROLE_ADMIN') %}disabled{% endif %}>
+                        <option value="TOUS"
+                            {% if selectedMetierAdmissibleVisite is empty or selectedMetierAdmissibleVisite == 'TOUS' %}selected{% endif %}>
+                            Tous les métiers</option>
+                        {% if not is_granted('ROLE_ADMIN') %}
+                        {% for metier in metiers %}
+                        <option value="{{ metier.id }}"
+                            {% if selectedMetierAdmissibleVisite == (metier.id ~ '') %}selected{% endif %}>{{ metier.nom }}
+                        </option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 gap-3 mt-1 md:col-span-3 md:grid-cols-2">
+                    <div>
+                        <label class="block mb-1 text-xs font-medium text-slate-500">Du (Inclus)</label>
+                        <input type="date" name="date_debut"
+                            class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition bg-white">
+                    </div>
+                    <div>
+                        <label class="block mb-1 text-xs font-medium text-slate-500">Au (Inclus)</label>
+                        <input type="date" name="date_fin"
+                            class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition bg-white">
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-2 md:col-span-3">
+                    <button type="submit"
+                        class="md:w-auto w-full px-6 py-2.5 bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-medium rounded-lg hover:from-teal-700 hover:to-emerald-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center">
+                        <i class="mr-2 fas fa-download"></i>
+                        Exporter Excel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+        <!-- Exportation des candidats admis -->
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY') %}
+        {% set selectedEtablissementAdmis = app.request.request.get('etablissement_admis') %}
+        {% set selectedMetierAdmis = app.request.request.get('metier_admis') %}
+        <div
+            class="overflow-hidden transition-all duration-300 bg-white border shadow-xl rounded-2xl border-slate-200 hover:shadow-2xl">
+            <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-green-50 to-emerald-50">
+                <h5 class="flex items-center text-lg font-semibold text-green-800">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 bg-green-100 rounded-lg">
+                        <i class="text-green-600 fas fa-user-check"></i>
+                    </div>
+                    Liste des candidats admis
+                </h5>
+            </div>
+            <div class="p-6">
+                <form action="{{ path('app_candidature_impressions') }}" method="post">
+                    <input type="hidden" name="action" value="export_liste_admis">
+
+                    <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <div>
+                            <select id="export-admis-etablissement" name="etablissement_admis" required
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-white">
+                                <option value="">Sélectionner un établissement</option>
+                                {% for etablissement in etablissements %}
+                                <option value="{{ etablissement.id }}"
+                                    {% if selectedEtablissementAdmis == (etablissement.id ~ '') %}selected{% endif %}>
+                                    {{ etablissement.nom }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% else %}
+                        {% set etablissementLie = etablissements|first %}
+                        <input type="hidden" name="etablissement_admis"
+                            value="{{ etablissementLie ? etablissementLie.id : '' }}">
+                        <div>
+                            <input type="text"
+                                value="{{ etablissementLie ? etablissementLie.nom : 'Aucun établissement associé' }}"
+                                disabled
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-100 text-slate-600">
+                        </div>
+                        {% endif %}
+
+                        <div>
+                            <select id="export-admis-metier" name="metier_admis"
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-white"
+                                {% if is_granted('ROLE_ADMIN') %}disabled{% endif %}>
+                                <option value="TOUS"
+                                    {% if selectedMetierAdmis is empty or selectedMetierAdmis == 'TOUS' %}selected{% endif %}>
+                                    Tous les métiers</option>
+                                {% if not is_granted('ROLE_ADMIN') %}
+                                {% for metier in metiers %}
+                                <option value="{{ metier.id }}"
+                                    {% if selectedMetierAdmis == (metier.id ~ '') %}selected{% endif %}>{{ metier.nom }}
+                                </option>
+                                {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-3 mt-1 md:col-span-3 md:grid-cols-2">
+                            <div>
+                                <label class="block mb-1 text-xs font-medium text-slate-500">Du (Inclus)</label>
+                                <input type="date" name="date_debut"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-white">
+                            </div>
+                            <div>
+                                <label class="block mb-1 text-xs font-medium text-slate-500">Au (Inclus)</label>
+                                <input type="date" name="date_fin"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition bg-white">
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end mt-2 md:col-span-3">
+                            <button type="submit"
+                                class="md:w-auto w-full px-6 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium rounded-lg hover:from-green-700 hover:to-emerald-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center">
+                                <i class="mr-2 fas fa-download"></i>
+                                Exporter Excel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Exportation des candidats admis définitifs -->
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY') %}
+        {% set selectedEtablissementAdmisDef = app.request.request.get('etablissement_admis_def') %}
+        {% set selectedMetierAdmisDef = app.request.request.get('metier_admis_def') %}
+        <div
+            class="overflow-hidden transition-all duration-300 bg-white border shadow-xl rounded-2xl border-slate-200 hover:shadow-2xl">
+            <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+                <h5 class="flex items-center text-lg font-semibold text-blue-800">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 bg-blue-100 rounded-lg">
+                        <i class="text-blue-600 fas fa-graduation-cap"></i>
+                    </div>
+                    Liste des candidats admis définitifs
+                </h5>
+            </div>
+            <div class="p-6">
+                <form action="{{ path('app_candidature_impressions') }}" method="post">
+                    <input type="hidden" name="action" value="export_liste_admis_definitifs">
+
+                    <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <div>
+                            <select id="export-admis-def-etablissement" name="etablissement_admis_def" required
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white">
+                                <option value="">Sélectionner un établissement</option>
+                                <option value="TOUS"
+                                    {% if selectedEtablissementAdmisDef == 'TOUS' %}selected{% endif %}>Tous les
+                                    établissements</option>
+                                {% for etablissement in etablissements %}
+                                <option value="{{ etablissement.id }}"
+                                    {% if selectedEtablissementAdmisDef == (etablissement.id ~ '') %}selected{% endif %}>
+                                    {{ etablissement.nom }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% else %}
+                        {% set etablissementLie = etablissements|first %}
+                        <input type="hidden" name="etablissement_admis_def"
+                            value="{{ etablissementLie ? etablissementLie.id : '' }}">
+                        <div>
+                            <input type="text"
+                                value="{{ etablissementLie ? etablissementLie.nom : 'Aucun établissement associé' }}"
+                                disabled
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-100 text-slate-600">
+                        </div>
+                        {% endif %}
+
+                        <div>
+                            <select id="export-admis-def-metier" name="metier_admis_def"
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white"
+                                {% if is_granted('ROLE_ADMIN') %}disabled{% endif %}>
+                                <option value="TOUS"
+                                    {% if selectedMetierAdmisDef is empty or selectedMetierAdmisDef == 'TOUS' %}selected{% endif %}>
+                                    Tous les métiers</option>
+                                {% if not is_granted('ROLE_ADMIN') %}
+                                {% for metier in metiers %}
+                                <option value="{{ metier.id }}"
+                                    {% if selectedMetierAdmisDef == (metier.id ~ '') %}selected{% endif %}>
+                                    {{ metier.nom }}</option>
+                                {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-3 mt-1 md:col-span-3 md:grid-cols-2">
+                            <div>
+                                <label class="block mb-1 text-xs font-medium text-slate-500">Du (Inclus)</label>
+                                <input type="date" name="date_debut"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white">
+                            </div>
+                            <div>
+                                <label class="block mb-1 text-xs font-medium text-slate-500">Au (Inclus)</label>
+                                <input type="date" name="date_fin"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white">
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end mt-2 md:col-span-3">
+                            <button type="submit"
+                                class="md:w-auto w-full px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-indigo-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center">
+                                <i class="mr-2 fas fa-download"></i>
+                                Exporter Excel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Exportation ZIP Contrats -->
+        {#
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY') %}
+        {% set selectedEtablissementZipContrats = app.request.request.get('etablissement_zip_contrats') %}
+        <div
+            class="overflow-hidden transition-all duration-300 bg-white border shadow-xl rounded-2xl border-slate-200 hover:shadow-2xl">
+            <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-sky-50 to-cyan-50">
+                <h5 class="flex items-center text-lg font-semibold text-sky-800">
+                    <div class="flex items-center justify-center w-8 h-8 mr-3 rounded-lg bg-sky-100">
+                        <i class="fas fa-file-signature text-sky-600"></i>
+                    </div>
+                    Télécharger les contrats des apprentis (ZIP)
+                </h5>
+            </div>
+            <div class="p-6">
+                <form action="{{ path('app_candidature_impressions') }}" method="post">
+                    <input type="hidden" name="action" value="export_zip_contrats">
+
+                    <div class="grid items-center grid-cols-1 gap-3 md:grid-cols-2">
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <div>
+                            <select id="export-zip-contrats-etablissement" name="etablissement_zip_contrats" required
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition bg-white">
+                                <option value="">Sélectionner un établissement</option>
+                                <option value="TOUS"
+                                    {% if selectedEtablissementZipContrats == 'TOUS' %}selected{% endif %}>Tous les
+                                    établissements</option>
+                                {% for etablissement in etablissements %}
+                                <option value="{{ etablissement.id }}"
+                                    {% if selectedEtablissementZipContrats == (etablissement.id ~ '') %}selected{% endif %}>
+                                    {{ etablissement.nom }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% else %}
+                        {% set etablissementLie = etablissements|first %}
+                        <input type="hidden" name="etablissement_zip_contrats"
+                            value="{{ etablissementLie ? etablissementLie.id : '' }}">
+                        <div>
+                            <input type="text"
+                                value="{{ etablissementLie ? etablissementLie.nom : 'Aucun établissement associé' }}"
+                                disabled
+                                class="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-100 text-slate-600">
+                        </div>
+                        {% endif %}
+
+                        <div>
+                            <button type="submit"
+                                class="md:w-auto w-full px-6 py-2.5 bg-gradient-to-r from-sky-600 to-cyan-600 text-white font-medium rounded-lg hover:from-sky-700 hover:to-cyan-700 transition transform hover:scale-[1.02] shadow-lg flex items-center justify-center">
+                                <i class="mr-2 fas fa-file-archive"></i>
+                                Générer l'archive ZIP
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+        #}
+    </div>
+    {% endblock %}
+
+{% block javascripts %}
+      {{ parent() }}
+      {% if is_granted('ROLE_ADMIN') %}
+  <script>
+         document.addEventListener('DOMContentLoaded', function() {
+             const metiersUrlTemplate = "{{ path('app_candidature_etablissement_metiers', {'id': '__ID__'}) }}";
+               /**
+                * Initialise le chargement dynamique des métiers pour un couple établissement/métier
+               */
+              function initDynamicMetiers(etablissementId, metierId, preselectedMetierValue) {
+                  const etablissementSelect = document.getElementById(etablissementId);
+                  const metierSelect = document.getElementById(metierId);
+                  if (!etablissementSelect || !metierSelect) {
+                      return;
+                  }
+                const resetMetiers = function() {
+                    metierSelect.innerHTML = '';
+                    const option = document.createElement('option');
+                    option.value = 'TOUS';
+                    option.textContent = 'Tous les métiers';
+                    option.selected = true;
+                    metierSelect.appendChild(option);
+                    metierSelect.disabled = true;
+                };
+                const loadMetiers = function(etablissementIdValue, preselectedMetier) {
+                    if (!etablissementIdValue || etablissementIdValue === 'TOUS') {
+                        resetMetiers();
+                        return;
+                    }
+                    metierSelect.disabled = true;
+                    const url = metiersUrlTemplate.replace('__ID__', encodeURIComponent(
+                        etablissementIdValue));
+                    fetch(url)
+                        .then(function(response) {
+                            return response.ok ? response.json() : [];
+                        })
+                        .then(function(data) {
+                            metierSelect.innerHTML = '';
+                            const allOption = document.createElement('option');
+                            allOption.value = 'TOUS';
+                            allOption.textContent = 'Tous les métiers';
+                            metierSelect.appendChild(allOption);
+                            data.forEach(function(metier) {
+                                const option = document.createElement('option');
+                                option.value = String(metier.id);
+                                option.textContent = metier.nom;
+                                if (String(preselectedMetier) === String(metier.id)) {
+                                    option.selected = true;
+                                }
+                                metierSelect.appendChild(option);
+                            });
+                            if (String(preselectedMetier) === 'TOUS' || String(preselectedMetier) ===
+                                '') {
+                                allOption.selected = true;
+                            }
+                            metierSelect.disabled = false;
+                        })
+                        .catch(function() {
+                            resetMetiers();
+                        });
+                };
+                etablissementSelect.addEventListener('change', function() {
+                    loadMetiers(this.value, 'TOUS');
+                });
+                if (etablissementSelect.value) {
+                    loadMetiers(etablissementSelect.value, preselectedMetierValue);
+                } else {
+                    resetMetiers();
+                }
+            }
+            // Liste des candidatures enregistrées
+            initDynamicMetiers(
+                'export-liste-etablissement',
+                'export-liste-metier',
+                '{{ app.request.request.get('metier_liste ')|default('TOUS ') }}'
+            );
+            // Liste des candidats éligibles
+            initDynamicMetiers(
+                'export-eligible-etablissement',
+                'export-eligible-metier',
+                '{{ app.request.request.get('metier_eligible')|default('TOUS') }}'
+            );
+            // Liste des candidats admissibles pour la visite médicale
+            initDynamicMetiers(
+                'export-admissible-visite-etablissement',
+                'export-admissible-visite-metier',
+                '{{ app.request.request.get('metier_admissible_visite')|default('TOUS') }}'
+            );
+            // Liste des candidats admis
+            initDynamicMetiers(
+                'export-admis-etablissement',
+                'export-admis-metier',
+                '{{ app.request.request.get('metier_admis ')|default('TOUS ') }}'
+            );
+            // Liste des candidats admis définitifs
+            initDynamicMetiers(
+                'export-admis-def-etablissement',
+                'export-admis-def-metier',
+                '{{ app.request.request.get('metier_admis_def ')|default('TOUS ') }}'
+            );
+        });
+    </script>
+    {% endif %}
+    {% endblock %}

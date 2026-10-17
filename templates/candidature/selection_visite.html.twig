@@ -1,0 +1,159 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}Sélection pour la visite médicale | {{ parent() }}{% endblock %}
+
+{% block body %}
+
+<div class="px-4 pb-16 mx-auto">
+
+    {# En-tête de page #}
+    <div class="relative p-6 mb-8 overflow-hidden text-white bg-gradient-to-r from-teal-600 to-emerald-600 rounded-2xl md:p-8">
+        <div class="absolute rounded-full pointer-events-none -top-14 -right-14 w-52 h-52 bg-white/5"></div>
+        <div class="relative z-10 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="flex items-center justify-center text-2xl border w-14 h-14 rounded-2xl bg-white/15 backdrop-blur border-white/20 shrink-0">
+                    <i class="fas fa-filter"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight md:text-2xl">Sélection pour la visite médicale</h1>
+                    <p class="mt-0.5 text-sm text-white/80">
+                        Classement des candidats admissibles par moyenne décroissante. Les {{ nombrePlaces }} premiers seront retenus.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between mb-6">
+                <a href="{{ path('app_candidature_etude_dossier') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium transition shadow-sm text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50">
+                    <i class="mr-2 fas fa-arrow-left"></i>
+                    Retour à l'étude de dossier
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {# Flash messages #}
+    {% include 'partials/_flash_messages.html.twig' %}
+
+    {# Bouton de validation #}
+    <form method="post" class="mb-6 flex justify-center items-center" onsubmit="return confirm('Confirmez-vous la sélection des {{ nombrePlaces }} premiers candidats ? Cela réinitialisera la sélection précédente.');">
+        <button type="submit"
+                class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-teal-700 hover:to-emerald-700 transition transform hover:scale-[1.02] shadow-lg">
+                <i class="fas fa-check-circle"></i>
+                Lancer la sélection des {{ nombrePlaces }} premiers
+        </button>
+    </form>
+
+    {# Statistiques rapides #}
+    <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-3">
+        <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold uppercase text-slate-400">Total admissibles</span>
+                <div class="flex items-center justify-center text-sm bg-blue-50 text-blue-600 rounded-lg w-8 h-8">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+            <div class="text-2xl font-bold text-slate-800">{{ candidats|length }}</div>
+        </div>
+
+        <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold uppercase text-slate-400">Places à pourvoir</span>
+                <div class="flex items-center justify-center text-sm bg-teal-50 text-teal-600 rounded-lg w-8 h-8">
+                    <i class="fas fa-chair"></i>
+                </div>
+            </div>
+            <div class="text-2xl font-bold text-slate-800">{{ nombrePlaces }}</div>
+        </div>
+
+        <div class="p-4 bg-white border border-slate-200 rounded-xl shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold uppercase text-slate-400">Sélection actuelle</span>
+                <div class="flex items-center justify-center text-sm bg-emerald-50 text-emerald-600 rounded-lg w-8 h-8">
+                    <i class="fas fa-check-double"></i>
+                </div>
+            </div>
+            <div class="text-2xl font-bold text-slate-800">
+                {% set nbSelectionnes = 0 %}
+                {% for item in candidats %}
+                    {% if item.candidature.selectionnePourVisite == true %}
+                        {% set nbSelectionnes = nbSelectionnes + 1 %}
+                    {% endif %}
+                {% endfor %}
+                {{ nbSelectionnes }}
+            </div>
+        </div>
+    </div>
+
+    {# Tableau des candidats classés #}
+    <div class="overflow-hidden bg-white border shadow-xl rounded-2xl border-slate-200">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="border-b bg-slate-50 border-slate-200">
+                    <tr>
+                        <th class="px-4 py-3 text-xs font-medium text-left uppercase text-slate-600">Rang</th>
+                        <th class="px-4 py-3 text-xs font-medium text-left uppercase text-slate-600">N° Candidature</th>
+                        <th class="px-4 py-3 text-xs font-medium text-left uppercase text-slate-600">Candidat</th>
+                        <th class="px-4 py-3 text-xs font-medium text-left uppercase text-slate-600">Métier</th>
+                        <th class="px-4 py-3 text-xs font-medium text-left uppercase text-slate-600">Total</th>
+                        <th class="px-4 py-3 text-xs font-medium text-left uppercase text-slate-600">Moyenne</th>
+                        <th class="px-4 py-3 text-xs font-medium text-left uppercase text-slate-600">Statut</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                    {% for i, item in candidats %}
+                        {% set c = item.candidature %}
+                        <tr class="transition hover:bg-slate-50 {% if i < nombrePlaces %}bg-green-50/40{% endif %}">
+                            <td class="px-4 py-3 text-sm font-bold text-slate-700">{{ i + 1 }}</td>
+                            <td class="px-4 py-3 font-mono text-sm font-semibold text-indigo-600">{{ c.numero }}</td>
+                            <td class="px-4 py-3 text-sm font-medium text-slate-800">
+                                {{ c.user ? (c.user.nom|upper ~ ' ' ~ c.user.prenoms) : 'N/A' }}
+                            </td>
+                            <td class="px-4 py-3 text-sm text-slate-600">{{ c.metier ? c.metier.nom : '-' }}</td>
+                            <td class="px-4 py-3 text-sm font-semibold text-slate-800">{{ item.total }} / 40</td>
+                            <td class="px-4 py-3 text-sm font-bold text-indigo-700">{{ item.moyenne }} / 4</td>
+                            <td class="px-4 py-3 text-sm">
+                                {% if c.selectionnePourVisite == true %}
+                                    <span class="px-2 py-1 text-xs font-bold text-green-700 bg-green-100 rounded-full">
+                                        <i class="fas fa-check mr-1"></i> Retenu
+                                    </span>
+                                {% elseif c.selectionnePourVisite == false %}
+                                    <span class="px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-full">
+                                        <i class="fas fa-times mr-1"></i> Non retenu
+                                    </span>
+                                {% else %}
+                                    <span class="px-2 py-1 text-xs font-medium text-slate-600 bg-slate-100 rounded-full">
+                                        En attente
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="px-4 py-8 text-center text-slate-500">
+                                <i class="mb-2 text-3xl opacity-50 fas fa-users"></i>
+                                <p>Aucun candidat admissible pour le moment.</p>
+                                <p class="text-xs mt-1">Les candidats doivent d'abord passer l'entretien et obtenir une moyenne ≥ 2/4.</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {# Légende #}
+    <div class="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+        <p class="text-sm font-semibold text-slate-700 mb-2">
+            <i class="fas fa-info-circle mr-1"></i> Comment ça marche ?
+        </p>
+        <ul class="text-sm text-slate-600 space-y-1 list-disc list-inside">
+            <li>Les candidats sont classés par <strong>total décroissant</strong> (les ex-aequo sont départagés par date de candidature).</li>
+            <li>Cliquez sur <strong>"Valider la sélection"</strong> pour retenir les <strong>{{ nombrePlaces }} premiers</strong>.</li>
+            <li>Les candidats retenus apparaîtront dans la liste <strong>"Visite médicale non effectuée"</strong>.</li>
+            <li>Vous pouvez relancer la sélection à tout moment : cela réinitialisera les choix précédents.</li>
+        </ul>
+    </div>
+
+</div>
+
+{% endblock %}

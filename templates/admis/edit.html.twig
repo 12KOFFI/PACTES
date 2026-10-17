@@ -1,0 +1,225 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}Modifier Inscription Définitive{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto pb-10">
+
+    {# ===== EN-TÊTE ===== #}
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 md:p-8 mb-8 text-white relative overflow-hidden">
+        <div class="absolute -top-14 -right-14 w-52 h-52 rounded-full bg-white/5 pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <a href="{{ is_granted('ROLE_ADMIN') ? path('app_admis_index') : path('app_admis_etablissement') }}" class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center hover:bg-white/25 transition">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-tight">Modifier Inscription</h1>
+                    <p class="text-white/70 text-sm mt-0.5">N° {{ admis.numeroInscription }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ===== FLASH MESSAGES ===== #}
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            {% set colors = type == 'success' ? 'bg-green-50 border-green-300 text-green-700' : (type == 'error' ? 'bg-red-50 border-red-300 text-red-700' : 'bg-blue-50 border-blue-300 text-blue-700') %}
+            <div class="flex items-center gap-3 px-5 py-4 rounded-xl border mb-6 text-sm font-medium {{ colors }}">
+                <i class="fas fa-{{ type == 'success' ? 'check-circle' : 'exclamation-circle' }}"></i>
+                {{ message|raw }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {# Informations du candidat #}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-200">
+                <h2 class="text-base font-semibold text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-user text-indigo-500"></i> Informations du candidat
+                </h2>
+            </div>
+            <div class="p-6 space-y-3 text-sm">
+                <div class="flex justify-between border-b border-slate-50 pb-2">
+                    <span class="text-slate-500">Nom complet</span>
+                    <span class="font-bold text-slate-800">{{ admis.user.nom|upper }} {{ admis.user.prenoms }}</span>
+                </div>
+                <div class="flex justify-between border-b border-slate-50 pb-2">
+                    <span class="text-slate-500">Contact</span>
+                    <span class="font-medium text-slate-800">{{ admis.user.contact ?? '—' }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Email</span>
+                    <span class="font-medium text-slate-800">{{ admis.user.email }}</span>
+                </div>
+            </div>
+        </div>
+
+        {# Informations de la formation #}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-200">
+                <h2 class="text-base font-semibold text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-graduation-cap text-indigo-500"></i> Informations de la formation
+                </h2>
+            </div>
+            <div class="p-6 space-y-3 text-sm">
+                <div class="flex justify-between border-b border-slate-50 pb-2">
+                    <span class="text-slate-500">N° inscription</span>
+                    <span class="font-bold text-indigo-600">{{ admis.numeroInscription }}</span>
+                </div>
+                <div class="flex justify-between border-b border-slate-50 pb-2">
+                    <span class="text-slate-500">Métier</span>
+                    <span class="font-medium text-slate-800">{{ admis.metier.nom }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Date</span>
+                    <span class="font-medium text-slate-800">{{ admis.dateInscription|date('d/m/Y H:i') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Wrapper flex pour ordonner visuellement les sections (Livret doit être hors du form Symfony) #}
+    <div class="flex flex-col gap-6">
+
+        {# ── Formulaire Symfony (contrat + confirmation + boutons) ── #}
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'contents', 'enctype': 'multipart/form-data'}}) }}
+
+        {# 1. Section Contrat #}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden order-1" id="contrat">
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-200">
+                <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-file-contract text-emerald-500"></i> Contrat d'apprentissage
+                </h2>
+            </div>
+            <div class="p-6 space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.entreprisePartenaire.vars.label }}</label>
+                    {{ form_widget(form.entreprisePartenaire, {'attr': {'class': 'w-full rounded-xl border-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500 shadow-sm'}}) }}
+                    {{ form_errors(form.entreprisePartenaire) }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">{{ form.contratFile.vars.label }}</label>
+                    {{ form_widget(form.contratFile, {'attr': {'class': 'block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100'}}) }}
+                    {{ form_errors(form.contratFile) }}
+                    
+                    {% if admis.fichierContrat %}
+                        <div class="mt-4 pt-4 border-t border-slate-100">
+                            <a href="{{ asset('uploads/contrats/' ~ admis.fichierContrat) }}" target="_blank" class="inline-flex items-center gap-2 text-sm text-emerald-600 hover:text-emerald-700 font-semibold bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 transition">
+                                <i class="fas fa-file-pdf"></i> Voir le contrat actuel
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# 3. Section Confirmation #}
+        <div class="bg-amber-50 rounded-2xl border border-amber-200 p-6 flex items-start gap-4 order-3">
+            <div class="pt-0.5">
+                {{ form_widget(form.confirme, {'attr': {'class': 'w-5 h-5 rounded border-amber-300 text-amber-600 focus:ring-amber-500'}}) }}
+            </div>
+            <div>
+                {{ form_label(form.confirme, 'Le candidat confirme vouloir poursuivre la formation jusqu\'au bout', {'label_attr': {'class': 'font-bold text-amber-900 cursor-pointer block mb-1'}}) }}
+                {{ form_errors(form.confirme) }}
+                <p class="text-xs text-amber-700/80">Cette case indique si le candidat s'est engagé à suivre la formation jusqu'à son terme.</p>
+            </div>
+        </div>
+
+        {# 2. Section Livret — Intégrée au formulaire principal, positionnée visuellement via order-2 #}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden order-2" id="livret">
+            <div class="px-6 py-4 bg-slate-50 border-b border-slate-200">
+                <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                    <i class="fas fa-book-reader text-blue-500"></i> Livret Apprenti
+                </h2>
+            </div>
+            <div class="p-6">
+                {% if admis.fichierLivret %}
+                    <div class="flex items-center gap-3 mb-4">
+                        <a href="{{ asset('uploads/livrets/' ~ admis.fichierLivret) }}" target="_blank" class="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-semibold bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200 transition">
+                            <i class="fas fa-file-pdf"></i> Voir le livret actuel
+                        </a>
+                        {% if admis.dateLivret %}
+                            <span class="text-xs text-slate-400">Uploadé le {{ admis.dateLivret|date('d/m/Y') }}</span>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Uploader ou remplacer le livret (PDF, JPG, PNG)</label>
+                    {{ form_widget(form.livretFile, {'attr': {'class': 'block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'}}) }}
+                    {{ form_errors(form.livretFile) }}
+                </div>
+            </div>
+        </div>
+
+        {# 4. Boutons #}
+        <div class="flex items-center justify-between order-4">
+            <a href="{{ is_granted('ROLE_ADMIN') ? path('app_admis_index') : path('app_admis_etablissement') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 text-sm font-medium transition">
+                <i class="fas fa-times"></i> Annuler
+            </a>
+            <button type="submit" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 text-sm font-semibold transition shadow-lg shadow-indigo-200">
+                <i class="fas fa-save"></i> Enregistrer tout
+            </button>
+        </div>
+
+        <div class="hidden">
+            {{ form_rest(form) }}
+        </div>
+        {{ form_end(form) }}
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialisation de TomSelect pour un menu déroulant moderne avec recherche
+            const selectEl = document.querySelector('select[id$="_entreprisePartenaire"]');
+            if (selectEl) {
+                new TomSelect(selectEl, {
+                    placeholder: 'Rechercher une entreprise...',
+                    searchField: ['text'],
+                    maxOptions: 50,
+                    controlClass: 'ts-control w-full !rounded-xl !border-slate-200 text-sm focus:!border-indigo-500 focus:!ring-indigo-500 !shadow-sm !px-4 !py-2.5',
+                    dropdownClass: 'ts-dropdown bg-white !rounded-xl !border-slate-200 !shadow-lg !mt-1 overflow-hidden',
+                    render: {
+                        no_results: function(data, escape) {
+                            return '<div class="no-results px-4 py-3 text-sm text-slate-500"><i class="fas fa-search mr-2"></i>Aucune entreprise trouvée pour "'+escape(data.input)+'"</div>';
+                        },
+                        option: function(data, escape) {
+                            return '<div class="!px-4 !py-2.5 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors cursor-pointer">' + escape(data.text) + '</div>';
+                        },
+                        item: function(data, escape) {
+                            return '<div class="text-sm font-medium text-slate-800">' + escape(data.text) + '</div>';
+                        }
+                    }
+                });
+            }
+
+            const form = document.querySelector('form');
+            if(form) {
+                form.addEventListener('submit', function(e) {
+                    const confirmCheckbox = document.getElementById('admis_confirme');
+                    if (confirmCheckbox && !confirmCheckbox.checked) {
+                        e.preventDefault();
+                        alert('Veuillez cocher la case de confirmation pour valider l\'inscription.');
+                        confirmCheckbox.focus();
+                        return false;
+                    }
+                    if (!confirm('Êtes-vous sûr de vouloir mettre à jour cette inscription ?')) {
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,572 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}Inscription Définitive{% endblock %}
+
+{% block body %}
+<div class="max-w-7xl mx-auto pb-12">
+
+{# ===== EN-TÊTE ===== #}
+<div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 md:p-8 mb-8 text-white relative overflow-hidden">
+    <div class="absolute -top-14 -right-14 w-52 h-52 rounded-full bg-white/5 pointer-events-none"></div>
+    <div class="absolute -bottom-16 left-1/3 w-64 h-64 rounded-full bg-white/[0.04] pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur border border-white/20 flex items-center justify-center text-2xl shrink-0">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Inscription Définitive</h1>
+                <p class="text-white/70 text-base mt-1">
+                    {% if step == 1 %}Recherchez un candidat admis pour finaliser son inscription
+                    {% elseif is_deja_admis_definitif is defined and is_deja_admis_definitif %}Candidat déjà inscrit — mise à jour de la fiche d'engagement
+                    {% else %}Vérifiez les informations et confirmez l'inscription
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <a href="{{ path('app_dashboard') }}"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-base font-medium transition-all hover:-translate-y-0.5 w-full md:w-auto justify-center">
+            <i class="fas fa-arrow-left text-sm"></i> Tableau de bord
+        </a>
+    </div>
+
+    {# Indicateur d'étapes #}
+    <div class="relative z-10 flex items-center gap-3">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
+                {{ step == 1 ? 'bg-white text-indigo-600' : 'bg-white/20 text-white' }}">1</div>
+            <span class="text-base font-medium {{ step == 1 ? 'text-white' : 'text-white/50' }}">Recherche</span>
+        </div>
+        <div class="flex-1 h-px bg-white/20 max-w-12"></div>
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
+                {{ step == 2 ? 'bg-white text-indigo-600' : 'bg-white/20 text-white' }}">2</div>
+            <span class="text-base font-medium {{ step == 2 ? 'text-white' : 'text-white/50' }}">Confirmation</span>
+        </div>
+    </div>
+</div>
+
+{# ===== FLASH MESSAGES ===== #}
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+        {% set bg  = type == 'success' ? 'bg-green-50 border-green-200 text-green-700'
+                   : (type == 'error'   ? 'bg-red-50 border-red-200 text-red-700'
+                   : (type == 'warning' ? 'bg-amber-50 border-amber-200 text-amber-700'
+                   : 'bg-blue-50 border-blue-200 text-blue-700')) %}
+        {% set ico = type == 'success' ? 'check-circle'
+                   : (type == 'error'   ? 'exclamation-circle'
+                   : (type == 'warning' ? 'exclamation-triangle' : 'info-circle')) %}
+        <div class="flex items-center gap-3 px-5 py-3.5 rounded-xl border mb-5 text-sm font-medium {{ bg }}">
+            <i class="fas fa-{{ ico }}"></i> {{ message|raw }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+{# ══════════════════════ ÉTAPE 1 : RECHERCHE ══════════════════════ #}
+{% if step == 1 %}
+
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-5">
+    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
+            <i class="fas fa-search text-sm"></i>
+        </div>
+        <h2 class="text-base font-semibold text-slate-700 uppercase tracking-wider">Rechercher un candidat admis</h2>
+    </div>
+    <div class="p-6">
+        <p class="text-base text-slate-500 mb-5 leading-relaxed">
+            Saisissez le numéro de candidature, l'adresse email ou le numéro de téléphone.
+            <br><span class="text-slate-400 text-sm">Seuls les candidats admis de votre établissement s'afficheront.</span>
+        </p>
+
+        <form method="GET" action="{{ path('app_admis_inscription') }}">
+            <div class="flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <i class="fas fa-search text-slate-400 text-sm"></i>
+                    </div>
+                    <input type="text" name="q" id="search" value="{{ searchQuery }}" required
+                           placeholder="N° candidature  •  email@exemple.com  •  0102030405"
+                           class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-base text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all">
+                </div>
+                <button type="submit"
+                        class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-base font-bold rounded-xl shadow-md shadow-indigo-200/50 hover:from-indigo-700 hover:to-purple-700 hover:-translate-y-0.5 transition-all whitespace-nowrap">
+                    <i class="fas fa-search"></i> Rechercher
+                </button>
+            </div>
+
+            {% if searchQuery %}
+            <p class="mt-3 text-sm text-slate-400">
+                <i class="fas fa-clock mr-1"></i>
+                Résultats pour : <span class="font-semibold text-slate-600">« {{ searchQuery }} »</span>
+            </p>
+            {% endif %}
+
+            {% if notFound is defined and notFound %}
+            <div class="mt-4 flex items-start gap-3 px-5 py-4 rounded-xl border border-red-200 bg-red-50 text-sm">
+                <i class="fas fa-user-times text-red-400 text-base mt-0.5 shrink-0"></i>
+                <div class="text-red-700">
+                    <p class="font-bold mb-0.5">Candidat introuvable</p>
+                    <p>Aucun candidat admis ne correspond à <strong>« {{ searchQuery }} »</strong>. Vérifiez le numéro, l'email ou le téléphone saisi.</p>
+                </div>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+{# Aide #}
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-600">
+            <i class="fas fa-lightbulb text-sm"></i>
+        </div>
+        <h2 class="text-base font-semibold text-slate-700 uppercase tracking-wider">Comment ça fonctionne ?</h2>
+    </div>
+    <div class="p-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {% for step_item in [
+            {'n': '1', 'icon': 'search',       'color': 'indigo',  'title': 'Rechercher',         'desc': 'Retrouvez le candidat par son numéro, email ou téléphone'},
+            {'n': '2', 'icon': 'file-upload',   'color': 'emerald', 'title': 'Fiche d\'engagement', 'desc': 'Joignez la fiche d\'engagement scannée et signée'},
+            {'n': '3', 'icon': 'check-circle',  'color': 'purple',  'title': 'Confirmer',          'desc': 'Validez l\'inscription définitive du candidat'},
+        ] %}
+        <div class="flex flex-col items-center text-center p-5 rounded-xl bg-{{ step_item.color }}-50 border border-{{ step_item.color }}-100 gap-3">
+            <div class="w-12 h-12 rounded-xl bg-{{ step_item.color }}-100 flex items-center justify-center text-{{ step_item.color }}-600">
+                <i class="fas fa-{{ step_item.icon }} text-lg"></i>
+            </div>
+            <div>
+                <p class="text-base font-bold text-slate-800">{{ step_item.n }}. {{ step_item.title }}</p>
+                <p class="text-sm text-slate-500 mt-1">{{ step_item.desc }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{# ══════════════════════ ÉTAPE 2 : DÉJÀ INSCRIT ══════════════════════ #}
+{% elseif step == 2 and is_deja_admis_definitif is defined and is_deja_admis_definitif %}
+
+<form method="POST" action="{{ path('app_admis_inscription', {candidature_id: candidature.id}) }}" id="engagement-form">
+
+    <div class="bg-blue-50 border border-blue-200 rounded-2xl px-5 py-4 mb-5 flex items-start gap-4">
+        <div class="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center shrink-0 mt-0.5">
+            <i class="fas fa-info-circle text-white"></i>
+        </div>
+        <div>
+            <p class="text-base font-bold text-blue-800">Ce candidat est déjà inscrit définitivement</p>
+            <p class="text-sm text-blue-600 mt-1">
+                <strong>{{ candidature.user.nom|upper }} {{ candidature.user.prenoms }}</strong>
+                — N° <span class="font-mono">{{ candidature.numero }}</span><br>
+                Vous pouvez uniquement joindre ou remplacer la fiche d'engagement scannée.
+            </p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-5">
+        <div class="px-6 py-4 border-b border-slate-100 bg-amber-50/60 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-600">
+                <i class="fas fa-file-upload text-sm"></i>
+            </div>
+            <h2 class="text-sm font-semibold text-amber-700 uppercase tracking-wider">Fiche d'engagement</h2>
+        </div>
+        <div class="p-6">
+            {% if candidature.ficheEngagement %}
+            <div class="mb-5 flex items-center gap-3 px-4 py-3 bg-green-50 border border-green-200 rounded-xl text-sm text-green-700">
+                <i class="fas fa-check-circle text-green-500 shrink-0"></i>
+                <span class="font-medium">Fiche déjà uploadée : <strong>{{ candidature.ficheEngagement }}</strong></span>
+            <a href="{{ path('app_media_file', {'candidatureNumero': candidature.numero, 'filename': candidature.ficheEngagement}) }}"
+               target="_blank"
+               class="ml-auto inline-flex items-center gap-1 text-green-600 hover:text-green-800 font-bold text-xs transition">
+                <i class="fas fa-eye"></i> Voir 
+            </a>
+            </div>
+            {% endif %}
+
+            <label class="block text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">
+                {{ candidature.ficheEngagement ? 'Remplacer la fiche' : 'Uploader la fiche' }}
+                <span class="font-normal text-slate-400 ml-1">(PDF, JPG, PNG — max 2 Mo)</span>
+            </label>
+            <input type="file" id="fiche_engagement_input" accept=".pdf,.jpg,.jpeg,.png"
+                   class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:font-bold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 file:transition-all file:cursor-pointer border border-slate-200 rounded-xl px-3 py-2">
+            <input type="hidden" name="fiche_engagement_base64" id="fiche_engagement_base64">
+            <input type="hidden" name="fiche_engagement_name" id="fiche_engagement_name">
+        </div>
+    </div>
+
+    {# Bouton de soumission #}
+    <div class="flex justify-end">
+        <button type="submit"
+                class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-base font-bold rounded-xl shadow-md shadow-amber-200/60 hover:from-amber-600 hover:to-orange-600 hover:-translate-y-0.5 transition-all">
+            <i class="fas fa-save"></i> Enregistrer la fiche d'engagement
+        </button>
+    </div>
+</form>
+
+{# ══════════════════════ ÉTAPE 2 : INSCRIPTION NORMALE ══════════════════════ #}
+{% elseif step == 2 %}
+
+<div class="bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4 mb-5 flex items-center gap-4">
+    <div class="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shrink-0">
+        <i class="fas fa-trophy text-white"></i>
+    </div>
+    <div>
+        <p class="text-base font-bold text-emerald-800">Candidat admis !</p>
+        <p class="text-sm text-emerald-600 mt-0.5">
+            <strong>{{ candidature.user.nom|upper }} {{ candidature.user.prenoms }}</strong> a été admis(e).
+            Vérifiez les infos, joignez la fiche d'engagement, puis confirmez.
+        </p>
+    </div>
+</div>
+
+<form method="POST" action="{{ path('app_admis_inscription', {candidature_id: candidature.id}) }}" id="engagement-form">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+
+        {# ---- Informations personnelles ---- #}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
+                        <i class="fas fa-user-edit text-sm"></i>
+                    </div>
+                    <h2 class="text-base font-semibold text-slate-700 uppercase tracking-wider">Informations personnelles</h2>
+                </div>
+                <span class="text-xs font-bold px-2 py-1 rounded-full bg-indigo-100 text-indigo-600">Modifiable</span>
+            </div>
+            <div class="p-6 space-y-4">
+
+                <div>
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">N° candidature</p>
+                    <p class="text-base font-bold text-slate-800 font-mono tracking-wider">{{ candidature.numero }}</p>
+                </div>
+
+                {% set fields = [
+                    {'name': 'nom',           'label': 'Nom',               'value': candidature.user.nom,       'type': 'text',  'class': 'uppercase'},
+                    {'name': 'prenoms',        'label': 'Prénoms',           'value': candidature.user.prenoms,   'type': 'text',  'class': ''},
+                    {'name': 'contact',        'label': 'Contact',           'value': candidature.user.contact,   'type': 'text',  'class': 'font-mono'},
+                    {'name': 'datenaissance',  'label': 'Date de naissance', 'value': candidature.user.datenaissance ? candidature.user.datenaissance|date('Y-m-d') : '', 'type': 'date', 'class': ''},
+                    {'name': 'lieunaissance',  'label': 'Lieu de naissance', 'value': candidature.user.lieunaissance, 'type': 'text', 'class': ''},
+                ] %}
+
+                {% for f in fields %}
+                <div>
+                    <label for="{{ f.name }}" class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">{{ f.label }}</label>
+                    <input type="{{ f.type }}" name="{{ f.name }}" id="{{ f.name }}" value="{{ f.value }}"
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-base text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition {{ f.class }}">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# ---- Colonne droite ---- #}
+        <div class="flex flex-col gap-5">
+
+            {# Formation #}
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600">
+                        <i class="fas fa-graduation-cap text-sm"></i>
+                    </div>
+                    <h2 class="text-base font-semibold text-slate-700 uppercase tracking-wider">Formation choisie</h2>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
+                            <i class="fas fa-school text-slate-400 text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-400 uppercase tracking-wider">Établissement</p>
+                            <p class="text-base font-bold text-slate-800 mt-0.5">{{ candidature.etablissement.nom }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
+                            <i class="fas fa-briefcase text-slate-400 text-xs"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-400 uppercase tracking-wider">Métier / Formation</p>
+                            <span class="inline-flex items-center gap-1.5 mt-1.5 px-3 py-1 rounded-full text-sm font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                {{ candidature.metier.nom }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Fiche d'engagement #}
+            <div class="bg-white rounded-2xl shadow-sm border border-amber-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-amber-100 bg-amber-50/60 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-600">
+                        <i class="fas fa-file-upload text-sm"></i>
+                    </div>
+                    <h2 class="text-base font-semibold text-amber-700 uppercase tracking-wider">Fiche d'engagement</h2>
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-500 mb-4 leading-relaxed">
+                        Scannez et joignez la fiche signée par le candidat (preuve qu'il s'engage à suivre la formation).
+                    </p>
+                    <input type="file" id="fiche_engagement_input2" accept=".pdf,.jpg,.jpeg,.png"
+                           class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:font-bold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 file:transition-all file:cursor-pointer border border-slate-200 rounded-xl px-3 py-2">
+                    <input type="hidden" name="fiche_engagement_base64" id="fiche_engagement_base64_2">
+                    <input type="hidden" name="fiche_engagement_name" id="fiche_engagement_name_2">
+                    <p class="text-xs text-slate-400 mt-2"><i class="fas fa-info-circle mr-1"></i> PDF, JPG, PNG — max 1 Mo</p>
+                </div>
+            </div>
+
+            {# Engagement + boutons #}
+            <div class="bg-white rounded-2xl shadow-sm border border-emerald-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-emerald-100 bg-emerald-50/60 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600">
+                        <i class="fas fa-handshake text-sm"></i>
+                    </div>
+                    <h2 class="text-base font-semibold text-emerald-700 uppercase tracking-wider">Engagement</h2>
+                </div>
+                <div class="p-6">
+                    <label class="flex items-start gap-3 cursor-pointer group mb-5 p-4 rounded-xl border-2 border-dashed border-amber-200 bg-amber-50/50 hover:bg-amber-50 transition-all">
+                        <div class="relative mt-0.5 shrink-0">
+                            <input type="checkbox" name="engagement" id="engagement" required class="peer sr-only">
+                            <div class="w-5 h-5 rounded-md border-2 border-slate-300 bg-white group-hover:border-emerald-400 peer-checked:bg-emerald-500 peer-checked:border-emerald-500 transition-all flex items-center justify-center">
+                                <i class="fas fa-check text-white text-[9px]"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-base font-semibold text-slate-800 leading-snug">
+                                Le candidat confirme être prêt(e) à suivre la formation jusqu'au bout
+                            </p>
+                            <p class="text-sm text-slate-500 mt-1.5 leading-relaxed">
+                                L'établissement confirme que le candidat s'engage à respecter le règlement intérieur.
+                            </p>
+                            <p class="text-xs text-amber-600 mt-2 font-semibold">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>Obligatoire pour valider l'inscription
+                            </p>
+                        </div>
+                    </label>
+
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="{{ path('app_admis_inscription') }}"
+                           class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-500 text-base font-medium hover:bg-slate-50 transition w-full sm:w-auto">
+                            <i class="fas fa-arrow-left text-xs"></i> Retour
+                        </a>
+                        <button type="submit"
+                                class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-base font-bold rounded-xl shadow-md shadow-emerald-200/60 hover:from-emerald-600 hover:to-green-600 hover:-translate-y-0.5 transition-all flex-1">
+                            <i class="fas fa-user-graduate"></i> Inscrire définitivement
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+{% endif %}
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Auto-submit si champ pré-rempli (depuis liste des admis)
+    const searchInput = document.getElementById('search');
+    if (searchInput?.value.trim()) {
+        setTimeout(() => searchInput.closest('form')?.submit(), 400);
+    }
+
+    // === UPLOAD PAR CHUNKS AJAX ===
+    const CHUNK_SIZE = 50 * 1024; // 50 Ko par chunk (sous la limite Apache)
+    const UPLOAD_URL = '{{ path("app_admis_upload_chunk") }}';
+    let uploadedFile = null; // Fichier prêt à être uploadé
+    let uploadInProgress = false;
+    let uploadDone = false;
+
+    // Compresser une image via canvas
+    function compressImage(file, maxW, maxH, quality) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            const reader = new FileReader();
+            reader.onload = e => {
+                img.onload = () => {
+                    let w = img.width, h = img.height;
+                    if (w > maxW) { h = h * (maxW / w); w = maxW; }
+                    if (h > maxH) { w = w * (maxH / h); h = maxH; }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    canvas.toBlob(blob => blob ? resolve(blob) : reject('Compression échouée'), 'image/jpeg', quality);
+                };
+                img.onerror = reject;
+                img.src = e.target.result;
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Préparer le fichier quand l'utilisateur le sélectionne
+    function setupFileInput(inputId) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+
+        input.addEventListener('change', async function () {
+            uploadDone = false;
+            uploadedFile = null;
+            const file = this.files[0];
+            if (!file) return;
+
+            // Vérifier taille max (5 Mo)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Le fichier est trop volumineux (max 5 Mo).');
+                this.value = '';
+                return;
+            }
+
+            // Compresser les images automatiquement
+            if (file.type.startsWith('image/')) {
+                try {
+                    const compressed = await compressImage(file, 1200, 1600, 0.6);
+                    const baseName = file.name.replace(/\.[^.]+$/, '');
+                    uploadedFile = { blob: compressed, name: baseName + '.jpg' };
+                    showFileStatus(input, '✅ Image compressée (' + Math.round(compressed.size / 1024) + ' Ko) — prête');
+                    return;
+                } catch (err) {
+                    console.error('Erreur compression:', err);
+                }
+            }
+
+            // PDF / autres
+            uploadedFile = { blob: file, name: file.name };
+            showFileStatus(input, '✅ Fichier sélectionné (' + Math.round(file.size / 1024) + ' Ko) — prêt');
+        });
+    }
+
+    function showFileStatus(input, message) {
+        let status = input.parentElement.querySelector('.upload-status');
+        if (!status) {
+            status = document.createElement('p');
+            status.className = 'upload-status text-sm font-medium mt-2';
+            input.parentElement.appendChild(status);
+        }
+        status.textContent = message;
+        status.className = 'upload-status text-sm font-medium mt-2 text-emerald-600';
+    }
+
+    function showFileError(input, message) {
+        let status = input.parentElement.querySelector('.upload-status');
+        if (!status) {
+            status = document.createElement('p');
+            status.className = 'upload-status text-sm font-medium mt-2';
+            input.parentElement.appendChild(status);
+        }
+        status.textContent = message;
+        status.className = 'upload-status text-sm font-medium mt-2 text-red-600';
+    }
+
+    // Envoyer le fichier par chunks
+    async function uploadFileByChunks(candidatureId) {
+        if (!uploadedFile) return true; // Pas de fichier = OK
+        if (uploadDone) return true;    // Déjà uploadé
+
+        const blob = uploadedFile.blob;
+        const arrayBuffer = await blob.arrayBuffer();
+        const bytes = new Uint8Array(arrayBuffer);
+        const totalChunks = Math.ceil(bytes.length / CHUNK_SIZE);
+        const tempId = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+
+        for (let i = 0; i < totalChunks; i++) {
+            const start = i * CHUNK_SIZE;
+            const end = Math.min(start + CHUNK_SIZE, bytes.length);
+            const chunkBytes = bytes.slice(start, end);
+
+            // Convertir ce petit chunk en base64
+            let binary = '';
+            for (let j = 0; j < chunkBytes.length; j++) {
+                binary += String.fromCharCode(chunkBytes[j]);
+            }
+            const chunkBase64 = btoa(binary);
+
+            const params = new URLSearchParams();
+            params.append('candidature_id', candidatureId);
+            params.append('chunk', chunkBase64);
+            params.append('chunk_index', i);
+            params.append('total_chunks', totalChunks);
+            params.append('file_name', uploadedFile.name);
+            params.append('temp_id', tempId);
+
+            const response = await fetch(UPLOAD_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString()
+            });
+
+            if (!response.ok) {
+                const err = await response.json().catch(() => ({ error: 'Erreur serveur' }));
+                throw new Error(err.error || 'Erreur lors de l\'envoi du chunk ' + (i + 1));
+            }
+        }
+
+        uploadDone = true;
+        return true;
+    }
+
+    // Initialiser les inputs fichier
+    setupFileInput('fiche_engagement_input');
+    setupFileInput('fiche_engagement_input2');
+
+    // Intercepter la soumission du formulaire
+    const form = document.getElementById('engagement-form');
+    if (form) {
+        form.addEventListener('submit', async function (e) {
+            // Vérifier engagement
+            const cb = document.getElementById('engagement');
+            if (cb && !cb.checked) {
+                e.preventDefault();
+                cb.closest('label')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                cb.closest('label').classList.add('ring-2', 'ring-red-400');
+                setTimeout(() => cb.closest('label').classList.remove('ring-2', 'ring-red-400'), 2000);
+                return;
+            }
+
+            // S'il y a un fichier à uploader, le faire avant de soumettre
+            if (uploadedFile && !uploadDone) {
+                e.preventDefault();
+
+                if (uploadInProgress) return;
+                uploadInProgress = true;
+
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn?.innerHTML;
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi du fichier en cours...';
+                }
+
+                // Récupérer candidature_id depuis l'URL du form action
+                const formUrl = new URL(form.action, window.location.origin);
+                const candidatureId = formUrl.searchParams.get('candidature_id');
+
+                try {
+                    await uploadFileByChunks(candidatureId);
+                    // Fichier uploadé ! Soumettre le formulaire normalement
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<i class="fas fa-check"></i> Fichier envoyé ! Validation...';
+                    }
+                    // Retirer les champs base64 du form pour ne pas dépasser la limite
+                    form.querySelectorAll('[name="fiche_engagement_base64"]').forEach(el => el.remove());
+                    form.querySelectorAll('[name="fiche_engagement_name"]').forEach(el => el.remove());
+                    form.submit();
+                } catch (err) {
+                    uploadInProgress = false;
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+                    }
+                    // Trouver l'input fichier visible
+                    const visibleInput = document.getElementById('fiche_engagement_input') || document.getElementById('fiche_engagement_input2');
+                    if (visibleInput) showFileError(visibleInput, '❌ ' + err.message);
+                    alert('Erreur lors de l\'envoi du fichier : ' + err.message);
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

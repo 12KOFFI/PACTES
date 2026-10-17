@@ -1,0 +1,78 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}{{ session.id ? 'Modifier la session' : 'Nouvelle session' }} | {{ parent() }}{% endblock %}
+
+{% set input_class = 'w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition' %}
+
+{% block body %}
+<div class="mx-auto">
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 mb-8 text-white">
+        <div class="flex items-center gap-4">
+            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                <i class="fas fa-calendar-alt text-3xl"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold">{{ session.id ? 'Modifier la session' : 'Nouvelle session de recrutement' }}</h1>
+                <p class="text-white/80">Configurez la campagne de recrutement PACTE</p>
+            </div>
+        </div>
+    </div>
+
+    {% include 'partials/_flash_messages.html.twig' %}
+
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden p-8">
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-slate-700 mb-1">Nom de la session <span class="text-red-500">*</span></label>
+                {{ form_widget(form.nom, {'attr': {'class': input_class, 'placeholder': 'Ex. Session 2026 - Vague 1'}}) }}
+                {{ form_errors(form.nom) }}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Année <span class="text-red-500">*</span></label>
+                {{ form_widget(form.annee, {'attr': {'class': input_class}}) }}
+                {{ form_errors(form.annee) }}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">N° de vague <span class="text-red-500">*</span></label>
+                {{ form_widget(form.numeroVague, {'attr': {'class': input_class}}) }}
+                {{ form_errors(form.numeroVague) }}
+                <p class="text-xs text-slate-400 mt-1">
+                    Apparaît dans le numéro de candidature (ex: PA26<strong>01</strong>0001 = vague 01). Ne pas réutiliser un numéro déjà attribué la même année.
+                </p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Statut <span class="text-red-500">*</span></label>
+                {{ form_widget(form.statut, {'attr': {'class': input_class}}) }}
+                {{ form_errors(form.statut) }}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Ouverture des inscriptions</label>
+                {{ form_widget(form.dateOuverture, {'attr': {'class': input_class}}) }}
+                {{ form_errors(form.dateOuverture) }}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Clôture des inscriptions</label>
+                {{ form_widget(form.dateCloture, {'attr': {'class': input_class}}) }}
+                {{ form_errors(form.dateCloture) }}
+            </div>
+            <div class="md:col-span-2 rounded-lg border border-indigo-100 bg-indigo-50/50 p-4">
+                <label class="block text-sm font-medium text-slate-700 mb-2">Session active</label>
+                <div class="flex gap-6 text-sm text-slate-700">{{ form_widget(form.active) }}</div>
+                {{ form_errors(form.active) }}
+            </div>
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-slate-700 mb-1">Description</label>
+                {{ form_widget(form.description, {'attr': {'class': input_class, 'rows': 5, 'placeholder': 'Présentez les objectifs et les modalités de la session.'}}) }}
+                {{ form_errors(form.description) }}
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-4 pt-6 border-t border-slate-200">
+            <a href="{{ path('app_session_recrutement_index') }}" class="px-6 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition inline-flex items-center"><i class="fas fa-times mr-2"></i>Annuler</a>
+            <button type="submit" class="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-700 hover:to-purple-700 transition shadow-lg inline-flex items-center"><i class="fas fa-save mr-2"></i>{{ session.id ? 'Modifier' : 'Enregistrer' }}</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

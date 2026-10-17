@@ -1,0 +1,99 @@
+{# templates/partials/_metiers_cards.html.twig #}
+
+{% set gradients = [
+    'from-indigo-600 to-blue-800',
+    'from-teal-600 to-cyan-800',
+    'from-rose-600 to-orange-700',
+    'from-purple-600 to-fuchsia-800',
+    'from-emerald-600 to-teal-800',
+    'from-amber-600 to-orange-800'
+] %}
+
+{% for metier in metiers %}
+    <div class="w-full max-w-md mx-auto">
+        <div class="relative overflow-hidden transition-all duration-300 shadow-xl group h-[420px] rounded-2xl hover:shadow-2xl hover:-translate-y-1 border border-white/10 flex flex-col justify-between p-6">
+            
+            {# --- Image dynamique de l'entité Metier ou Dégradé de secours --- #}
+            {% if metier.image is defined and metier.image %}
+                <div class="absolute inset-0 transition-transform duration-500 bg-center bg-cover group-hover:scale-105"
+                     style="background-image: url('{{ asset('uploads/metiers/' ~ metier.image) }}');">
+                    <div class="absolute inset-0 bg-slate-950/40 mix-blend-multiply"></div>
+                </div>
+            {% else %}
+                <div class="absolute inset-0 bg-gradient-to-br {{ gradients[loop.index0 % gradients|length] }}"></div>
+            {% endif %}
+            
+            {# Direct Overlay sombre pour garantir la lisibilité du texte #}
+            <div class="absolute inset-0 pointer-events-none bg-gradient-to-t from-slate-950 via-slate-900/60 to-slate-900/20"></div>
+
+            {# --- En-tête : Badge du Nom de métier --- #}
+            <div class="relative z-10">
+                <span class="inline-block bg-orange-500 text-white text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-lg shadow-md">
+                    {{ metier.nom }}
+                </span>
+            </div>
+
+            {# --- Contenu bas de carte : Niveau, Détails espacés et Bouton Postuler --- #}
+            <div class="relative z-10 space-y-4">
+                
+                {# Niveau requis #}
+                {% if metier.niveauRequis is defined and metier.niveauRequis %}
+                    <div>
+                        <span class="block mb-1 text-xs font-medium tracking-wider uppercase text-slate-300">Niveau requis</span>
+                        <p class="text-2xl font-extrabold leading-none text-white sm:text-3xl">
+                            {{ metier.niveauRequis }}
+                        </p>
+                    </div>
+                {% endif %}
+
+                {# Informations complémentaires avec espacements #}
+                <div class="flex flex-wrap items-center pt-3 text-xs border-t gap-x-6 gap-y-2 sm:text-sm text-slate-200 border-white/15">
+                    {% set nbEtab = metier.nbEtablissements is defined ? metier.nbEtablissements : (metier.etablissementMetiers is defined ? metier.etablissementMetiers|length : 0) %}
+                    {% if nbEtab > 0 %}
+                        <span class="inline-flex items-center gap-2">
+                            <i class="text-orange-400 fas fa-school"></i>
+                            {{ nbEtab }} établissement{{ nbEtab > 1 ? 's' : '' }}
+                        </span>
+                    {% endif %}
+
+                    {% if metier.nbrplace is defined and metier.nbrplace %}
+                        <span class="inline-flex items-center gap-1.5">
+                            <i class="text-indigo-300 fas fa-user"></i>
+                            {{ metier.nbrplace }} place{{ metier.nbrplace > 1 ? 's' : '' }}
+                        </span>
+                    {% endif %}
+
+                    {% if metier.dureeFormation is defined and metier.dureeFormation %}
+                        <span class="inline-flex items-center gap-1.5">
+                            <i class="text-pink-300 far fa-calendar"></i>
+                            {{ metier.dureeFormation }}
+                        </span>
+                    {% endif %}
+                </div>
+
+                {# Bouton de Postulation avec redirection d'authentification #}
+                <div class="pt-1">
+                    {% if app.user %}
+                        <a href="{{ path('app_candidature_new', {'metier': metier.id}) }}" 
+                           class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 font-semibold text-white transition-all bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg hover:shadow-orange-500/25 active:scale-[0.98]">
+                            <i class="fas fa-paper-plane"></i>
+                            Postuler à ce métier
+                        </a>
+                    {% else %}
+                        <a href="{{ path('app_login') }}?redirect={{ path('app_candidature_new', {'metier': metier.id}) }}" 
+                           class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 font-semibold text-white transition-all bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg hover:shadow-orange-500/25 active:scale-[0.98]">
+                            <i class="fas fa-paper-plane"></i>
+                            Postuler à ce métier
+                        </a>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+{% else %}
+    <div class="py-10 text-center col-span-full text-white/80">
+        Aucun métier disponible pour le moment.
+    </div>
+{% endfor %}

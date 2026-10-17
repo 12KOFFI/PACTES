@@ -1,0 +1,427 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}Inscription Définitive — Recherche{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto pb-12">
+
+{# ===== EN-TÊTE ===== #}
+<div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 md:p-8 mb-8 text-white relative overflow-hidden">
+    <div class="absolute -top-14 -right-14 w-52 h-52 rounded-full bg-white/5 pointer-events-none"></div>
+    <div class="absolute -bottom-16 left-1/3 w-64 h-64 rounded-full bg-white/[0.04] pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur border border-white/20 flex items-center justify-center text-2xl shrink-0">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold tracking-tight">Inscription Définitive</h1>
+                <p class="text-white/60 text-sm mt-0.5">Recherchez et inscrivez un candidat admis</p>
+            </div>
+        </div>
+        <a href="{{ path('app_admis_index') }}"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-sm font-medium transition-all hover:-translate-y-0.5 w-full md:w-auto justify-center">
+            <i class="fas fa-arrow-left text-xs"></i> Retour à la liste
+        </a>
+    </div>
+</div>
+
+{# ===== FLASH MESSAGES ===== #}
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+        {% set bg = type == 'success' ? 'bg-green-50 border-green-200 text-green-700' : (type == 'error' or type == 'danger' ? 'bg-red-50 border-red-200 text-red-700' : 'bg-blue-50 border-blue-200 text-blue-700') %}
+        {% set ico = type == 'success' ? 'check-circle' : (type == 'error' or type == 'danger' ? 'exclamation-circle' : 'info-circle') %}
+        <div class="flex items-center gap-3 px-5 py-3.5 rounded-xl border mb-5 text-sm font-medium {{ bg }}">
+            <i class="fas fa-{{ ico }}"></i> {{ message|raw }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+{# ===== SECTION RECHERCHE ===== #}
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-5">
+    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center text-indigo-600">
+            <i class="fas fa-search text-sm"></i>
+        </div>
+        <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wider">Rechercher un candidat admis</h2>
+    </div>
+    <div class="p-6">
+        <p class="text-sm text-slate-500 mb-5">
+            Saisissez le numéro d'inscription, le nom, les prénoms, le contact ou l'email du candidat. La recherche se lance automatiquement à partir de 2 caractères.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3">
+            <div class="relative flex-1">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                    <i class="fas fa-search text-slate-400 text-sm"></i>
+                </div>
+                <input type="text" id="searchInput"
+                       placeholder="N° inscription, nom, contact, email…"
+                       autocomplete="off"
+                       class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all">
+            </div>
+            <button type="button" id="searchBtn"
+                    class="inline-flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-semibold rounded-xl shadow-md shadow-indigo-200/50 hover:from-indigo-700 hover:to-purple-700 hover:-translate-y-0.5 transition-all whitespace-nowrap">
+                <i class="fas fa-search"></i> Rechercher
+            </button>
+            <button type="button" id="clearBtn"
+                    class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-500 text-sm font-medium hover:bg-slate-50 transition whitespace-nowrap">
+                <i class="fas fa-times text-xs"></i> Effacer
+            </button>
+        </div>
+    </div>
+</div>
+
+{# ===== RÉSULTATS DE RECHERCHE ===== #}
+<div id="searchResults" class="hidden mb-5">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600">
+                    <i class="fas fa-list text-sm"></i>
+                </div>
+                <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wider">Résultats</h2>
+            </div>
+            <span id="resultsCount" class="text-xs text-slate-400 font-medium"></span>
+        </div>
+        <div id="resultsList" class="p-4 space-y-3"></div>
+    </div>
+</div>
+
+{# ===== FORMULAIRE D'INSCRIPTION (caché par défaut) ===== #}
+<div id="inscriptionForm" class="hidden space-y-5">
+
+    {# Candidat sélectionné #}
+    <div class="bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4 flex items-start gap-4">
+        <div class="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
+            <i class="fas fa-user-check text-white"></i>
+        </div>
+        <div id="selectedCandidateInfo" class="flex-1 min-w-0"></div>
+        <button type="button" id="cancelBtn"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-200 bg-white text-emerald-700 text-xs font-semibold hover:bg-emerald-50 transition shrink-0">
+            <i class="fas fa-exchange-alt text-[10px]"></i> Changer
+        </button>
+    </div>
+
+    {# Confirmation des informations #}
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+                <i class="fas fa-id-card text-sm"></i>
+            </div>
+            <h2 class="text-sm font-semibold text-slate-700 uppercase tracking-wider">Confirmation des informations</h2>
+        </div>
+        <div class="p-6">
+            <input type="hidden" id="selectedCandidatureId">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {# Nom #}
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        Nom <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="confirmNom" required
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition">
+                </div>
+                {# Prénoms #}
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        Prénoms <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="confirmPrenoms" required
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition">
+                </div>
+                {# Contact #}
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        Contact <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="confirmContact" required
+                           placeholder="Numéro de téléphone ou WhatsApp"
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition">
+                </div>
+                {# Date de naissance #}
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Date de naissance</label>
+                    <input type="date" id="confirmDateNaissance"
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition">
+                </div>
+                {# Lieu de naissance #}
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Lieu de naissance</label>
+                    <input type="text" id="confirmLieuNaissance"
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition">
+                </div>
+                {# Type de pièce #}
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Type de pièce d'identité</label>
+                    <select id="confirmPieceIdentite"
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition bg-white">
+                        <option value="">Sélectionner…</option>
+                        <option value="CNI">Carte nationale d'identité</option>
+                        <option value="PASSEPORT">Passeport</option>
+                        <option value="PERMIS">Permis de conduire</option>
+                        <option value="AUTRE">Autre</option>
+                    </select>
+                </div>
+                {# N° de pièce #}
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">N° de la pièce</label>
+                    <input type="text" id="confirmNumeroPiece"
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition">
+                </div>
+                {# Diplôme #}
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Dernier diplôme</label>
+                    <input type="text" id="confirmDiplome"
+                           class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition">
+                </div>
+                {# Niveau d'étude #}
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Niveau d'étude</label>
+                    <select id="confirmNiveauEtude"
+                            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition bg-white">
+                        <option value="">Sélectionner…</option>
+                        <option value="PRIMAIRE">Primaire</option>
+                        <option value="SECONDAIRE">Secondaire</option>
+                        <option value="SUPERIEUR">Supérieur</option>
+                        <option value="PROFESSIONNEL">Professionnel</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Engagement #}
+    <div class="bg-white rounded-2xl shadow-sm border border-amber-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-amber-100 bg-amber-50/60 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-600">
+                <i class="fas fa-handshake text-sm"></i>
+            </div>
+            <h2 class="text-sm font-semibold text-amber-800 uppercase tracking-wider">Engagement du candidat</h2>
+        </div>
+        <div class="p-6">
+            <label class="flex items-start gap-3 cursor-pointer group">
+                <div class="relative mt-0.5 shrink-0">
+                    <input type="checkbox" id="confirmEngagement" required class="peer sr-only">
+                    <div class="w-5 h-5 rounded-md border-2 border-slate-300 bg-white group-hover:border-amber-400 peer-checked:bg-amber-500 peer-checked:border-amber-500 transition-all flex items-center justify-center">
+                        <i class="fas fa-check text-white text-[9px]"></i>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-slate-800 leading-snug">
+                        Le candidat confirme vouloir poursuivre la formation jusqu'au bout <span class="text-red-500">*</span>
+                    </p>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                        En cochant cette case, le candidat s'engage à suivre assidûment la formation et à respecter le règlement intérieur de l'établissement.
+                    </p>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    {# Boutons #}
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 py-2">
+        <button type="button" id="cancelBtn2"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-500 text-sm font-medium hover:bg-slate-50 transition w-full sm:w-auto justify-center">
+            <i class="fas fa-arrow-left text-xs"></i> Nouvelle recherche
+        </button>
+        <button type="button" id="submitInscription"
+                class="inline-flex items-center gap-2 px-8 py-2.5 bg-gradient-to-r from-emerald-500 to-green-500 text-white text-sm font-bold rounded-xl shadow-md shadow-emerald-200/60 hover:from-emerald-600 hover:to-green-600 hover:-translate-y-0.5 transition-all w-full sm:w-auto justify-center">
+            <i class="fas fa-user-graduate"></i> Inscrire définitivement
+        </button>
+    </div>
+
+</div>
+
+</div>
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+(function () {
+    let searchTimeout = null;
+    let selectedCandidate = null;
+
+    const searchInput   = document.getElementById('searchInput');
+    const searchBtn     = document.getElementById('searchBtn');
+    const clearBtn      = document.getElementById('clearBtn');
+    const cancelBtn     = document.getElementById('cancelBtn');
+    const cancelBtn2    = document.getElementById('cancelBtn2');
+    const submitBtn     = document.getElementById('submitInscription');
+    const searchResults = document.getElementById('searchResults');
+    const resultsList   = document.getElementById('resultsList');
+    const resultsCount  = document.getElementById('resultsCount');
+    const inscriptionForm = document.getElementById('inscriptionForm');
+    const selectedInfo  = document.getElementById('selectedCandidateInfo');
+
+    /* ---- Recherche ---- */
+    searchInput.addEventListener('input', function () {
+        clearTimeout(searchTimeout);
+        const q = this.value.trim();
+        if (q.length >= 2) searchTimeout = setTimeout(() => performSearch(q), 300);
+        else searchResults.classList.add('hidden');
+    });
+
+    searchBtn.addEventListener('click', function () {
+        const q = searchInput.value.trim();
+        if (q.length >= 2) performSearch(q);
+    });
+
+    searchInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); searchBtn.click(); }
+    });
+
+    clearBtn.addEventListener('click', resetAll);
+    cancelBtn.addEventListener('click', resetAll);
+    cancelBtn2.addEventListener('click', resetAll);
+
+    function resetAll() {
+        searchInput.value = '';
+        selectedCandidate = null;
+        searchResults.classList.add('hidden');
+        inscriptionForm.classList.add('hidden');
+        resultsList.innerHTML = '';
+    }
+
+    function performSearch(q) {
+        resultsList.innerHTML = `
+            <div class="flex items-center gap-3 p-4 text-sm text-slate-400">
+                <i class="fas fa-spinner fa-spin text-indigo-500"></i> Recherche en cours…
+            </div>`;
+        searchResults.classList.remove('hidden');
+
+        fetch('{{ path("app_admis_search_api") }}?q=' + encodeURIComponent(q))
+            .then(r => r.json())
+            .then(results => displayResults(results))
+            .catch(() => {
+                resultsList.innerHTML = `<p class="p-4 text-sm text-red-500">Erreur lors de la recherche.</p>`;
+            });
+    }
+
+    function displayResults(results) {
+        resultsCount.textContent = results.length + ' résultat(s)';
+
+        if (results.length === 0) {
+            resultsList.innerHTML = `
+                <div class="flex flex-col items-center py-10 text-slate-400">
+                    <i class="fas fa-search text-3xl mb-3 opacity-40"></i>
+                    <p class="text-sm font-medium">Aucun candidat trouvé</p>
+                    <p class="text-xs mt-1">Essayez avec un autre terme de recherche</p>
+                </div>`;
+            return;
+        }
+
+        resultsList.innerHTML = results.map(c => `
+            <div class="border border-slate-200 rounded-xl p-4 hover:border-indigo-300 hover:bg-indigo-50/30 transition-all cursor-pointer group"
+                 onclick='selectCandidate(${JSON.stringify(c).replace(/'/g, "&#39;")})'>
+                <div class="flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
+                            <i class="fas fa-user text-emerald-600 text-xs"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-bold text-slate-800 truncate">
+                                <span class="font-mono text-indigo-600 mr-2">${c.numero}</span>${c.nom} ${c.prenoms}
+                            </p>
+                            <p class="text-xs text-slate-400 mt-0.5 truncate">
+                                <i class="fas fa-phone mr-1"></i>${c.contact || '—'} &nbsp;·&nbsp;
+                                <i class="fas fa-briefcase mr-1"></i>${c.metier} &nbsp;·&nbsp;
+                                <i class="fas fa-school mr-1"></i>${c.etablissement}
+                            </p>
+                        </div>
+                    </div>
+                    <button type="button"
+                            class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100 text-xs font-bold group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                        <i class="fas fa-check text-[10px]"></i> Sélectionner
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        searchResults.classList.remove('hidden');
+    }
+
+    function selectCandidate(c) {
+        selectedCandidate = c;
+
+        selectedInfo.innerHTML = `
+            <div>
+                <p class="text-sm font-bold text-emerald-800 mb-1">
+                    <span class="font-mono bg-emerald-100 px-2 py-0.5 rounded text-xs mr-2">${c.numero}</span>
+                    ${c.nom} ${c.prenoms}
+                </p>
+                <p class="text-xs text-emerald-700">
+                    <i class="fas fa-phone mr-1"></i>${c.contact || '—'} &nbsp;·&nbsp;
+                    <i class="fas fa-briefcase mr-1"></i>${c.metier} &nbsp;·&nbsp;
+                    <i class="fas fa-school mr-1"></i>${c.etablissement}
+                </p>
+            </div>`;
+
+        document.getElementById('selectedCandidatureId').value = c.id;
+        document.getElementById('confirmNom').value = c.nom || '';
+        document.getElementById('confirmPrenoms').value = c.prenoms || '';
+        document.getElementById('confirmContact').value = c.contact || '';
+
+        searchResults.classList.add('hidden');
+        inscriptionForm.classList.remove('hidden');
+        inscriptionForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    /* ---- Soumission ---- */
+    submitBtn.addEventListener('click', function () {
+        if (!selectedCandidate) { alert('Veuillez sélectionner un candidat.'); return; }
+        if (!document.getElementById('confirmEngagement').checked) {
+            alert('Veuillez cocher la case d\'engagement.'); return;
+        }
+        if (!confirm('Inscrire définitivement ce candidat ?\n\nCette action est irréversible.')) return;
+
+        const payload = {
+            candidatureId:  selectedCandidate.id,
+            nom:            document.getElementById('confirmNom').value,
+            prenoms:        document.getElementById('confirmPrenoms').value,
+            contact:        document.getElementById('confirmContact').value,
+            dateNaissance:  document.getElementById('confirmDateNaissance').value,
+            lieuNaissance:  document.getElementById('confirmLieuNaissance').value,
+            pieceIdentite:  document.getElementById('confirmPieceIdentite').value,
+            numeroPiece:    document.getElementById('confirmNumeroPiece').value,
+            diplome:        document.getElementById('confirmDiplome').value,
+            niveauEtude:    document.getElementById('confirmNiveauEtude').value,
+            confirme:       true,
+        };
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Enregistrement…';
+
+        fetch('{{ path("app_admis_inscription") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify(payload),
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                alert('Inscription enregistrée !\nN° inscription : ' + data.numeroInscription);
+                window.location.href = '{{ path("app_admis_index") }}';
+            } else {
+                alert('Erreur : ' + (data.message || 'Erreur inconnue'));
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-user-graduate mr-2"></i> Inscrire définitivement';
+            }
+        })
+        .catch(() => {
+            alert('Erreur réseau, veuillez réessayer.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-user-graduate mr-2"></i> Inscrire définitivement';
+        });
+    });
+
+    {# Recherche initiale depuis URL #}
+    const urlParams = new URLSearchParams(window.location.search);
+    const q = urlParams.get('q');
+    if (q) { searchInput.value = q; performSearch(q); }
+})();
+</script>
+{% endblock %}
+
+{% endblock %}

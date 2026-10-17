@@ -1,0 +1,80 @@
+{# templates/partials/_flash_messages.html.twig #}
+
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="flash-message bg-{{ type == 'success' ? 'green' : (type == 'error' ? 'red' : (type == 'warning' ? 'amber' : 'blue')) }}-50 border-l-4 border-{{ type == 'success' ? 'green' : (type == 'error' ? 'red' : (type == 'warning' ? 'amber' : 'blue')) }}-500 p-4 rounded-r-lg mb-4 relative animate-slide-in" data-autodismiss="{{ type == 'success' ? '3000' : '5000' }}">
+            <button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-{{ type == 'success' ? 'green' : (type == 'error' ? 'red' : (type == 'warning' ? 'amber' : 'blue')) }}-500 hover:text-{{ type == 'success' ? 'green' : (type == 'error' ? 'red' : (type == 'warning' ? 'amber' : 'blue')) }}-700 transition-colors" onclick="this.closest('.flash-message').remove()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="flex items-center">
+                <i class="fas fa-{{ type == 'success' ? 'check-circle' : (type == 'error' ? 'exclamation-circle' : (type == 'warning' ? 'exclamation-triangle' : 'info-circle')) }} text-{{ type == 'success' ? 'green' : (type == 'error' ? 'red' : (type == 'warning' ? 'amber' : 'blue')) }}-500 mr-3"></i>
+                <p class="text-{{ type == 'success' ? 'green' : (type == 'error' ? 'red' : (type == 'warning' ? 'amber' : 'blue')) }}-700 pr-6">{{ message|raw }}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% endfor %}
+
+{% if error is defined and error %}
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg mb-4 animate-shake relative">
+        <button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-red-500 hover:text-red-700 transition-colors" onclick="this.closest('[class*=\'bg-red-50\']').remove()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="flex items-center">
+            <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+            <p class="text-red-700 pr-6">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+        </div>
+    </div>
+{% endif %}
+
+<style>
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+.animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+.animate-shake {
+    animation: shake 0.6s ease-in-out;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+.flash-message.fade-out {
+    animation: fadeOut 0.3s ease-out forwards;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.flash-message[data-autodismiss]').forEach(function(message) {
+        var delay = parseInt(message.dataset.autodismiss, 10);
+        setTimeout(function() {
+            message.classList.add('fade-out');
+            setTimeout(function() {
+                message.remove();
+            }, 300);
+        }, delay);
+    });
+});
+</script>

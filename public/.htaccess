@@ -1,0 +1,36 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # --- MODE MAINTENANCE ---
+    RewriteCond %{DOCUMENT_ROOT}/maintenance.lock -f
+    RewriteCond %{REMOTE_ADDR} !^196.192.121.140$
+    RewriteCond %{REQUEST_URI} !^/maintenance\.html$
+    RewriteRule ^(.*)$ /maintenance.html [R=503,L]
+    ErrorDocument 503 /maintenance.html
+    # --- FIN MODE MAINTENANCE ---
+
+    RewriteBase /
+    DirectoryIndex index.php
+    RewriteRule ^index.php$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.php [L]
+</IfModule>
+
+<IfModule php8_module>
+   php_flag display_errors On
+   php_value max_execution_time 300
+   php_value max_input_time 60
+   php_value max_input_vars 2000
+   php_value memory_limit 512M
+   php_value post_max_size 64M
+   php_value upload_max_filesize 64M
+</IfModule>
+<IfModule lsapi_module>
+   php_flag display_errors On
+   php_value max_execution_time 300
+   php_value max_input_time 60
+   php_value max_input_vars 2000
+   php_value memory_limit 512M
+   php_value post_max_size 64M
+   php_value upload_max_filesize 64M
+</IfModule>

@@ -1,0 +1,256 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}Étude de dossier | {{ parent() }}{% endblock %}
+
+{% block body %}
+
+{# En-tête de page #}
+<div class="relative p-6 mb-8 overflow-hidden text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl md:p-8">
+    <div class="absolute rounded-full pointer-events-none -top-14 -right-14 w-52 h-52 bg-white/5"></div>
+    <div class="relative z-10 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <div class="flex items-center justify-center text-2xl border w-14 h-14 rounded-2xl bg-white/15 backdrop-blur border-white/20 shrink-0">
+                <i class="fas fa-folder-open"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight md:text-2xl">Étude de dossier</h1>
+                <p class="mt-0.5 text-sm text-white/80">Vue d'ensemble et suivi rapide des candidatures</p>
+            </div>
+        </div>
+
+        {# ===== BOUTON : LANCER LA SÉLECTION VISITE MÉDICALE ===== #}
+        {#
+        <a href="{{ path('app_candidature_selection_visite') }}"
+           class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white text-teal-700 font-semibold rounded-xl shadow-lg hover:bg-teal-50 transition transform hover:scale-[1.03]">
+            <i class="fas fa-filter"></i>
+            Lancer la sélection visite médicale
+        </a>
+        #}
+    </div>
+</div>
+
+{# ===== STATISTIQUES RAPIDES ===== #}
+<div class="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+    <!-- En attente -->
+    <div class="p-4 bg-white border shadow-sm border-slate-200 rounded-xl">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold uppercase text-slate-400">En attente d'étude</span>
+            <div class="flex items-center justify-center w-8 h-8 text-sm rounded-lg bg-amber-50 text-amber-600">
+                <i class="fas fa-clock"></i>
+            </div>
+        </div>
+        <div class="text-2xl font-bold text-slate-800">{{ stats.attente }}</div>
+    </div>
+
+    <!-- Admissibles -->
+    <div class="p-4 bg-white border shadow-sm border-slate-200 rounded-xl">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold uppercase text-slate-400">Admissibles</span>
+            <div class="flex items-center justify-center w-8 h-8 text-sm text-blue-600 rounded-lg bg-blue-50">
+                <i class="fas fa-user-check"></i>
+            </div>
+        </div>
+        <div class="text-2xl font-bold text-slate-800">{{ stats.admissible }}</div>
+    </div>
+
+    <!-- Admis -->
+    <div class="p-4 bg-white border shadow-sm border-slate-200 rounded-xl">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold uppercase text-slate-400">Admis</span>
+            <div class="flex items-center justify-center w-8 h-8 text-sm rounded-lg bg-emerald-50 text-emerald-600">
+                <i class="fas fa-award"></i>
+            </div>
+        </div>
+        <div class="text-2xl font-bold text-slate-800">{{ stats.admis }}</div>
+    </div>
+
+    <!-- Visite Médicale -->
+    <div class="p-4 bg-white border shadow-sm border-slate-200 rounded-xl">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold uppercase text-slate-400">Visite Médicale</span>
+            <div class="flex items-center justify-center w-8 h-8 text-sm text-teal-600 rounded-lg bg-teal-50">
+                <i class="fas fa-notes-medical"></i>
+            </div>
+        </div>
+        <div class="text-2xl font-bold text-slate-800">{{ stats.visite }}</div>
+    </div>
+
+    <!-- Entretien Effectué -->
+    <div class="p-4 bg-white border shadow-sm border-slate-200 rounded-xl">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold uppercase text-slate-400">Entretien éffectué</span>
+            <div class="flex items-center justify-center w-8 h-8 text-sm text-purple-600 rounded-lg bg-purple-50">
+                <i class="fas fa-comments"></i>
+            </div>
+        </div>
+        <div class="text-2xl font-bold text-slate-800">{{ stats.entretien_effectue }}</div>
+    </div>
+
+    <!-- Entretien Non Effectué -->
+    <div class="p-4 bg-white border shadow-sm border-slate-200 rounded-xl">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold uppercase text-slate-400">Entretien Non Fait</span>
+            <div class="flex items-center justify-center w-8 h-8 text-sm rounded-lg bg-rose-50 text-rose-600">
+                <i class="fas fa-comment-slash"></i>
+            </div>
+        </div>
+        <div class="text-2xl font-bold text-slate-800">{{ stats.entretien_non_effectue }}</div>
+    </div>
+</div>
+
+{# Macro pour rendre un bloc tableau identique au style Dashboard #}
+{% macro candidate_card_table(title, icon, header_gradient, title_color, btn_bg, btn_hover, candidates, empty_message, target_path = null) %}
+{% set etablissement_name = candidates|length > 0 and candidates[0].etablissement ? candidates[0].etablissement.nom : null %}
+
+<div class="mb-8 overflow-hidden bg-white border shadow-xl rounded-2xl border-slate-200">
+    <!-- En-tête de carte -->
+    <div class="px-6 py-4 border-b border-slate-200 {{ header_gradient }}">
+        <h2 class="flex items-center text-lg font-semibold {{ title_color }}">
+            <i class="mr-2 fas fa-{{ icon }}"></i>
+            {{ title }}{% if etablissement_name %} <span class="font-normal opacity-90"> - {{ etablissement_name }}</span>{% endif %}
+        </h2>
+    </div>
+
+    <!-- Conteneur tableau -->
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="border-b bg-slate-50 border-slate-200">
+                <tr>
+                    <th class="px-4 py-3 text-xs font-medium text-left uppercase text-slate-600">N° Candidature</th>
+                    <th class="px-4 py-3 text-xs font-medium text-left uppercase text-slate-600">Candidat</th>
+                    <th class="px-4 py-3 text-xs font-medium text-left uppercase text-slate-600">Métier</th>
+                    <th class="px-4 py-3 text-xs font-medium text-left uppercase text-slate-600">Date</th>
+                    <th class="px-4 py-3 text-xs font-medium text-right uppercase text-slate-600">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+                {% for c in candidates %}
+                <tr class="transition hover:bg-slate-50">
+                    <td class="px-4 py-3 font-mono text-sm font-semibold text-indigo-600">
+                        {{ c.numero }}
+                    </td>
+                    <td class="px-4 py-3 text-sm font-medium text-slate-800">
+                        {{ c.user ? (c.user.nom|upper ~ ' ' ~ c.user.prenoms) : 'N/A' }}
+                    </td>
+                    <td class="px-4 py-3 text-sm text-slate-600">
+                        {{ c.metier ? c.metier.nom : '-' }}
+                    </td>
+                    <td class="px-4 py-3 text-sm text-slate-500">
+                        {{ c.creation|date('d/m/Y') }}
+                    </td>
+                    <td class="px-4 py-3 text-sm text-right">
+                        <a href="{{ path('app_candidature_edit', {'id': c.id}) }}" class="px-3 py-1.5 text-xs font-medium bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition">
+                            <i class="mr-1 fas fa-edit"></i> Traiter
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="px-4 py-8 text-center text-slate-500">
+                        <i class="mb-2 text-3xl opacity-50 fas fa-{{ icon }}"></i>
+                        <p>{{ empty_message }}</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pied de carte avec bouton d'action -->
+    <div class="px-6 py-3 border-t border-slate-200 bg-slate-50/50">
+        <a href="{{ target_path ? target_path : path('app_candidature_index') }}" class="inline-flex items-center px-3 py-1.5 {{ btn_bg }} text-white text-sm rounded-lg {{ btn_hover }} transition">
+            <i class="mr-1.5 fas fa-list"></i>
+            Voir la liste complète
+        </a>
+    </div>
+</div>
+{% endmacro %}
+
+{% import _self as macros %}
+
+{# ===== LISTES / TABLEAUX ===== #}
+
+{{ macros.candidate_card_table(
+    "Candidats en attente d'étude de dossier (5 derniers) ",
+    'clock',
+    'bg-gradient-to-r from-amber-50 to-orange-50',
+    'text-amber-800',
+    'bg-amber-600',
+    'hover:bg-amber-700',
+    candidats_attente,
+    'Aucun candidat en attente',
+    path('app_candidature_en_attente')
+) }}
+
+{{ macros.candidate_card_table(
+    'Candidats admissibles (5 derniers) ',
+    'user-check',
+    'bg-gradient-to-r from-blue-50 to-indigo-50',
+    'text-blue-800',
+    'bg-blue-600',
+    'hover:bg-blue-700',
+    candidats_admissibles,
+    'Aucun candidat admissible'
+) }}
+
+{# {{ macros.candidate_card_table(
+    'Candidats admis (5 derniers) ',
+    'award',
+    'bg-gradient-to-r from-emerald-50 to-green-50',
+    'text-emerald-800',
+    'bg-emerald-600',
+    'hover:bg-emerald-700',
+    candidats_admis,
+    'Aucun candidat admis'
+) }}
+    #}
+
+{{ macros.candidate_card_table(
+    'Candidats visite médicale non effectuée (5 derniers)',
+    'user-clock',
+    'bg-gradient-to-r from-amber-50 to-yellow-50',
+    'text-amber-800',
+    'bg-amber-600',
+    'hover:bg-amber-700',
+    candidats_visite_non_effectuee,
+    'Aucune visite médicale en attente',
+    path('app_candidature_visite_non_effectuee')
+) }}
+
+{{ macros.candidate_card_table(
+    'Candidats visite médicale effectuée (5 derniers) ',
+    'notes-medical',
+    'bg-gradient-to-r from-teal-50 to-cyan-50',
+    'text-teal-800',
+    'bg-teal-600',
+    'hover:bg-teal-700',
+    candidats_visite_medicale,
+    'Aucune visite médicale enregistrée'
+) }}
+
+{#
+{{ macros.candidate_card_table(
+    'Candidats entretien effectué (5 derniers) ',
+    'comments',
+    'bg-gradient-to-r from-purple-50 to-indigo-50',
+    'text-purple-800',
+    'bg-purple-600',
+    'hover:bg-purple-700',
+    candidats_entretien_effectue,
+    'Aucun entretien effectué'
+) }}
+#}
+
+{{ macros.candidate_card_table(
+    'Candidats entretien non effectué (5 derniers) ',
+    'comment-slash',
+    'bg-gradient-to-r from-rose-50 to-pink-50',
+    'text-rose-800',
+    'bg-rose-600',
+    'hover:bg-rose-700',
+    candidats_entretien_non_effectue,
+    'Aucun entretien en attente',
+    path('app_candidature_entretien_non_effectue')
+) }}
+
+{% endblock %}

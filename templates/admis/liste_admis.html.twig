@@ -1,0 +1,315 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}Liste des Candidats Admis Provisoires{% endblock %}
+
+{% block body %}
+<div class="max-w-7xl mx-auto pb-10">
+
+{# ===== EN-TÊTE ===== #}
+<div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 md:p-8 mb-8 text-white relative overflow-hidden">
+    <div class="absolute -top-14 -right-14 w-52 h-52 rounded-full bg-white/5 pointer-events-none"></div>
+    <div class="absolute -bottom-16 left-1/3 w-64 h-64 rounded-full bg-white/[0.04] pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur border border-white/20 flex items-center justify-center text-2xl shrink-0">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold tracking-tight">Candidats Admis Provisoires</h1>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <p class="text-white/60 text-sm mt-0.5">Tous les établissements</p>
+                {% else %}
+                    <p class="text-white/60 text-sm mt-0.5">{{ etablissement.nom }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <a href="{{ path('app_dashboard') }}"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-sm font-medium transition-all hover:-translate-y-0.5 w-full md:w-auto justify-center">
+            <i class="fas fa-arrow-left text-xs"></i> Tableau de bord
+        </a>
+    </div>
+
+    {# Statistique résumé dans le header - Option A (Total, Hommes, Femmes) #}
+    {% set total_admis = candidatures.getTotalItemCount %}
+    {% set count_h = total_hommes|default(0) %}
+    {% set count_f = total_femmes|default(0) %}
+    {% set pct_hommes = total_admis > 0 ? ((count_h / total_admis) * 100)|round(1) : 0 %}
+    {% set pct_femmes = total_admis > 0 ? ((count_f / total_admis) * 100)|round(1) : 0 %}
+
+    <div class="relative z-10 mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        {# Total Admis Provisoires #}
+        <div class="bg-white/15 backdrop-blur-md rounded-2xl p-4 border border-white/20 flex items-center gap-4 shadow-sm hover:bg-white/20 transition-all">
+            <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center text-2xl text-white shrink-0">
+                <i class="fas fa-users"></i>
+            </div>
+            <div>
+                <p class="text-2xl lg:text-3xl font-extrabold tracking-tight leading-none text-white">{{ total_admis }}</p>
+                <p class="text-blue-100 text-xs uppercase tracking-wider font-semibold mt-1">Total Admis Provisoires</p>
+            </div>
+        </div>
+
+        {# Hommes #}
+        <div class="bg-white/15 backdrop-blur-md rounded-2xl p-4 border border-white/20 flex items-center gap-4 shadow-sm hover:bg-white/20 transition-all">
+            <div class="w-12 h-12 rounded-xl bg-sky-400/20 text-sky-200 border border-sky-300/30 flex items-center justify-center text-2xl shrink-0">
+                <i class="fas fa-mars"></i>
+            </div>
+            <div>
+                <div class="flex items-baseline gap-2">
+                    <p class="text-2xl lg:text-3xl font-extrabold tracking-tight leading-none text-white">{{ count_h }}</p>
+                    <span class="text-[11px] font-bold text-sky-100 bg-sky-500/30 px-2 py-0.5 rounded-full border border-sky-300/30">{{ pct_hommes }}%</span>
+                </div>
+                <p class="text-blue-100 text-xs uppercase tracking-wider font-semibold mt-1">Hommes</p>
+            </div>
+        </div>
+
+        {# Femmes #}
+        <div class="bg-white/15 backdrop-blur-md rounded-2xl p-4 border border-white/20 flex items-center gap-4 shadow-sm hover:bg-white/20 transition-all">
+            <div class="w-12 h-12 rounded-xl bg-pink-400/20 text-pink-200 border border-pink-300/30 flex items-center justify-center text-2xl shrink-0">
+                <i class="fas fa-venus"></i>
+            </div>
+            <div>
+                <div class="flex items-baseline gap-2">
+                    <p class="text-2xl lg:text-3xl font-extrabold tracking-tight leading-none text-white">{{ count_f }}</p>
+                    <span class="text-[11px] font-bold text-pink-100 bg-pink-500/30 px-2 py-0.5 rounded-full border border-pink-300/30">{{ pct_femmes }}%</span>
+                </div>
+                <p class="text-blue-100 text-xs uppercase tracking-wider font-semibold mt-1">Femmes</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ===== TABLEAU ===== #}
+<div id="admis-container">
+{% if candidatures.getTotalItemCount > 0 %}
+
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+
+    {# Toolbar #}
+    <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-slate-100 bg-slate-50/60">
+        <form method="get" id="filterForm" class="flex flex-wrap items-center w-full justify-between gap-3">
+            <div class="flex items-center gap-2 text-sm text-slate-500 font-medium">
+                <span>Afficher</span>
+                <select name="limit" id="pageSizeSelect" onchange="document.getElementById('filterForm').submit();"
+                        class="border border-slate-200 rounded-lg px-2 py-1 text-sm text-slate-700 bg-white cursor-pointer outline-none focus:border-indigo-400 font-medium">
+                    <option value="10" {% if limit == 10 %}selected{% endif %}>10</option>
+                    <option value="25" {% if limit == 25 %}selected{% endif %}>25</option>
+                    <option value="50" {% if limit == 50 %}selected{% endif %}>50</option>
+                    <option value="100" {% if limit == 100 %}selected{% endif %}>100</option>
+                </select>
+                <span>éléments</span>
+            </div>
+            <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-2 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
+                <i class="fas fa-search text-slate-400 text-xs"></i>
+                <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher…"
+                       class="outline-none text-sm text-slate-700 placeholder-slate-300 w-44 bg-transparent">
+            </div>
+            {% for key, val in app.request.query.all %}
+                {% if key != 'limit' and key != 'q' and key != 'page' %}
+                    <input type="hidden" name="{{ key }}" value="{{ val }}">
+                {% endif %}
+            {% endfor %}
+        </form>
+    </div>
+
+            {# Table #}
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[850px]">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-100">
+                            <th class="px-3 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">N°</th>
+                            <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Numéro </br>d'inscription</th>
+                            <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Candidat</th>
+                            <th class="px-3 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Contact</th>
+                            <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Métier</th>
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Établissement</th>
+                            {% endif %}
+                            <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Date admission</th>
+                            <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="divide-y divide-slate-50">
+                        {% for item in candidatures %}
+                        <tr class="hover:bg-slate-50/70 transition-colors duration-100">
+                            <td class="px-3 py-4 text-sm text-slate-400 font-medium">{{ (candidatures.currentPageNumber - 1) * candidatures.itemNumberPerPage + loop.index }}</td>
+                            <td class="px-5 py-4">
+                                <span class="font-bold text-xs bg-blue-50 text-blue-600 border border-blue-500 px-2.5 py-1 rounded-lg font-medium hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-150 inline-block">
+                                    {{ item.numero }}
+                                </span>
+                            </td>
+                            <td class="px-5 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
+                                        <i class="fas fa-user text-blue-600 text-xs"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-800">{{ item.user.nom|upper }} {{ item.user.prenoms }}</p>
+                                        <p class="text-xs text-slate-400 mt-0.5">{{ item.user.email }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-3 py-4 text-sm font-mono text-slate-500">
+    {% if item.user.contact %}
+        {% set contact = item.user.contact|replace({' ': ''}) %}
+        {% if contact|length == 8 %}
+            {{ contact|slice(0, 2) }} {{ contact|slice(2, 2) }} {{ contact|slice(4, 2) }} {{ contact|slice(6, 2) }}
+        {% elseif contact|length == 10 %}
+            {{ contact|slice(0, 2) }} {{ contact|slice(2, 2) }} {{ contact|slice(4, 2) }} {{ contact|slice(6, 2) }} {{ contact|slice(8, 2) }}
+        {% else %}
+            {{ item.user.contact }}
+        {% endif %}
+    {% else %}
+        -
+    {% endif %}
+</td>
+                            <td class="px-5 py-4">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[0.68rem] font-semibold bg-blue-50 text-blue-700 border border-blue-400">
+                                    {{ item.metier.nom }}
+                                </span>
+                            </td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <td class="px-5 py-4">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[0.68rem] font-semibold bg-purple-50 text-purple-700 border border-purple-400">
+                                    {{ item.etablissement.nom }}
+                                </span>
+                            </td>
+                            {% endif %}
+                            <td class="px-5 py-4 text-xs text-slate-400 font-bold">
+                                {{ item.modification ? item.modification|date('d/m/Y') : '-' }}
+                                <span class="block text-slate-300">{{ item.modification ? item.modification|date('H:i') : '' }}</span>
+                            </td>
+                    <td class="px-5 py-4">
+                        <div class="flex items-center gap-2">
+                            {% if item.admis is null %}
+                                {% if is_granted('ROLE_ENT') and not is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ path('app_admis_inscription') }}?candidature={{ item.id }}"
+                                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 text-red-600 border border-red-500 text-xs font-bold hover:bg-red-600 hover:text-white transition-all">
+                                        <i class="fas fa-user-plus text-[10px]"></i> Inscrire définitivement
+                                    </a>
+                                {% elseif is_granted('ROLE_ADMIN') %}
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-600 border border-amber-500 text-xs font-bold">
+                                        <i class="fas fa-clock text-[10px]"></i> Pas encore inscrit
+                                    </span>
+                                {% endif %}
+                            {% else %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-500 text-xs font-bold">
+                                    <i class="fas fa-check text-[10px]"></i> Déjà inscrit
+                                </span>
+                            {% endif %}
+                            <a href="{{ path('app_candidature_edit', {'id': item.id}) }}"
+                               class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-500 text-xs font-bold hover:bg-indigo-600 hover:text-white transition-all">
+                                <i class="fas fa-eye text-[10px]"></i> Voir
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# Pagination #}
+    <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50/60">
+        <p class="text-xs text-slate-400 font-medium">
+            Affichage de <strong class="text-slate-600">{{ candidatures.itemNumberPerPage * (candidatures.currentPageNumber - 1) + 1 }}</strong> 
+            à <strong class="text-slate-600">{{ min(candidatures.itemNumberPerPage * candidatures.currentPageNumber, candidatures.getTotalItemCount) }}</strong> 
+            sur <strong class="text-slate-600">{{ candidatures.getTotalItemCount }}</strong> élément(s)
+        </p>
+        <div class="knp-pagination">
+            {{ knp_pagination_render(candidatures) }}
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+{# ===== ÉTAT VIDE ===== #}
+<div class="bg-white rounded-2xl shadow-sm border border-slate-200 py-16 px-8 text-center">
+    <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mx-auto mb-5 text-3xl text-blue-400">
+        <i class="fas fa-user-check"></i>
+    </div>
+    <h3 class="text-lg font-bold text-slate-800 mb-2">Aucun candidat admis</h3>
+    <p class="text-sm text-slate-500">Aucun candidat n'a encore été admis dans votre établissement.</p>
+</div>
+
+{% endif %}
+</div>
+
+</div>
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('admis-container');
+    if (!container) return;
+
+    let searchTimeout;
+
+    container.addEventListener('submit', (e) => {
+        if (e.target.id === 'filterForm') {
+            e.preventDefault();
+            fetchResults(new URLSearchParams(new FormData(e.target)).toString());
+        }
+    });
+
+    container.addEventListener('input', (e) => {
+        if (e.target.name === 'q') {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const form = document.getElementById('filterForm');
+                if (form) fetchResults(new URLSearchParams(new FormData(form)).toString());
+            }, 400);
+        }
+    });
+
+    container.addEventListener('change', (e) => {
+        if (e.target.name === 'limit') {
+            const form = document.getElementById('filterForm');
+            if (form) fetchResults(new URLSearchParams(new FormData(form)).toString());
+        }
+    });
+
+    container.addEventListener('click', (e) => {
+        const link = e.target.closest('.knp-pagination a');
+        if (link) {
+            e.preventDefault();
+            const url = new URL(link.href);
+            fetchResults(url.search);
+        }
+    });
+
+    function fetchResults(queryString) {
+        const url = `${window.location.pathname}?${queryString}`;
+        
+        window.history.pushState({}, '', url);
+
+        container.style.opacity = '0.5';
+        container.style.pointerEvents = 'none';
+
+        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(response => response.text())
+        .then(html => {
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const newContainer = doc.getElementById('admis-container');
+            if (newContainer) {
+                container.innerHTML = newContainer.innerHTML;
+            }
+        })
+        .finally(() => {
+            container.style.opacity = '1';
+            container.style.pointerEvents = 'auto';
+            
+            const searchInput = document.querySelector('input[name="q"]');
+            if (searchInput) {
+                const val = searchInput.value;
+                searchInput.focus();
+                searchInput.setSelectionRange(val.length, val.length);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

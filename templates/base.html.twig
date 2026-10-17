@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block meta %}
+    <meta name="author" content="PACTE"/>
+    <meta property="fb:app_id" content="1604133883317306" />
+    {% endblock %}
+    <title>{% block title %}PACTE - Recrutement 2026{% endblock %}</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    {{ encore_entry_link_tags('app') }}
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px -15px rgba(102, 126, 234, 0.3);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .float { animation: float 6s ease-in-out infinite; }
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* ✅ Masque les éléments Alpine.js avant leur initialisation (évite le flash) */
+        [x-cloak] { display: none !important; }
+    </style>
+    
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="bg-gray-50 overflow-x-hidden">
+    {% include 'header.html.twig' %}
+    
+    <main>
+        {% block body %}{% endblock %}
+    </main>
+    
+    {% include 'footer.html.twig' %}
+    
+    {% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+
+    <!-- Alpine.js — chargé UNE SEULE FOIS pour toute l'application -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.10/dist/cdn.min.js"></script>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Script personnalisé -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM chargé, Alpine.js disponible:', typeof Alpine !== 'undefined');
+            
+            // Auto-disparition des messages flash
+            const flashMessages = document.querySelectorAll('[data-flash-message]');
+            flashMessages.forEach(function(message) {
+                const delay = message.dataset.delay || 5000;
+                
+                setTimeout(function() {
+                    message.style.transition = 'opacity 0.5s ease-out, transform 0.3s ease-out';
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateY(-10px)';
+                    
+                    setTimeout(function() {
+                        message.remove();
+                    }, 500);
+                }, delay);
+                
+                // Bouton de fermeture manuelle
+                const closeButton = document.createElement('button');
+                closeButton.innerHTML = '×';
+                closeButton.className = 'ml-4 text-gray-400 hover:text-gray-600 text-xl font-bold transition-colors';
+                closeButton.style.cursor = 'pointer';
+                closeButton.onclick = function() {
+                    message.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateY(-10px)';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 300);
+                };
+                
+                const messageContent = message.querySelector('div');
+                if (messageContent) {
+                    messageContent.appendChild(closeButton);
+                }
+            });
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>

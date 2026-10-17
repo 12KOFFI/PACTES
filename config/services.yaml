@@ -1,0 +1,15 @@
+parameters:
+    dir_image: '%kernel.project_dir%/public/image/'
+    dir_media: '%kernel.project_dir%/public/media/'
+    timezone: 'Africa/Abidjan'
+    metiers_directory: '%kernel.project_dir%/public/uploads/metiers'
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'

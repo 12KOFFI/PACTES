@@ -1,0 +1,372 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}Mon Établissement{% endblock %}
+
+{% block body %}
+<div class="max-w-8xl mx-auto pb-12">
+
+{# ===== EN-TÊTE ===== #}
+<div class="bg-gradient-to-r from-amber-600 to-orange-600 rounded-2xl p-6 md:p-8 mb-8 text-white relative overflow-hidden">
+    <div class="absolute -top-14 -right-14 w-52 h-52 rounded-full bg-white/5 pointer-events-none"></div>
+    <div class="absolute -bottom-16 left-1/3 w-64 h-64 rounded-full bg-white/[0.04] pointer-events-none"></div>
+
+    <div class="relative z-10">
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-16 h-16 rounded-2xl bg-white/15 backdrop-blur border border-white/20 flex items-center justify-center text-2xl shrink-0">
+                <i class="fas fa-building"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight">{{ etablissement.nom }}</h1>
+                <p class="text-white/70 text-base mt-1">Informations et statistiques de votre établissement</p>
+            </div>
+        </div>
+        <a href="{{ path('app_dashboard') }}"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-base font-medium transition-all hover:-translate-y-0.5">
+            <i class="fas fa-arrow-left text-sm"></i> Tableau de bord
+        </a>
+    </div>
+</div>
+
+{# ===== INFORMATIONS DE L'ÉTABLISSEMENT ===== #}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+    <div class="lg:col-span-2">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600">
+                    <i class="fas fa-info-circle text-lg"></i>
+                </div>
+                <h2 class="text-base font-semibold text-slate-700 uppercase tracking-wider">Informations générales</h2>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Nom de l'établissement</h3>
+                        <p class="text-base text-slate-800 font-medium">{{ etablissement.nom }}</p>
+                    </div>
+                    {% if etablissement.localite %}
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Localité</h3>
+                        <p class="text-base text-slate-800 font-medium">{{ etablissement.localite.nom ?? 'Non défini' }}</p>
+                    </div>
+                    {% endif %}
+                    {% if etablissement.user %}
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Email</h3>
+                        <p class="text-base text-slate-800 font-medium">{{ etablissement.user.email }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% if etablissement.definition %}
+                <div class="mt-6">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Description</h3>
+                    <p class="text-base text-slate-700 leading-relaxed">{{ etablissement.definition|raw }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600">
+                    <i class="fas fa-chart-line text-lg"></i>
+                </div>
+                <h2 class="text-base font-semibold text-slate-700 uppercase tracking-wider">Résumé</h2>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-slate-500">Total candidatures</span>
+                    <span class="text-2xl font-bold text-slate-800">{{ stats.total }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-slate-500">Aujourd'hui</span>
+                    <span class="text-lg font-bold text-blue-600">{{ stats.aujourdhui }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-slate-500">Cette semaine</span>
+                    <span class="text-lg font-bold text-indigo-600">{{ stats.cette_semaine }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm text-slate-500">Ce mois</span>
+                    <span class="text-lg font-bold text-purple-600">{{ stats.ce_mois }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ===== STATISTIQUES DÉTAILLÉES ===== #}
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+    {# Statuts des candidatures #}
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
+                <i class="fas fa-chart-pie text-lg"></i>
+            </div>
+            <h2 class="text-base font-semibold text-slate-700 uppercase tracking-wider">Statuts des candidatures</h2>
+        </div>
+        <div class="p-6">
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-3 h-3 rounded-full bg-slate-400"></span>
+                        <span class="text-sm text-slate-600">En attente</span>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800">{{ stats.par_statut.en_attente }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                        <span class="text-sm text-slate-600">Dossier OK</span>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800">{{ stats.par_statut.dossier_ok }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                        <span class="text-sm text-slate-600">Admissible</span>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800">{{ stats.par_statut.admissible }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                        <span class="text-sm text-slate-600">Admis</span>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800">{{ stats.par_statut.admis }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                        <span class="text-sm text-slate-600">Rejeté</span>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800">{{ stats.par_statut.rejete }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                        <span class="text-sm text-slate-600">Admis définitifs</span>
+                    </div>
+                    <span class="text-sm font-bold text-slate-800">{{ stats.par_statut.admis_definitifs }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Candidatures par métier #}
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
+                <i class="fas fa-briefcase text-lg"></i>
+            </div>
+            <h2 class="text-base font-semibold text-slate-700 uppercase tracking-wider">Candidatures par métier</h2>
+        </div>
+        <div class="p-6">
+            {% if stats.par_metier|length > 0 %}
+            <div class="space-y-4">
+                {% for metier, count in stats.par_metier|slice(0, 8) %}
+                <div class="border border-slate-200 rounded-lg p-3 bg-slate-50/30">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-semibold text-slate-700">{{ metier }}</span>
+                        <span class="text-sm font-bold text-slate-800">{{ count }} candidature(s)</span>
+                    </div>
+                    
+                    {% if stats.par_metier_genre[metier] is defined %}
+                    <div class="space-y-2">
+                        {% set masculin = stats.par_metier_genre[metier]['masculin'] %}
+                        {% set feminin = stats.par_metier_genre[metier]['feminin'] %}
+                        {% set total_genre = masculin + feminin %}
+                        
+                        {% if total_genre > 0 %}
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-600 w-16">Masculin</span>
+                            <div class="flex-1 bg-blue-100 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: {{ (masculin / total_genre * 100)|round(0) }}%"></div>
+                            </div>
+                            <span class="text-xs font-medium text-blue-600 w-8 text-right">{{ masculin }}</span>
+                        </div>
+                        
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-600 w-16">Féminin</span>
+                            <div class="flex-1 bg-pink-100 rounded-full h-2">
+                                <div class="bg-pink-500 h-2 rounded-full transition-all duration-500" style="width: {{ (feminin / total_genre * 100)|round(0) }}%"></div>
+                            </div>
+                            <span class="text-xs font-medium text-pink-600 w-8 text-right">{{ feminin }}</span>
+                        </div>
+                        {% else %}
+                        <p class="text-xs text-slate-500 italic">Genre non spécifié</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-sm text-slate-500 text-center py-4">Aucune candidature pour le moment</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{# ===== DERNIÈRES CANDIDATURES ===== #}
+<div class="bg-white rounded-2xl mb-8 shadow-sm border border-slate-200 overflow-hidden">
+    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600">
+                <i class="fas fa-clock text-lg"></i>
+            </div>
+            <h2 class="text-base font-semibold text-slate-700 uppercase tracking-wider">5 dernières candidatures</h2>
+        </div>
+        <a href="{{ path('app_candidature_index') }}" 
+           class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-200 border border-slate-400 text-indigo-600 text-sm font-medium hover:bg-indigo-500 hover:text-white transition">
+            <i class="fas fa-list text-xs"></i> Voir tout
+        </a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-slate-50 border-b border-slate-200">
+                <tr>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase">N°</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase">Candidat</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase">Métier</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase">Statut</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase">Date</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+                {% for candidature in stats.recentes %}
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="px-4 py-3 text-sm font-mono text-indigo-600">{{ candidature.numero }}</td>
+                    <td class="px-4 py-3 text-sm">
+                        {{ candidature.user ? candidature.user.nom ~ ' ' ~ candidature.user.prenoms : '-' }}
+                    </td>
+                    <td class="px-4 py-3 text-sm">{{ candidature.metier ? candidature.metier.nom : '-' }}</td>
+                    <td class="px-4 py-3">
+                        {% if candidature.resultat == 2 %}
+                            <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Admis</span>
+                        {% elseif candidature.entstatut == 2 %}
+                            <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">Admissible</span>
+                        {% elseif candidature.etustatut == 2 %}
+                            <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-semibold">Dossier OK</span>
+                        {% elseif candidature.etustatut == 1 %}
+                            <span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">Rejeté</span>
+                        {% else %}
+                            <span class="px-2 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-semibold">En attente</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-3 text-sm text-slate-500">{{ candidature.creation|date('d/m/Y') }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="px-4 py-8 text-center text-slate-500">
+                        <i class="fas fa-inbox text-3xl mb-2 opacity-50"></i>
+                        <p>Aucune candidature récente</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{# ===== LISTE DES ADMIS ===== #}
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center text-green-600">
+                    <i class="fas fa-user-graduate text-lg"></i>
+                </div>
+                <h2 class="text-base font-semibold text-slate-700 uppercase tracking-wider">5 derniers admis</h2>
+            </div>
+            <a href="{{ path('app_admis_liste') }}" 
+               class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-green-200 border border-slate-400 text-green-600 text-sm font-medium hover:bg-green-500 hover:text-white transition">
+                <i class="fas fa-list text-xs"></i> Voir tout
+            </a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase">N°</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase">Candidat</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase">Métier</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase">Date</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                    {% for candidat in admis %}
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-4 py-3 text-sm font-mono text-green-600">{{ candidat.numero }}</td>
+                        <td class="px-4 py-3 text-sm">
+                            {{ candidat.user ? candidat.user.nom ~ ' ' ~ candidat.user.prenoms : '-' }}
+                        </td>
+                        <td class="px-4 py-3 text-sm">{{ candidat.metier ? candidat.metier.nom : '-' }}</td>
+                        <td class="px-4 py-3 text-sm text-slate-500">{{ candidat.modification ? candidat.modification|date('d/m/Y') : '-' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="px-4 py-8 text-center text-slate-500">
+                            <i class="fas fa-user-graduate text-3xl mb-2 opacity-50"></i>
+                            <p>Aucun admis pour le moment</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {# ===== LISTE DES ADMIS DÉFINITIFS ===== #}
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600">
+                    <i class="fas fa-check-circle text-lg"></i>
+                </div>
+                <h2 class="text-base font-semibold text-slate-700 uppercase tracking-wider">5 derniers admis définitifs</h2>
+            </div>
+            <a href="{{ path('app_admis_etablissement') }}" 
+               class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-200 border border-slate-400 text-emerald-600 text-sm font-medium hover:bg-emerald-500 hover:text-white transition">
+                <i class="fas fa-list text-xs"></i> Voir tout
+            </a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase">N° Inscription</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase">Candidat</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase">Métier</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase">Date</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                    {% for admisDefinitif in admisDefinitifs %}
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-4 py-3 text-sm font-mono text-emerald-600">{{ admisDefinitif.numeroInscription }}</td>
+                        <td class="px-4 py-3 text-sm">
+                            {{ admisDefinitif.user.nom|upper }} {{ admisDefinitif.user.prenoms }}
+                        </td>
+                        <td class="px-4 py-3 text-sm">{{ admisDefinitif.metier ? admisDefinitif.metier.nom : '-' }}</td>
+                        <td class="px-4 py-3 text-sm text-slate-500">{{ admisDefinitif.dateInscription|date('d/m/Y') }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="px-4 py-8 text-center text-slate-500">
+                            <i class="fas fa-check-circle text-3xl mb-2 opacity-50"></i>
+                            <p>Aucune inscription définitive pour le moment</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</div>
+
+</div>
+{% endblock %}

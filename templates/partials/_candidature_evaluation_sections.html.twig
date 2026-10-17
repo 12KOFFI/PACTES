@@ -1,0 +1,179 @@
+{% set input_class = input_class|default('w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition') %}
+
+<!-- SECTION 3: POUR ENT ET ADMIN - Étude de dossier -->
+{% if is_granted('ROLE_ENT') or is_granted('ROLE_ADMIN') %}
+    <h3 class="text-lg font-semibold text-amber-800 mb-5 flex items-center border-b pb-3">
+        <div class="w-8 h-8 bg-amber-200 rounded-lg flex items-center justify-center mr-3">
+            <i class="fas fa-clipboard-check text-amber-700"></i>
+        </div>
+        Étude de dossier (ENT)
+    </h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Statut dossier</label>
+            {{ form_widget(form.etustatut, {'attr': {'class': input_class}}) }}
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Commentaire</label>
+            {{ form_widget(form.etucom, {'attr': {'class': input_class, 'placeholder': 'Commentaire sur le dossier...'}}) }}
+        </div>
+    </div>
+{% endif %}
+
+<!-- SECTION 4: POUR JURY, ENT ET ADMIN - Évaluation entretien -->
+{% if is_granted('ROLE_JURY') or is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') %}
+    <h3 class="text-lg font-semibold text-blue-800 mb-5 flex items-center border-b pb-3">
+        <div class="w-8 h-8 bg-blue-200 rounded-lg flex items-center justify-center mr-3">
+            <i class="fas fa-microphone-alt text-blue-700"></i>
+        </div>
+        Évaluation entretien
+    </h3>
+
+    {# Date et lieu de l'entretien #}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Date entretien</label>
+            {{ form_widget(form.entdate, {'attr': {'class': input_class}}) }}
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Lieu entretien</label>
+            {{ form_widget(form.entlieu, {'attr': {'class': input_class, 'placeholder': 'Ex: Salle 101'}}) }}
+        </div>
+    </div>
+
+    {# Numéro de jury, créneau et présence #}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Numéro du jury</label>
+            {{ form_widget(form.jury, {'attr': {'class': input_class, 'min': 1, 'max': 20}}) }}
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Créneau</label>
+            {{ form_widget(form.creneauEntretien, {'attr': {'class': input_class, 'min': 1}}) }}
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Présence à l'entretien</label>
+            {{ form_widget(form.entstatut, {'attr': {'class': input_class}}) }}
+            <p class="text-xs text-slate-400 mt-1">1 = présent, vide = absent</p>
+        </div>
+    </div>
+
+    {% if form.note1 is defined %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        {% for i in 1..13 %}
+            {% if attribute(form, 'note' ~ i) is defined %}
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">
+                        {{ attribute(form, 'note' ~ i).vars.label }}
+                        <span class="text-xs text-slate-400 font-normal">(Max: {{ attribute(form, 'note' ~ i).vars.attr['data-max'] }})</span>
+                    </label>
+                    {{ form_widget(attribute(form, 'note' ~ i), {'attr': {'class': input_class ~ ' note-input'}}) }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    {# Affichage du Total et de la Moyenne #}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+        <div class="text-center">
+            <p class="text-sm font-semibold text-slate-600">TOTAL</p>
+            <p id="total-display" class="text-2xl font-bold text-indigo-700">0 / 40</p>
+        </div>
+        <div class="text-center">
+            <p class="text-sm font-semibold text-slate-600">MOYENNE</p>
+            <p id="moyenne-display" class="text-2xl font-bold text-purple-700">0 / 4</p>
+        </div>
+    </div>
+
+    {# DÉCISION DU JURY — centrée sous le Total/Moyenne #}
+    <div class="flex justify-center mb-6">
+        <div class="w-full max-w-md bg-blue-50 p-5 rounded-xl border border-blue-200 shadow-sm">
+            <label class="block text-sm font-bold text-blue-800 mb-2 text-center">
+                <i class="fas fa-gavel mr-1"></i> Décision du jury
+            </label>
+            {{ form_widget(form.decisionJury, {'attr': {'class': input_class ~ ' text-center font-semibold text-blue-800'}}) }}
+            <p class="text-xs text-slate-500 mt-2 text-center">
+                À saisir manuellement par le jury (voir moyenne calculée ci-dessus)
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="mt-4 mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-1">Commentaire entretien</label>
+        {{ form_widget(form.entcom, {'attr': {'class': input_class, 'rows': 3, 'placeholder': "Observations sur l'entretien..."}}) }}
+    </div>
+{% endif %}
+
+<!-- SECTION 5: Visite médicale et résultat final -->
+{% if is_granted('ROLE_ENT') or is_granted('ROLE_JURY') or is_granted('ROLE_ADMIN') %}
+    <div class="bg-emerald-50 rounded-2xl border border-emerald-200 p-6">
+        <h3 class="text-lg font-semibold text-emerald-800 mb-5 flex items-center border-b border-emerald-200 pb-3">
+            <div class="w-8 h-8 bg-emerald-200 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-hospital text-emerald-700"></i>
+            </div>
+            VISITE MÉDICALE & Résultat final
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Date visite</label>
+                {{ form_widget(form.visdate, {'attr': {'class': input_class}}) }}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Lieu visite</label>
+                {{ form_widget(form.vislieu, {'attr': {'class': input_class, 'placeholder': 'Ex: Centre médical'}}) }}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Statut visite</label>
+                {{ form_widget(form.visstatut, {'attr': {'class': input_class}}) }}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Résultat final</label>
+                {{ form_widget(form.resultat, {'attr': {'class': input_class}}) }}
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Commentaire</label>
+                {{ form_widget(form.viscom, {'attr': {'class': input_class, 'placeholder': 'Commentaire visite...'}}) }}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Javascript : calcul du total et de la moyenne (affichage uniquement) -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const noteInputs = document.querySelectorAll('.note-input');
+    const totalDisplay = document.getElementById('total-display');
+    const moyenneDisplay = document.getElementById('moyenne-display');
+
+    // Fonction de calcul (affichage uniquement, pas de modification de la décision)
+    function calculerNotes() {
+        let total = 0;
+
+        noteInputs.forEach(input => {
+            const val = parseFloat(input.value) || 0;
+            total += val;
+        });
+
+        const totalMax = 40;
+        const moyenne = (total / totalMax) * 4;
+
+        if (totalDisplay) totalDisplay.textContent = total.toFixed(2).replace(/\.00$/, '') + ' / ' + totalMax;
+        if (moyenneDisplay) moyenneDisplay.textContent = moyenne.toFixed(2).replace(/\.00$/, '') + ' / 4';
+    }
+
+    noteInputs.forEach(input => {
+        input.addEventListener('input', calculerNotes);
+        input.addEventListener('change', calculerNotes);
+    });
+
+    if (noteInputs.length > 0) {
+        calculerNotes();
+    }
+});
+</script>

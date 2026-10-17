@@ -1,0 +1,121 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}
+    {% if localite.id %}
+        Modifier la localité | {{ parent() }}
+    {% else %}
+        Nouvelle localité | {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .select2-container {
+            width: 100% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="mx-auto">
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 mb-8 text-white">
+        <div class="flex items-center gap-4">
+            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                <i class="fas fa-map-marker-alt text-3xl"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold">
+                    {% if localite.id %}
+                        Modifier la localité
+                    {% else %}
+                        Nouvelle localité
+                    {% endif %}
+                </h1>
+                <p class="text-white/80">
+                    {% if localite.id %}
+                        {{ localite.nom }}
+                    {% else %}
+                        Renseignez les informations de la localité
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {% include 'partials/_flash_messages.html.twig' %}
+
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden p-6">
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Nom -->
+            <div class="col-span-2 md:col-span-1">
+                {{ form_label(form.nom, 'Nom de la localité', {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-2'}}) }}
+                {{ form_widget(form.nom, {'attr': {
+                    'class': 'w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition text-uppercase',
+                    'placeholder': 'Ex: ABIDJAN'
+                }}) }}
+                {{ form_errors(form.nom) }}
+            </div>
+
+            <!-- Type -->
+            <div class="col-span-2 md:col-span-1">
+                {{ form_label(form.type, 'Type de localité', {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-2'}}) }}
+                {{ form_widget(form.type, {'attr': {
+                    'class': 'w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition'
+                }}) }}
+                {{ form_errors(form.type) }}
+            </div>
+
+            <!-- Localité parente -->
+            <div class="col-span-2 md:col-span-1">
+                {{ form_label(form.parent, 'Localité parente', {'label_attr': {'class': 'block text-sm font-medium text-slate-700 mb-2'}}) }}
+                {{ form_widget(form.parent, {
+                    'id': 'localite_parent',
+                    'attr': {
+                        'class': 'w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition select2',
+                        'data-placeholder': '-- AUCUN --'
+                    }
+                }) }}
+                {{ form_errors(form.parent) }}
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-200">
+            <a href="{{ path('app_localite_index') }}" 
+               class="px-6 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition">
+                Annuler
+            </a>
+            <button type="submit" 
+                    class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition transform hover:scale-105 shadow-lg">
+                {% if localite.id %}
+                    <i class="fas fa-save mr-2"></i>Mettre à jour
+                {% else %}
+                    <i class="fas fa-plus-circle mr-2"></i>Créer
+                {% endif %}
+            </button>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}
+
+{% block datatables_js %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof $.fn.select2 !== 'undefined') {
+            $('.select2').select2({
+                width: '100%',
+                allowClear: true
+            });
+        }
+    });
+    </script>
+{% endblock %}

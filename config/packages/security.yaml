@@ -1,0 +1,147 @@
+security:
+    enable_authenticator_manager: true
+
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            lazy: false
+            provider: app_user_provider
+            access_denied_handler: App\Security\AccessDeniedHandler
+
+            # Authenticator personnalisé
+            entry_point: App\Security\AppAuthenticator
+            custom_authenticator: App\Security\AppAuthenticator
+
+            logout:
+                path: app_logout
+                target: app_home
+
+            switch_user: false
+
+    access_control:
+
+    # 1. Autoriser le Web Debug Toolbar et Profiler en mode DEV (A placer tout en haut)
+        - { path: ^/(_profiler|_wdt), roles: PUBLIC_ACCESS }
+
+        # =====================================================
+        # PAGES PUBLIQUES
+        # =====================================================
+
+        # Page d'accueil
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+
+        # Vérification d'éligibilité (PUBLIC)
+        - { path: ^/verifier-statut, roles: PUBLIC_ACCESS }
+
+        # Téléchargement de la convocation (PUBLIC)
+        - { path: ^/candidature/imprimer-convocation, roles: PUBLIC_ACCESS }
+
+        # Routes AJAX publiques (métiers, établissements)
+        - { path: ^/load-metiers, roles: PUBLIC_ACCESS }
+        - { path: ^/load-etablissements, roles: PUBLIC_ACCESS }
+        - { path: ^/etablissements, roles: PUBLIC_ACCESS }
+        - { path: ^/metiers, roles: PUBLIC_ACCESS }
+
+        # Page de connexion
+        - { path: ^/connexion$, roles: PUBLIC_ACCESS }
+
+        # Inscription
+        - { path: ^/inscription, roles: PUBLIC_ACCESS }
+
+        # Mot de passe oublié
+        - { path: ^/forgot-password, roles: PUBLIC_ACCESS }
+
+        # Réinitialisation du mot de passe
+        - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+
+
+        # =====================================================
+        # CANDIDATURE
+        # =====================================================
+
+        # Statistiques : accès réservé
+        - { path: ^/candidature/statistiques, roles: [ROLE_ADMIN, ROLE_ENT, ROLE_JURY] }
+
+        # Impressions : accès réservé
+        - { path: ^/candidature/impressions, roles: [ROLE_ADMIN, ROLE_ENT, ROLE_JURY, ROLE_COM, ROLE_CANDIDAT] }
+
+        # Autres pages candidature
+        - { path: ^/candidature, roles: ROLE_USER }
+
+
+        # =====================================================
+        # TABLEAU DE BORD
+        # =====================================================
+
+        - { path: ^/dashboard, roles: ROLE_USER }
+
+
+        # =====================================================
+        # ADMINISTRATION
+        # =====================================================
+
+        - { path: ^/admin, roles: ROLE_ADMIN }
+
+
+        # =====================================================
+        # PROFIL
+        # =====================================================
+
+        - { path: ^/profile, roles: ROLE_USER }
+
+
+        # =====================================================
+        # RÈGLE PAR DÉFAUT
+        # =====================================================
+
+        # Toutes les autres pages nécessitent une authentification
+        - { path: ^/, roles: ROLE_USER }
+
+
+    # =========================================================
+    # HIÉRARCHIE DES RÔLES
+    # =========================================================
+
+    role_hierarchy:
+
+        ROLE_CANDIDAT: ROLE_USER
+        ROLE_AGENT: ROLE_USER
+        ROLE_ETABLISSEMENT: ROLE_USER
+        ROLE_ENT: ROLE_USER
+        ROLE_JURY: ROLE_ENT
+        ROLE_COM: ROLE_USER
+
+        ROLE_ADMIN:
+            - ROLE_AGENT
+            - ROLE_ETABLISSEMENT
+            - ROLE_ENT
+            - ROLE_CANDIDAT
+            - ROLE_JURY
+            - ROLE_COM
+            - ROLE_ALLOWED_TO_SWITCH
+
+
+# =============================================================
+# CONFIGURATION POUR LES TESTS
+# =============================================================
+
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 5
+                time_cost: 4
+                memory_cost: 11

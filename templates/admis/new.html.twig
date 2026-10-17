@@ -1,0 +1,126 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}Nouvelle Inscription Définitive{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Nouvelle Inscription Définitive</h1>
+            <a href="{{ path('app_admis_index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+
+        {% if app.flashes is not empty %}
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show" role="alert">
+                        {{ message|raw }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    Inscription Définitive - {{ etablissement.nom }}
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Processus d'inscription :</strong><br>
+                            1. Sélectionnez le candidat admis dans la liste déroulante<br>
+                            2. Cochez la case de confirmation pour valider l'engagement<br>
+                            3. Cliquez sur "Enregistrer l'inscription"
+                        </div>
+                    </div>
+                </div>
+
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            {{ form_label(form.candidature, 'Candidat Admis *', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.candidature, {'attr': {'class': 'form-select'}}) }}
+                            {{ form_errors(form.candidature) }}
+                            <small class="form-text text-muted">Seuls les candidats admis (résultat = 2) et non encore inscrits apparaissent dans cette liste.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-warning bg-gradient mb-4">
+                    <div class="card-body">
+                        <div class="form-group mb-0">
+                            <div class="form-check">
+                                {{ form_widget(form.confirme, {'attr': {'class': 'form-check-input'}}) }}
+                                {{ form_label(form.confirme, 'Je confirme vouloir poursuivre la formation jusqu\'au bout *', {'label_attr': {'class': 'form-check-label fw-bold'}}) }}
+                                {{ form_errors(form.confirme) }}
+                            </div>
+                            <small class="text-muted">
+                                En cochant cette case, le candidat s'engage à suivre la formation jusqu'à son terme.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('app_admis_index') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                                <i class="fas fa-save"></i> Enregistrer l'inscription
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block datatables_js %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $('form').on('submit', function(e) {
+                var candidatureSelect = $('#admis_candidature');
+                var confirmCheckbox = $('#admis_confirme');
+
+                if (!candidatureSelect.val()) {
+                    e.preventDefault();
+                    alert('Veuillez sélectionner un candidat admis.');
+                    candidatureSelect.focus();
+                    return false;
+                }
+
+                if (!confirmCheckbox.is(':checked')) {
+                    e.preventDefault();
+                    alert('Veuillez cocher la case de confirmation pour valider l\'inscription.');
+                    confirmCheckbox.focus();
+                    return false;
+                }
+
+                if (!confirm('Êtes-vous sûr de vouloir inscrire définitivement ce candidat ?')) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                $('#submitBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Enregistrement...');
+            });
+        });
+    </script>
+{% endblock %}

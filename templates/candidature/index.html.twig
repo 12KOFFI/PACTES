@@ -1,0 +1,413 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}{{ is_admin ? 'Gestion des candidatures' : 'Mes candidatures' }} | {{ parent() }}{% endblock %}
+
+{% block body %}
+
+{# ===== EN-TÊTE ===== #}
+<div class="relative p-6 mb-8 overflow-hidden text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl md:p-8">
+    <div class="absolute rounded-full pointer-events-none -top-14 -right-14 w-52 h-52 bg-white/5"></div>
+    <div class="absolute -bottom-20 left-1/3 w-72 h-72 rounded-full bg-white/[0.03] pointer-events-none"></div>
+
+    <div class="relative z-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div class="flex items-center gap-4">
+            <div class="flex items-center justify-center text-2xl border w-14 h-14 rounded-2xl bg-white/15 backdrop-blur border-white/20 shrink-0">
+                <i class="fas fa-{{ is_admin ? 'users' : 'file-alt' }}"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight md:text-2xl">
+                    {{ is_admin ? 'Gestion des candidatures' : 'Mes candidatures' }}
+                </h1>
+                <p class="text-white/70 text-sm mt-0.5">
+                    {% if is_admin %}{{ candidatures.getTotalItemCount }} candidature(s) au total
+                    {% else %}{{ candidatures.getTotalItemCount }} candidature(s) soumise(s){% endif %}
+                </p>
+            </div>
+        </div>
+
+        {% if is_admin %}
+            <div class="flex flex-wrap gap-2">
+                <a href="{{ path('app_candidature_impressions') }}"
+                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-sm font-medium transition-all duration-200 hover:-translate-y-0.5">
+                    <i class="fas fa-download"></i> Exports
+                </a>
+                <a href="{{ path('app_candidature_stat') }}"
+                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-sm font-medium transition-all duration-200 hover:-translate-y-0.5">
+                    <i class="fas fa-chart-bar"></i> Statistiques
+                </a>
+            </div>
+        {% else %}
+            <a href="{{ path('app_candidature_new') }}"
+               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-indigo-600 hover:bg-indigo-50 border border-white text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 w-full md:w-auto justify-center">
+                <i class="fas fa-plus-circle"></i> Nouvelle candidature
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+{# ===== FLASH MESSAGES ===== #}
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+        {% set colors = type == 'success' ? 'bg-green-50 border-green-300 text-green-700' : (type == 'error' ? 'bg-red-50 border-red-300 text-red-700' : 'bg-blue-50 border-blue-300 text-blue-700') %}
+        {% set icon = type == 'success' ? 'check-circle' : (type == 'error' ? 'exclamation-circle' : 'info-circle') %}
+        <div class="flex items-center gap-3 px-5 py-4 rounded-xl border mb-4 text-sm font-medium {{ colors }}">
+            <i class="fas fa-{{ icon }}"></i>
+            {{ message|raw }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+{# ===== FILTRES ADMIN ===== #}
+{% if is_granted('ROLE_ADMIN') %}
+<div class="p-4 mb-6 bg-white border shadow-sm rounded-xl border-slate-200">
+    <form method="get" action="{{ path('app_candidature_index') }}" class="flex flex-wrap items-end gap-4">
+        <div class="flex-1 min-w-[200px]">
+            <label class="block mb-1 text-sm font-medium text-slate-600">Établissement</label>
+            <select name="etablissement" class="w-full px-3 py-2 text-sm border rounded-lg border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">Tous</option>
+                {% for etab in etablissements %}
+                    <option value="{{ etab.id }}" {{ etablissement_filtre and etablissement_filtre.id == etab.id ? 'selected' : '' }}>{{ etab.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="flex-1 min-w-[200px]">
+            <label class="block mb-1 text-sm font-medium text-slate-600">Métier</label>
+            <select name="metier" class="w-full px-3 py-2 text-sm border rounded-lg border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">Tous</option>
+                {% for m in metiers %}
+                    <option value="{{ m.id }}" {{ metier_filtre and metier_filtre.id == m.id ? 'selected' : '' }}>{{ m.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="flex gap-2">
+            <button type="submit" class="px-4 py-2 text-sm font-medium text-white transition bg-indigo-600 rounded-lg hover:bg-indigo-700">
+                <i class="mr-1 fas fa-filter"></i> Filtrer
+            </button>
+            <a href="{{ path('app_candidature_index') }}" class="px-4 py-2 text-sm font-medium transition rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">
+                <i class="mr-1 fas fa-undo"></i> Réinitialiser
+            </a>
+        </div>
+    </form>
+</div>
+{% endif %}
+
+{# ===== FILTRES ENT ===== #}
+{% if is_granted('ROLE_ENT') and not is_granted('ROLE_ADMIN') %}
+<div class="p-4 mb-6 bg-white border shadow-sm rounded-xl border-slate-200">
+    <form method="get" action="{{ path('app_candidature_index') }}" class="flex flex-wrap items-end gap-4">
+        <div class="flex-1 min-w-[200px]">
+            <label class="block mb-1 text-sm font-medium text-slate-600">Métier</label>
+            <select name="metier" class="w-full px-3 py-2 text-sm border rounded-lg border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">Tous les métiers</option>
+                {% for m in metiers %}
+                    <option value="{{ m.id }}" {{ metier_filtre and metier_filtre.id == m.id ? 'selected' : '' }}>{{ m.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="flex-1 min-w-[140px]">
+            <label class="block mb-1 text-sm font-medium text-slate-600">Du (Inclus)</label>
+            <input type="date" name="date_debut" value="{{ date_debut|default('') }}" class="w-full px-3 py-2 text-sm border rounded-lg border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div class="flex-1 min-w-[140px]">
+            <label class="block mb-1 text-sm font-medium text-slate-600">Au (Inclus)</label>
+            <input type="date" name="date_fin" value="{{ date_fin|default('') }}" class="w-full px-3 py-2 text-sm border rounded-lg border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div class="flex gap-2">
+            <button type="submit" class="px-4 py-2 text-sm font-medium text-white transition bg-indigo-600 rounded-lg hover:bg-indigo-700">
+                <i class="mr-1 fas fa-filter"></i> Filtrer
+            </button>
+            <a href="{{ path('app_candidature_index') }}" class="px-4 py-2 text-sm font-medium transition rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">
+                <i class="mr-1 fas fa-undo"></i> Réinitialiser
+            </a>
+        </div>
+    </form>
+</div>
+{% endif %}
+
+{# ===== TABLEAU ===== #}
+<div id="candidatures-container">
+{% if candidatures.getTotalItemCount > 0 %}
+<div class="overflow-hidden bg-white border shadow-sm rounded-2xl border-slate-200">
+
+    {# Toolbar #}
+    <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-slate-100 bg-slate-50/60">
+        <form method="get" id="filterForm" class="flex flex-wrap items-center justify-between w-full gap-3">
+            <div class="flex items-center gap-2 text-sm font-medium text-slate-500">
+                <span>Afficher</span>
+                <select name="limit" id="pageSizeSelect" onchange="document.getElementById('filterForm').submit();"
+                        class="px-2 py-1 text-sm font-medium bg-white border rounded-lg outline-none cursor-pointer border-slate-200 text-slate-700 focus:border-indigo-400">
+                    <option value="10" {% if limit == 10 %}selected{% endif %}>10</option>
+                    <option value="25" {% if limit == 25 %}selected{% endif %}>25</option>
+                    <option value="50" {% if limit == 50 %}selected{% endif %}>50</option>
+                    <option value="100" {% if limit == 100 %}selected{% endif %}>100</option>
+                </select>
+                <span>éléments</span>
+            </div>
+            <div class="flex items-center gap-2 px-3 py-2 transition-all bg-white border border-slate-200 rounded-xl focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100">
+                <i class="text-xs fas fa-search text-slate-400"></i>
+                <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher…"
+                       class="text-sm bg-transparent outline-none text-slate-700 placeholder-slate-300 w-44">
+            </div>
+            <!-- Keep other query parameters if any -->
+            {% for key, val in app.request.query.all %}
+                {% if key != 'limit' and key != 'q' and key != 'page' %}
+                    <input type="hidden" name="{{ key }}" value="{{ val }}">
+                {% endif %}
+            {% endfor %}
+        </form>
+    </div>
+
+    {# Table #}
+    <div class="overflow-x-auto">
+        <table class="w-full min-w-[850px]">
+            <thead>
+                <tr class="border-b bg-slate-50 border-slate-100">
+                    <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">N°</th>
+                    <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">N° Candidature</th>
+                    {% if is_admin %}<th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Candidat</th>{% endif %}
+                    <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Métier</th>
+                    <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Établissement</th>
+                    {% if is_admin %}<th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Jury</th>{% endif %}
+                    <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Statut</th>
+                    <th class="px-5 py-3 text-left text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Date</th>
+                    <th class="px-5 py-3 text-right text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody" class="divide-y divide-slate-50">
+                {% for candidature in candidatures %}
+                <tr class="transition-colors duration-100 hover:bg-slate-50/70">
+                    <td class="px-5 py-4 text-sm font-medium text-slate-400">{{ (candidatures.currentPageNumber - 1) * candidatures.itemNumberPerPage + loop.index }}</td>
+                    <td class="px-5 py-4">
+                        <a href="{{ path('app_candidature_edit', {'id': candidature.id}) }}"
+                           class="font-mono text-xs bg-indigo-50 text-indigo-600 border border-indigo-100 px-2.5 py-1 rounded-lg hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all duration-150 inline-block font-medium">
+                            {{ candidature.numero }}
+                        </a>
+                    </td>
+
+                    {% if is_admin %}
+                    <td class="px-5 py-4">
+                        {% set fullName = candidature.user ? ((candidature.user.nom|default('') ~ ' ' ~ candidature.user.prenoms|default(''))|trim) : '' %}
+                        <div class="text-sm font-semibold text-slate-800">{{ fullName ?: 'Utilisateur indisponible' }}</div>
+                        <div class="text-xs text-slate-400 mt-0.5">{{ candidature.user ? (candidature.user.contact|default('-')) : '-' }}</div>
+                    </td>
+                    {% endif %}
+
+                    <td class="px-5 py-4 text-sm font-medium text-slate-700">{{ candidature.metier ? candidature.metier.nom : '-' }}</td>
+                    <td class="px-5 py-4 text-sm text-slate-500">{{ candidature.etablissement ? candidature.etablissement.nom : '-' }}</td>
+
+                    {% if is_admin %}
+                    <td class="px-5 py-4 text-sm text-slate-400">
+                        {% if candidature.entstatut == 1 or candidature.entstatut == 2 %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                Évalué
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-500/10 text-slate-400 border border-slate-500/20">
+                                Non évalué
+                            </span>
+                        {% endif %}
+                    </td>
+                    {% endif %}
+
+                    <td class="px-2 py-4">
+                        {% if candidature.resultat == 2 %}
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.6rem] font-semibold bg-green-50 text-green-700 border border-green-200 hover:bg-green-500 hover:text-white transition-all duration-150">
+                                <span class="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0"></span>Admis
+                            </span>
+                        {% elseif candidature.entstatut == 2 %}
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.6rem] font-semibold bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-500 hover:text-white transition-all duration-150">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>Admissible
+                            </span>
+                        {% elseif candidature.etustatut == 2 %}
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.6rem] font-semibold bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-500 hover:text-white transition-all duration-150">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>Dossier OK
+                            </span>
+                        {% elseif candidature.etustatut == 1 %}
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.6rem] font-semibold bg-red-50 text-red-700 border border-red-200 hover:bg-red-500 hover:text-white transition-all duration-150">
+                                <span class="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0"></span>Rejeté
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.6rem] font-semibold bg-slate-100 text-slate-500 border border-slate-200 hover:bg-slate-500 hover:text-white transition-all duration-150">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0"></span>En attente
+                            </span>
+                        {% endif %}
+                    </td>
+
+                    <td class="px-5 py-4 text-xs text-slate-400">{{ candidature.creation|date('d/m/Y') }}</td>
+
+                    <td class="px-5 py-4">
+                        <div class="flex items-center justify-end gap-1.5">
+                            {% if is_admin or (is_granted('ROLE_CANDIDAT') and candidature.etustatut is null) %}
+                            <a href="{{ path('app_candidature_edit', {'id': candidature.id, 'redirect_to': app.request.requestUri}) }}"
+                               title="Modifier"
+                               class="flex items-center justify-center w-8 h-8 text-sm transition-all duration-150 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white hover:-translate-y-px">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            {% endif %}
+                            <a href="{{ path('app_candidature_imprimer', {'id': candidature.id}) }}"
+                               target="_blank" title="Imprimer la fiche"
+                               class="flex items-center justify-center w-8 h-8 text-sm transition-all duration-150 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white hover:-translate-y-px">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            {% if candidature.entstatut == 2 or candidature.etustatut == 2 %}
+                            <a href="{{ path('app_candidature_imprimer_convocation', {'id': candidature.id}) }}"
+                               target="_blank" title="Imprimer la convocation"
+                               class="flex items-center justify-center w-8 h-8 text-sm text-purple-600 transition-all duration-150 rounded-lg bg-purple-50 hover:bg-purple-500 hover:text-white hover:-translate-y-px">
+                                <i class="fas fa-envelope-open-text"></i>
+                            </a>
+                            {% endif %}
+
+                            {# Bouton convocation visite médicale — uniquement si admissible #}
+                            {% if candidature.decisionJury == 2 %}
+                            <a href="{{ path('app_candidature_imprimer_convocation_visite', {'id': candidature.id}) }}"
+                               target="_blank" title="Imprimer la convocation visite médicale"
+                               class="flex items-center justify-center w-8 h-8 text-sm text-teal-600 transition-all duration-150 rounded-lg bg-teal-50 hover:bg-teal-500 hover:text-white hover:-translate-y-px">
+                                <i class="fas fa-heartbeat"></i>
+                            </a>
+                            {% endif %}
+
+                            {# Bouton supprimer — ROLE_ADMIN ou ROLE_ENT uniquement #}
+                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') %}
+                            <form method="post"
+                                  action="{{ path('app_candidature_delete', {'id': candidature.id}) }}"
+                                  onsubmit="return confirm('Supprimer la candidature {{ candidature.numero }} ? Cette action est irréversible.');"
+                                  class="inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ candidature.id) }}">
+                                <button type="submit" title="Supprimer"
+                                        class="flex items-center justify-center w-8 h-8 text-sm text-red-500 transition-all duration-150 rounded-lg bg-red-50 hover:bg-red-500 hover:text-white hover:-translate-y-px">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# Pagination #}
+    <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50/60">
+        <p class="text-xs font-medium text-slate-400">
+            Affichage de <strong class="text-slate-600">{{ candidatures.itemNumberPerPage * (candidatures.currentPageNumber - 1) + 1 }}</strong> 
+            à <strong class="text-slate-600">{{ min(candidatures.itemNumberPerPage * candidatures.currentPageNumber, candidatures.getTotalItemCount) }}</strong> 
+            sur <strong class="text-slate-600">{{ candidatures.getTotalItemCount }}</strong> élément(s)
+        </p>
+        <div class="knp-pagination">
+            {{ knp_pagination_render(candidatures) }}
+        </div>
+    </div>
+</div>
+
+{% else %}
+{# ===== ÉTAT VIDE ===== #}
+<div class="px-8 py-16 text-center bg-white border shadow-sm rounded-2xl border-slate-200">
+    <div class="flex items-center justify-center w-16 h-16 mx-auto mb-5 text-3xl text-indigo-500 rounded-2xl bg-indigo-50">
+        <i class="fas fa-{{ is_admin ? 'inbox' : 'file-alt' }}"></i>
+    </div>
+    <h3 class="mb-2 text-lg font-bold text-slate-800">Aucune candidature</h3>
+    <p class="text-sm text-slate-500 mb-7">
+        {% if is_admin %}Il n'y a pas encore de candidatures dans le système.
+        {% else %}Vous n'avez pas encore soumis de candidature.{% endif %}
+    </p>
+    {% if not is_admin %}
+    <a href="{{ path('app_candidature_new') }}"
+       class="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5 transition-all duration-200">
+        <i class="fas fa-plus-circle"></i> Déposer ma première candidature
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('candidatures-container');
+    if (!container) return;
+
+    let searchTimeout;
+
+    // Delegate events to the container since its contents will be replaced
+    container.addEventListener('submit', (e) => {
+        if (e.target.id === 'filterForm') {
+            e.preventDefault();
+            fetchResults(new URLSearchParams(new FormData(e.target)).toString());
+        }
+    });
+
+    container.addEventListener('input', (e) => {
+        if (e.target.name === 'q') {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const form = document.getElementById('filterForm');
+                if (form) fetchResults(new URLSearchParams(new FormData(form)).toString());
+            }, 400); // 400ms debounce
+        }
+    });
+
+    container.addEventListener('change', (e) => {
+        if (e.target.name === 'limit') {
+            const form = document.getElementById('filterForm');
+            if (form) fetchResults(new URLSearchParams(new FormData(form)).toString());
+        }
+    });
+
+    container.addEventListener('click', (e) => {
+        const link = e.target.closest('.knp-pagination a');
+        if (link) {
+            e.preventDefault();
+            const url = new URL(link.href);
+            fetchResults(url.search);
+        }
+    });
+
+    function fetchResults(queryString) {
+        const url = `${window.location.pathname}?${queryString}`;
+        
+        // Update URL in browser (History API)
+        window.history.pushState({}, '', url);
+
+        // Add a loading state (e.g., slight opacity)
+        container.style.opacity = '0.5';
+        container.style.pointerEvents = 'none';
+
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newContainer = doc.getElementById('candidatures-container');
+            
+            if (newContainer) {
+                container.innerHTML = newContainer.innerHTML;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        })
+        .finally(() => {
+            container.style.opacity = '1';
+            container.style.pointerEvents = 'auto';
+            
+            // Refocus search input if it was active to not lose cursor
+            const searchInput = document.querySelector('input[name="q"]');
+            if (searchInput) {
+                const val = searchInput.value;
+                searchInput.focus();
+                // Move cursor to end
+                searchInput.setSelectionRange(val.length, val.length);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

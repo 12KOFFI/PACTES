@@ -1,0 +1,547 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PACTE - Recrutement 2026{% endblock %}
+
+{% block meta %}
+{{ parent() }}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<meta name="keywords" content="PACTE, solaire, photovoltaique, electricite, recrutement, apprentissage, CQP, 2026, Cote d'Ivoire">
+<meta name="description" content="Projet PACTE - Recrutement de jeunes pour la formation par apprentissage au métier d'installateur de systèmes solaires photovoltaïques au titre de l'année 2026.">
+{% endblock %}
+
+{% block body %}
+
+{# ===== BANDEAU CENTRÉ : ADMISSIONS DISPONIBLES ===== #}
+{% if admissions_disponibles is defined and admissions_disponibles %}
+<div class="relative w-full py-3 text-white shadow-lg bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600">
+    <div class="flex items-center justify-center gap-2 px-4 mx-auto text-center">
+        <i class="fas fa-bullhorn animate-pulse"></i>
+        <span class="text-sm font-semibold sm:text-base">
+            🎉 Les résultats <span class="text-xl font-bold text-indigo-600">d'admission définitive</span> à la formation sont disponibles !
+        </span>
+        <a href="{{ path('app_verifier_statut') }}" class="font-bold underline transition hover:text-yellow-200">
+            Cliquez ici pour Vérifier votre statut →
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<!-- ==================== HERO SECTION ==================== -->
+<section class="hero relative min-h-[600px] flex items-center justify-center bg-gradient-to-br from-indigo-700 via-purple-700 to-blue-700 py-16">
+    
+    <!-- Éléments décoratifs -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-0 left-0 w-64 h-64 rounded-full bg-indigo-50 filter blur-3xl opacity-5 animate-pulse-glow"></div>
+        <div class="absolute bottom-0 right-0 w-64 h-64 rounded-full bg-purple-50 filter blur-3xl opacity-5 animate-pulse-glow animation-delay-2000"></div>
+        <div class="absolute bg-purple-400 rounded-full -top-40 -right-40 w-80 h-80 mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div class="absolute bg-indigo-400 rounded-full -bottom-40 -left-40 w-80 h-80 mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div class="absolute transform -translate-x-1/2 -translate-y-1/2 bg-pink-400 rounded-full top-1/2 left-1/2 w-80 h-80 mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+    </div>
+    
+    <div class="container relative z-10 w-full max-w-full px-4 mx-auto">
+        <div class="max-w-4xl mx-auto text-center">
+            <!-- Badge -->
+            <div class="inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-semibold bg-white text-indigo-700 border-white mb-6 animate-fade-up animation-delay-200 shadow-sm">
+                <span class="flex w-2 h-2 mr-2 bg-green-400 rounded-full animate-pulse"></span>
+                RECRUTEMENT PACTE 2026
+            </div>
+            
+            <h1 class="mb-6 text-3xl font-bold leading-tight text-white break-words sm:text-4xl md:text-5xl lg:text-6xl animate-fade-up animation-delay-400">
+                Formation de jeunes au métier
+                <span class="block mt-2 text-transparent bg-gradient-to-r from-amber-200 via-orange-200 to-yellow-100 bg-clip-text">
+                    d'installateur de systèmes solaires photovoltaïques
+                </span>
+            </h1>
+
+            <p class="max-w-2xl mx-auto mb-8 text-base text-indigo-100 sm:text-lg animate-fade-up animation-delay-600">
+                Programme de formation par apprentissage de six (06) mois sanctionné par un Certificat de Qualification Professionnelle (CQP).
+            </p>
+
+            <!-- Boutons d'action -->
+            <div class="flex flex-wrap items-center justify-center gap-4 mb-10 animate-fade-up animation-delay-800">
+                {% if app.user %}
+                    <a href="{{ path('app_candidature_new') }}" class="inline-flex items-center gap-2 px-6 py-3.5 font-bold text-white transition bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg hover:scale-105">
+                        <i class="fas fa-paper-plane"></i>
+                        Déposer ma candidature
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_register') }}" class="inline-flex items-center gap-2 px-6 py-3.5 font-bold text-white transition bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg hover:scale-105">
+                        <i class="fas fa-user-plus"></i>
+                        Postuler en ligne
+                    </a>
+                {% endif %}
+                <a href="#presentation" class="inline-flex items-center gap-2 px-6 py-3.5 font-semibold text-white transition bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20">
+                    <i class="fas fa-info-circle"></i>
+                    Consulter le communiqué
+                </a>
+            </div>
+            
+            <!-- Stats rapides -->
+            <div class="flex justify-center">
+                <div class="grid max-w-3xl grid-cols-2 gap-2 mx-auto mb-10 sm:grid-cols-4 sm:gap-4">
+                    <div class="p-3 border bg-white/5 backdrop-blur-sm rounded-xl sm:p-4 border-white/10 animate-fade-up animation-delay-800">
+                        <div class="text-xl font-bold text-white sm:text-2xl">{{ stats.metiers }}</div>
+                        <div class="text-[11px] sm:text-xs text-white/70">Métier(s)</div>
+                    </div>
+                    <div class="p-3 border bg-white/5 backdrop-blur-sm rounded-xl sm:p-4 border-white/10 animate-fade-up animation-delay-1000">
+                        <div class="text-xl font-bold text-white sm:text-2xl">{{ stats.etablissements }}</div>
+                        <div class="text-[11px] sm:text-xs text-white/70">Établissements</div>
+                    </div>
+                    <div class="p-3 border bg-white/5 backdrop-blur-sm rounded-xl sm:p-4 border-white/10 animate-fade-up animation-delay-1200">
+                        <div class="text-xl font-bold text-white sm:text-2xl">{{ stats.places }}</div>
+                        <div class="text-[11px] sm:text-xs text-white/70">Postes ouverts</div>
+                    </div>
+                    <div class="p-3 border bg-white/5 backdrop-blur-sm rounded-xl sm:p-4 border-white/10 animate-fade-up animation-delay-1400">
+                        <div class="text-xl font-bold text-white sm:text-2xl">{{ stats.candidatures }}</div>
+                        <div class="text-[11px] sm:text-xs text-white/70">Candidatures</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <a href="#presentation" class="absolute transform -translate-x-1/2 bottom-4 left-1/2 animate-bounce">
+        <div class="flex justify-center w-6 h-10 border-2 rounded-full border-white/30">
+            <div class="w-1 h-3 mt-2 rounded-full bg-white/60 animate-pulse"></div>
+        </div>
+    </a>
+</section>
+
+<!-- ==================== PRÉSENTATION OFFICIELLE SECTION ==================== -->
+<section id="presentation" class="relative w-full py-12 overflow-hidden bg-white sm:py-20">
+    <div class="container relative z-10 w-full max-w-5xl px-4 mx-auto">
+        <div class="mb-10 text-center">
+            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm">
+                <i class="mr-2 fas fa-bullhorn"></i>
+                COMMUNIQUÉ OFFICIEL N°___________/MENAET/CAB-MDET (À COMPLÉTER)
+            </div>
+            <h2 class="text-2xl font-bold sm:text-3xl md:text-4xl text-slate-900">
+                Présentation du programme de recrutement 2026
+            </h2>
+        </div>
+
+        <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl shadow-sm sm:p-8 space-y-6 text-slate-700 leading-relaxed text-base sm:text-lg">
+            <p>
+                Il est ouvert, au titre de l’année <strong>2026</strong>, un recrutement de <strong>deux cent cinquante (250) jeunes</strong> pour la formation au métier d’<strong>installateur de systèmes solaires photovoltaïques</strong>.
+            </p>
+            <p>
+                La formation, dispensée selon la modalité de l’<strong>Apprentissage</strong>, durera <strong>six (06) mois</strong> et sera sanctionnée d’un <strong>Certificat de Qualification Professionnelle (CQP)</strong>.
+            </p>
+            <p>
+                Les <strong>formations théoriques</strong> se dérouleront au sein des structures de formation professionnelle impliquées (Lycée Professionnel des Métiers de l’Énergie Renouvelable, Lycée Professionnel de Jacqueville, Lycée Professionnel de Korhogo) et les <strong>formations pratiques</strong> dans les entreprises partenaires.
+            </p>
+
+            <div class="p-4 bg-emerald-50 border-l-4 border-emerald-500 rounded-r-xl">
+                <p class="text-sm sm:text-base font-semibold text-emerald-900">
+                    <i class="fas fa-check-circle mr-2 text-emerald-600"></i>
+                    <strong>Gratuité totale :</strong> L’inscription et la formation sont intégralement gratuites.
+                </p>
+                <p class="text-sm sm:text-base font-semibold text-emerald-900 mt-2">
+                    <i class="fas fa-venus mr-2 text-pink-600"></i>
+                    <strong>Promotion du genre :</strong> Les candidatures féminines sont vivement encouragées (la formation vise une participation féminine d’au moins 40 %).
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== SECTION ÉTABLISSEMENTS : UNE CARTE PAR ÉTABLISSEMENT ==================== -->
+<section id="etablissements" class="py-12 bg-slate-100 sm:py-20 border-t border-slate-200">
+    <div class="container w-full max-w-6xl px-4 mx-auto">
+        <div class="mb-10 text-center">
+            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-white px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm">
+                <i class="mr-2 fas fa-school"></i>
+                STRUCTURES DE FORMATION
+            </div>
+            <h2 class="text-2xl font-bold sm:text-3xl md:text-4xl text-slate-900">
+                Choisissez votre établissement
+            </h2>
+            <p class="max-w-2xl mx-auto mt-2 text-sm sm:text-base text-slate-600">
+                Chaque établissement dispose de ses propres postes. Vous déposez votre candidature dans <strong>un seul établissement</strong> : celui que vous sélectionnez ci-dessous.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {% for etablissement in etablissements %}
+                <article class="flex flex-col overflow-hidden transition-all duration-300 bg-white border shadow-sm border-slate-200 rounded-2xl hover:shadow-lg hover:-translate-y-0.5">
+                    <header class="p-6 bg-gradient-to-br from-indigo-600 to-blue-700 text-white">
+                        <div class="flex items-center justify-center w-11 h-11 mb-3 rounded-xl bg-white/15">
+                            <i class="text-xl fas fa-university"></i>
+                        </div>
+                        <h3 class="text-lg font-bold leading-snug">{{ etablissement.nom }}</h3>
+                        <p class="mt-1 text-xs text-indigo-100">
+                            <i class="mr-1 fas fa-map-marker-alt"></i>
+                            {% if etablissement.localite %}{{ etablissement.localite.nom }}{% else %}Localité : À COMPLÉTER{% endif %}
+                        </p>
+                    </header>
+
+                    <div class="flex flex-col flex-1 p-6">
+                        {% for em in etablissement.etablissementMetiers %}
+                            <div class="{{ not loop.first ? 'mt-5 pt-5 border-t border-slate-100' : '' }}">
+                                <p class="text-xs font-semibold tracking-wider uppercase text-slate-500">Métier</p>
+                                <p class="mt-1 text-base font-bold text-slate-900">{{ em.metier.nom }}</p>
+
+                                <dl class="grid grid-cols-2 gap-3 mt-4 text-sm">
+                                    <div class="p-3 rounded-xl bg-indigo-50">
+                                        <dt class="text-xs text-slate-500">Postes</dt>
+                                        <dd class="text-xl font-bold text-indigo-700">{{ em.nbrplace ?? '—' }}</dd>
+                                    </div>
+                                    <div class="p-3 rounded-xl bg-slate-50">
+                                        <dt class="text-xs text-slate-500">Durée</dt>
+                                        <dd class="text-base font-bold text-slate-800">{{ em.dureeFormation ?: '—' }}</dd>
+                                    </div>
+                                </dl>
+
+                                <div class="mt-4">
+                                    {% if admissions_disponibles %}
+                                        {% set cible = path('app_candidature_new', {'etablissement': etablissement.id, 'metier': em.metier.id}) %}
+                                        <a href="{{ app.user ? cible : path('app_login') ~ '?redirect=' ~ cible|url_encode }}"
+                                           class="inline-flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-semibold text-white transition-all shadow-md rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600">
+                                            <i class="fas fa-paper-plane"></i>
+                                            Postuler dans cet établissement
+                                        </a>
+                                    {% else %}
+                                        <span class="inline-flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-semibold rounded-xl bg-slate-100 text-slate-500">
+                                            <i class="fas fa-lock"></i>
+                                            Candidatures fermées
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <p class="text-sm text-slate-500">Aucun métier ouvert pour le moment.</p>
+                        {% endfor %}
+                    </div>
+                </article>
+            {% else %}
+                <div class="p-8 text-center bg-white border col-span-full border-slate-200 rounded-2xl text-slate-500">
+                    Aucune structure de formation configurée pour le moment.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- ==================== CONDITIONS D'ÉLIGIBILITÉ SECTION ==================== -->
+<section id="eligibilite" class="py-12 bg-white sm:py-20 border-t border-slate-200">
+    <div class="container w-full max-w-5xl px-4 mx-auto">
+        <div class="mb-10 text-center">
+            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm">
+                <i class="mr-2 fas fa-user-check"></i>
+                CRITÈRES D'ACCÈS
+            </div>
+            <h2 class="text-2xl font-bold sm:text-3xl md:text-4xl text-slate-900">
+                Conditions d'éligibilité
+            </h2>
+            <p class="max-w-2xl mx-auto mt-2 text-sm sm:text-base text-slate-600">
+                Peut faire acte de candidature, toute personne remplissant les conditions générales et l'une des trois conditions de profil suivantes :
+            </p>
+        </div>
+
+        <!-- Critères généraux -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div class="flex items-start gap-4 p-5 bg-indigo-50/60 border border-indigo-100 rounded-xl">
+                <div class="flex items-center justify-center flex-shrink-0 w-10 h-10 bg-indigo-600 text-white rounded-lg">
+                    <i class="fas fa-flag"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-900">Nationalité</h3>
+                    <p class="text-sm text-slate-600 mt-0.5">Être obligatoirement de nationalité ivoirienne.</p>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-4 p-5 bg-purple-50/60 border border-purple-100 rounded-xl">
+                <div class="flex items-center justify-center flex-shrink-0 w-10 h-10 bg-purple-600 text-white rounded-lg">
+                    <i class="fas fa-birthday-cake"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-900">Tranche d'âge</h3>
+                    <p class="text-sm text-slate-600 mt-0.5">Être âgé de 18 à 35 ans inclus au 31 décembre 2026.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3 profils d'éligibilité expliqués textuellement (sans champ de sélection ni liste interactive) -->
+        <div class="space-y-4">
+            <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+                <div class="flex items-start gap-3">
+                    <span class="flex items-center justify-center flex-shrink-0 w-7 h-7 text-xs font-bold text-white bg-indigo-600 rounded-full">1</span>
+                    <div class="space-y-2">
+                        <h4 class="text-base font-bold text-slate-900">Profil 1 — Titulaire d'un diplôme requis :</h4>
+                        <ul class="pl-5 space-y-1 text-sm list-disc text-slate-700">
+                            <li><strong>CAP :</strong> Électricité d’Équipement ou Électricité Bâtiment ;</li>
+                            <li><strong>BT :</strong> Électrotechnique, Électromécanique, Électronique, Maintenance des Équipements Électriques et Électroniques ;</li>
+                            <li><strong>BTS :</strong> Électrotechnique, Génie Énergétique et Environnement, Maintenance des Systèmes de Production, Systèmes Électroniques et Informatiques.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+                <div class="flex items-start gap-3">
+                    <span class="flex items-center justify-center flex-shrink-0 w-7 h-7 text-xs font-bold text-white bg-indigo-600 rounded-full">2</span>
+                    <div>
+                        <h4 class="text-base font-bold text-slate-900">Profil 2 — Parcours de formation sans diplôme obtenu :</h4>
+                        <p class="mt-1 text-sm text-slate-700 leading-relaxed">
+                            Avoir suivi un parcours de formation de niveau CAP, BT ou BTS en Génie Électrique, sans avoir obtenu le diplôme correspondant, et le justifier par la présentation des relevés de notes délivrés par l’établissement de formation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+                <div class="flex items-start gap-3">
+                    <span class="flex items-center justify-center flex-shrink-0 w-7 h-7 text-xs font-bold text-white bg-indigo-600 rounded-full">3</span>
+                    <div>
+                        <h4 class="text-base font-bold text-slate-900">Profil 3 — Compétences professionnelles :</h4>
+                        <p class="mt-1 text-sm text-slate-700 leading-relaxed">
+                            Justifier de compétences professionnelles dans les domaines concernés, attestées par une Validation des Acquis de l’Expérience (VAE) ou par tout autre document justifiant des compétences acquises dans l’exercice d’une activité professionnelle.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== PIÈCES À FOURNIR SECTION ==================== -->
+<section id="pieces" class="py-12 bg-slate-50 sm:py-20 border-t border-slate-200">
+    <div class="container w-full max-w-5xl px-4 mx-auto">
+        <div class="mb-10 text-center">
+            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-white px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm">
+                <i class="mr-2 fas fa-file-alt"></i>
+                DOSSIER DE CANDIDATURE EN LIGNE
+            </div>
+            <h2 class="text-2xl font-bold sm:text-3xl md:text-4xl text-slate-900">
+                Les trois (03) pièces demandées
+            </h2>
+            <p class="max-w-2xl mx-auto mt-2 text-sm sm:text-base text-slate-600">
+                Le dossier de candidature en ligne devra comporter impérativement les pièces suivantes :
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Pièce 1 -->
+            <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition">
+                <div class="flex items-center justify-center w-12 h-12 mb-4 bg-indigo-100 rounded-xl">
+                    <i class="text-xl text-indigo-600 fas fa-id-card"></i>
+                </div>
+                <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Pièce n°1</span>
+                <h3 class="mt-1 mb-2 text-lg font-bold text-slate-900">Pièce d'identité</h3>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Une copie de la Carte Nationale d’Identité (CNI) ou l’attestation d’identité ou le passeport.
+                </p>
+            </div>
+
+            <!-- Pièce 2 -->
+            <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition">
+                <div class="flex items-center justify-center w-12 h-12 mb-4 bg-purple-100 rounded-xl">
+                    <i class="text-xl text-purple-600 fas fa-graduation-cap"></i>
+                </div>
+                <span class="text-xs font-bold uppercase tracking-wider text-purple-600">Pièce n°2</span>
+                <h3 class="mt-1 mb-2 text-lg font-bold text-slate-900">Justificatif de niveau / compétence</h3>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Une copie du diplôme requis, de l’attestation de réussite, du relevé de notes ou tout autre document prouvant l’exercice d’une activité professionnelle liée au métier.
+                </p>
+            </div>
+
+            <!-- Pièce 3 -->
+            <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition">
+                <div class="flex items-center justify-center w-12 h-12 mb-4 bg-emerald-100 rounded-xl">
+                    <i class="text-xl text-emerald-600 fas fa-heartbeat"></i>
+                </div>
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Pièce n°3</span>
+                <h3 class="mt-1 mb-2 text-lg font-bold text-slate-900">Couverture Maladie Universelle</h3>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    La carte de la Couverture Maladie Universelle (CMU).
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== PROCESSUS DE SÉLECTION SECTION ==================== -->
+<section id="processus" class="py-12 bg-white sm:py-20 border-t border-slate-200">
+    <div class="container w-full max-w-5xl px-4 mx-auto">
+        <div class="mb-10 text-center">
+            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm">
+                <i class="mr-2 fas fa-tasks"></i>
+                SÉLECTION DES CANDIDATS
+            </div>
+            <h2 class="text-2xl font-bold sm:text-3xl md:text-4xl text-slate-900">
+                Les trois (03) étapes de sélection
+            </h2>
+            <p class="max-w-2xl mx-auto mt-2 text-sm sm:text-base text-slate-600">
+                La sélection des candidats se déroule selon les étapes officielles du communiqué :
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Étape 1 -->
+            <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white bg-indigo-600 rounded-full">1</span>
+                    <h3 class="text-lg font-bold text-slate-900">Analyse des dossiers</h3>
+                </div>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Vérification de la conformité des pièces fournies et des critères d'éligibilité définis.
+                </p>
+            </div>
+
+            <!-- Étape 2 -->
+            <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white bg-purple-600 rounded-full">2</span>
+                    <h3 class="text-lg font-bold text-slate-900">Entretien & Épreuves</h3>
+                </div>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Entretien de motivation et passation des épreuves écrite et orale devant le jury.
+                </p>
+            </div>
+
+            <!-- Étape 3 -->
+            <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white bg-teal-600 rounded-full">3</span>
+                    <h3 class="text-lg font-bold text-slate-900">Visite médicale</h3>
+                </div>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Visite médicale d'aptitude physique pour valider l'admission définitive.
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-8 p-4 text-center bg-indigo-50 border border-indigo-100 rounded-xl text-sm text-indigo-900">
+            <i class="fas fa-info-circle mr-2 text-indigo-600"></i>
+            Les résultats de la sélection seront communiqués sur le site internet <strong>www.daip.ci</strong>.
+        </div>
+    </div>
+</section>
+
+<!-- ==================== CALENDRIER SECTION ==================== -->
+<section id="calendrier" class="py-12 bg-slate-50 sm:py-20 border-t border-slate-200">
+    <div class="container w-full max-w-5xl px-4 mx-auto">
+        <div class="mb-10 text-center">
+            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-white px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm">
+                <i class="mr-2 fas fa-calendar-alt"></i>
+                CALENDRIER DE RÉCEPTION
+            </div>
+            <h2 class="text-2xl font-bold sm:text-3xl md:text-4xl text-slate-900">
+                Période des candidatures
+            </h2>
+        </div>
+
+        <div class="max-w-2xl mx-auto p-8 bg-white border border-slate-200 rounded-2xl shadow-sm text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-indigo-100 rounded-full">
+                <i class="text-3xl text-indigo-600 fas fa-calendar-check"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">
+                Du lundi 19 au samedi 31 octobre 2026
+            </h3>
+            <p class="text-base text-slate-600 mb-6">
+                Les candidatures sont reçues exclusivement en ligne sur le site officiel :
+            </p>
+            <a href="https://www.daip.ci" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 font-mono font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-xl hover:bg-indigo-100 transition">
+                <i class="fas fa-globe"></i>
+                www.daip.ci
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== INFOLINE & CONTACT SECTION ==================== -->
+<section id="contact" class="py-12 text-white sm:py-16 bg-gradient-to-r from-indigo-600 to-purple-600">
+    <div class="container w-full max-w-4xl px-4 mx-auto text-center">
+        <i class="mb-4 text-3xl fas fa-phone-alt sm:text-4xl animate-pulse"></i>
+        <h3 class="px-2 mb-2 text-xl font-bold sm:text-2xl md:text-3xl">Une question ? Besoin d'assistance ?</h3>
+        <p class="mb-6 text-sm sm:text-base text-white/80">
+            Plateforme officielle de recrutement PACTE
+        </p>
+        
+        <div class="flex flex-col flex-wrap justify-center gap-4 px-2 sm:flex-row sm:gap-6">
+            <div class="inline-flex items-center justify-center px-5 py-3 text-sm font-medium border rounded-xl bg-white/10 backdrop-blur-sm border-white/20 sm:text-base">
+                <i class="mr-2 fas fa-phone"></i>
+                INFOLINE : À COMPLÉTER
+            </div>
+            <div class="inline-flex items-center justify-center px-5 py-3 text-sm font-medium border rounded-xl bg-white/10 backdrop-blur-sm border-white/20 sm:text-base">
+                <i class="mr-2 fas fa-envelope"></i>
+                Courriel : À COMPLÉTER
+            </div>
+            <a href="https://www.daip.ci" target="_blank" class="inline-flex items-center justify-center px-5 py-3 text-sm font-medium border rounded-xl bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition sm:text-base">
+                <i class="mr-2 fas fa-globe"></i>
+                Site officiel : www.daip.ci
+            </a>
+        </div>
+    </div>
+</section>
+
+{# ===== MODAL : VÉRIFICATION STATUT ===== #}
+{% if admissions_disponibles is defined and admissions_disponibles %}
+<div id="statutModal"
+     class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/60 backdrop-blur-sm"
+     role="dialog" aria-modal="true">
+    <div class="relative w-full max-w-md p-6 mx-4 bg-white shadow-2xl rounded-2xl sm:p-8">
+
+        {# Icône #}
+        <div class="flex items-center justify-center w-16 h-16 mx-auto mb-5 rounded-full bg-gradient-to-br from-green-100 to-emerald-100">
+            <i class="text-3xl text-green-600 fas fa-award"></i>
+        </div>
+
+        {# Titre #}
+        <h3 class="mb-3 text-xl font-bold text-center text-slate-800 sm:text-2xl">
+            Résultats disponibles !
+        </h3>
+
+        {# Message #}
+        <p class="mb-6 text-sm leading-relaxed text-center text-slate-600 sm:text-base">
+            Les résultats d'admission <strong>définitive à la formation</strong> sont désormais disponibles.
+            Vérifiez dès maintenant votre statut de candidature.
+        </p>
+
+        {# Actions #}
+        <div class="flex flex-col gap-3">
+            <a href="{{ path('app_verifier_statut') }}"
+               class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition transform hover:scale-[1.02] shadow-lg">
+                <i class="fas fa-user-check"></i>
+                Vérifier mon statut
+            </a>
+            <button type="button"
+                    id="closeStatutModal"
+                    class="w-full px-6 py-3 font-medium transition bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200">
+                Plus tard
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('statutModal');
+    const closeBtn = document.getElementById('closeStatutModal');
+
+    if (!modal) return;
+
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    closeBtn?.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+});
+</script>
+{% endif %}
+
+{% endblock %}

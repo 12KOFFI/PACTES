@@ -1,0 +1,329 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}Exports Inscriptions Définitives{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Exports - Inscriptions Définitives</h1>
+            <a href="{{ path('app_admis_index') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+
+        {% if app.flashes is not empty %}
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show" role="alert">
+                        {{ message|raw }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+
+        <!-- Statistiques globales -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Total Inscrits
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.total|default(0) }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-users fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Confirmés
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.confirmes|default(0) }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-user-check fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    Établissements
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.etablissements|default(0) }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-school fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Métiers
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.metiers|default(0) }}</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-briefcase fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtres et exports -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Exports et Filtres</h6>
+            </div>
+            <div class="card-body">
+                <form method="get" action="{{ path('app_admis_export') }}" class="mb-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="etablissement" class="form-label">Établissement</label>
+                                <select name="etablissement" id="etablissement" class="form-select">
+                                    <option value="">Tous les établissements</option>
+                                    {% for etablissement in etablissements %}
+                                        <option value="{{ etablissement.id }}">{{ etablissement.nom }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="metier" class="form-label">Métier</label>
+                                <select name="metier" id="metier" class="form-select">
+                                    <option value="">Tous les métiers</option>
+                                    {% for metier in metiers %}
+                                        <option value="{{ metier.id }}">{{ metier.nom }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="form-label">&nbsp;</label><br>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-download"></i> Exporter Excel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Résumé par établissement -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="mb-3">Résumé par Établissement et Métier</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Établissement</th>
+                                        <th>Métier</th>
+                                        <th>Total Inscrits</th>
+                                        <th>Confirmés</th>
+                                        <th>Non Confirmés</th>
+                                        <th>% Confirmation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in resume %}
+                                        <tr>
+                                            <td>{{ row.etablissement_nom }}</td>
+                                            <td>{{ row.metier_nom }}</td>
+                                            <td class="text-center">{{ row.total }}</td>
+                                            <td class="text-center">
+                                                <span class="badge badge-success">{{ row.confirmes }}</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge badge-warning">{{ row.non_confirmes }}</span>
+                                            </td>
+                                            <td class="text-center">
+                                                {% if row.total > 0 %}
+                                                    {% set pourcentage = (row.confirmes / row.total * 100)|round(1) %}
+                                                    <div class="progress" style="height: 20px;">
+                                                        <div class="progress-bar bg-success" role="progressbar" 
+                                                             style="width: {{ pourcentage }}%" 
+                                                             aria-valuenow="{{ pourcentage }}" 
+                                                             aria-valuemin="0" aria-valuemax="100">
+                                                            {{ pourcentage }}%
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">
+                                                Aucune inscription définitive trouvée
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr class="font-weight-bold">
+                                        <td colspan="2">TOTAL</td>
+                                        <td class="text-center">{{ totals.total|default(0) }}</td>
+                                        <td class="text-center">{{ totals.confirmes|default(0) }}</td>
+                                        <td class="text-center">{{ totals.non_confirmes|default(0) }}</td>
+                                        <td class="text-center">
+                                            {% if totals.total > 0 %}
+                                                {% set pourcentage_global = (totals.confirmes / totals.total * 100)|round(1) %}
+                                                <div class="progress" style="height: 20px;">
+                                                    <div class="progress-bar bg-primary" role="progressbar" 
+                                                         style="width: {{ pourcentage_global }}%" 
+                                                         aria-valuenow="{{ pourcentage_global }}" 
+                                                         aria-valuemin="0" aria-valuemax="100">
+                                                        {{ pourcentage_global }}%
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions rapides -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h6 class="m-0 font-weight-bold text-primary">Export Complet</h6>
+                            <p class="text-xs text-gray-500 mb-3">Toutes les inscriptions</p>
+                            <a href="{{ path('app_admis_export') }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-file-excel"></i> Télécharger
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h6 class="m-0 font-weight-bold text-success">Export Confirmés</h6>
+                            <p class="text-xs text-gray-500 mb-3">Seulement les confirmés</p>
+                            <button class="btn btn-success btn-sm" onclick="exportConfirmes()">
+                                <i class="fas fa-check-circle"></i> Télécharger
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h6 class="m-0 font-weight-bold text-info">Stats par Établissement</h6>
+                            <p class="text-xs text-gray-500 mb-3">Résumé détaillé</p>
+                            <button class="btn btn-info btn-sm" onclick="exportStatsEtablissement()">
+                                <i class="fas fa-chart-bar"></i> Télécharger
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h6 class="m-0 font-weight-bold text-warning">Contacts</h6>
+                            <p class="text-xs text-gray-500 mb-3">Liste des contacts</p>
+                            <button class="btn btn-warning btn-sm" onclick="exportContacts()">
+                                <i class="fas fa-address-book"></i> Télécharger
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function exportConfirmes() {
+            const url = new URL('{{ path("app_admis_export") }}', window.location.origin);
+            url.searchParams.set('confirmes', '1');
+            window.open(url.toString());
+        }
+
+        function exportStatsEtablissement() {
+            const url = new URL('{{ path("app_admis_export") }}', window.location.origin);
+            url.searchParams.set('stats', '1');
+            window.open(url.toString());
+        }
+
+        function exportContacts() {
+            const url = new URL('{{ path("app_admis_export") }}', window.location.origin);
+            url.searchParams.set('contacts', '1');
+            window.open(url.toString());
+        }
+
+        // Filtrer les métiers en fonction de l'établissement sélectionné
+        document.getElementById('etablissement').addEventListener('change', function() {
+            const etablissementId = this.value;
+            const metierSelect = document.getElementById('metier');
+            
+            // Réinitialiser la liste des métiers
+            metierSelect.innerHTML = '<option value="">Tous les métiers</option>';
+            
+            if (etablissementId) {
+                // Requête AJAX pour charger les métiers de l'établissement
+                fetch(`/stat/etablissement/${etablissementId}/metiers`)
+                    .then(response => response.json())
+                    .then(metiers => {
+                        metiers.forEach(metier => {
+                            const option = document.createElement('option');
+                            option.value = metier.id;
+                            option.textContent = metier.nom;
+                            metierSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Erreur:', error));
+            }
+        });
+    </script>
+{% endblock %}

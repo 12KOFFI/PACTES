@@ -1,0 +1,14 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    globals:
+        dir_image: '/public/image/'
+        dir_media: '/public/media/'
+        session_context: '@App\Service\SessionContext'
+        webhost: 'https://localhost/daikin/'
+    number_format:
+        decimals: 1
+        decimal_point: '.'
+        thousands_separator: ' '
+when@test:
+    twig:
+        strict_variables: false

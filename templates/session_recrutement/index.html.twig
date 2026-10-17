@@ -1,0 +1,65 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}Sessions de recrutement | {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">Sessions de recrutement</h1>
+            <p class="text-slate-500 mt-1">Gérez les campagnes de recrutement du projet PACTE.</p>
+        </div>
+        <a href="{{ path('app_session_recrutement_new') }}" class="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700">
+            <i class="fas fa-plus"></i> Nouvelle session
+        </a>
+    </div>
+
+    <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200">
+                <thead class="bg-slate-50">
+                    <tr>
+                        <th class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Session</th>
+                        <th class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Période</th>
+                        <th class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Statut</th>
+                        <th class="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Candidatures</th>
+                        <th class="px-5 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                {% for session in sessions %}
+                    <tr>
+                        <td class="px-5 py-4">
+                            <div class="font-semibold text-slate-800">{{ session.nom }}</div>
+                            <div class="text-sm text-slate-500">{{ session.annee }} · Vague {{ '%02d'|format(session.numeroVague) }}</div>
+                        </td>
+                        <td class="px-5 py-4 text-sm text-slate-600">
+                            {{ session.dateOuverture ? session.dateOuverture|date('d/m/Y H:i') : 'Non définie' }}
+                            <span class="text-slate-400">→</span>
+                            {{ session.dateCloture ? session.dateCloture|date('d/m/Y H:i') : 'Non définie' }}
+                        </td>
+                        <td class="px-5 py-4">
+                            <span class="rounded-full px-2.5 py-1 text-xs font-semibold {{ session.active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600' }}">{{ session.statut|replace({'_': ' '}) }}</span>
+                        </td>
+                        <td class="px-5 py-4 text-sm">
+                            <a href="{{ path('app_candidature_index', {session: session.id}) }}" class="text-indigo-600 hover:text-indigo-800 hover:underline font-medium">
+                                {{ counts[session.id]|default(0) }} candidature(s)
+                            </a>
+                        </td>
+                        <td class="px-5 py-4 text-right">
+                            <a href="{{ path('app_session_recrutement_edit', {id: session.id}) }}" class="text-indigo-600 hover:text-indigo-800" title="Modifier"><i class="fas fa-edit"></i></a>
+                            <form method="post" action="{{ path('app_session_recrutement_delete', {id: session.id}) }}" class="inline ml-3" onsubmit="return confirm('Supprimer cette session ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_session_' ~ session.id) }}">
+                                <button class="text-red-600 hover:text-red-800" title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5" class="px-5 py-12 text-center text-slate-500">Aucune session de recrutement.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

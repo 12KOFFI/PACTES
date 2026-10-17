@@ -1,0 +1,81 @@
+{# templates/etablissement/form.html.twig #}
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}{{ etablissement.id ? 'Modifier' : 'Nouvel' }} établissement | {{ parent() }}{% endblock %}
+
+{# Définition de la classe CSS réutilisable #}
+{% set input_class = 'w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition' %}
+
+{% block body %}
+<div class="mx-auto">
+    <!-- En-tête -->
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 mb-8 text-white">
+        <div class="flex items-center gap-4">
+            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                <i class="fas fa-school text-3xl"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold">{{ etablissement.id ? 'Modifier' : 'Nouvel' }} établissement</h1>
+                <p class="text-white/80">{{ etablissement.id ? 'Modifiez les informations de l\'établissement' : 'Créez un nouvel établissement de formation' }}</p>
+            </div>
+        </div>
+    </div>
+
+    {% include 'partials/_flash_messages.html.twig' %}
+
+    <!-- Formulaire -->
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden p-8">
+        {{ form_start(form, {'attr': {'class': 'space-y-6', 'id': 'etablissement_form'}}) }}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">
+                    Nom de l'établissement <span class="text-red-500">*</span>
+                </label>
+                {{ form_widget(form.nom, {'attr': {'class': input_class, 'placeholder': 'Ex: Centre de formation professionnelle'}}) }}
+                {{ form_errors(form.nom) }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">
+                    Définition
+                </label>
+                {{ form_widget(form.definition, {'attr': {'class': input_class, 'placeholder': 'Brève description de l\'établissement'}}) }}
+                {{ form_errors(form.definition) }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">
+                    Localité <span class="text-red-500">*</span>
+                </label>
+                {{ form_widget(form.localite, {'attr': {'class': input_class}}) }}
+                {{ form_errors(form.localite) }}
+            </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="flex justify-end gap-4 pt-6 border-t border-slate-200">
+            <a href="{{ path('app_etablissement_index') }}" 
+               class="px-6 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition inline-flex items-center">
+                <i class="fas fa-times mr-2"></i>
+                Annuler
+            </a>
+            <button type="submit" 
+                    class="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-700 hover:to-purple-700 transition transform hover:scale-105 shadow-lg inline-flex items-center">
+                <i class="fas {{ etablissement.id ? 'fa-save' : 'fa-plus-circle' }} mr-2"></i>
+                {{ etablissement.id ? 'Modifier' : 'Enregistrer' }}
+            </button>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+});
+</script>
+{% endblock %}

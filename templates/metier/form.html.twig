@@ -1,0 +1,61 @@
+{% extends 'base_dashboard.html.twig' %}
+
+{% block title %}{{ metier.id ? 'Modifier' : 'Nouveau' }} métier | {{ parent() }}{% endblock %}
+
+{# Définition de la classe CSS réutilisable #}
+{% set input_class = 'w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition' %}
+
+{% block body %}
+<div class="mx-auto">
+    <!-- En-tête -->
+    <div class="p-8 mb-8 text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl">
+        <div class="flex items-center gap-4">
+            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-white/20">
+                <i class="text-3xl fas fa-briefcase"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold">{{ metier.id ? 'Modifier' : 'Nouveau' }} métier</h1>
+                <p class="text-white/80">{{ metier.id ? 'Modifiez les informations du métier' : 'Créez un nouveau métier' }}</p>
+            </div>
+        </div>
+    </div>
+
+    {% include 'partials/_flash_messages.html.twig' %}
+
+    <!-- Formulaire -->
+    <div class="p-8 overflow-hidden bg-white border shadow-xl rounded-2xl border-slate-200">
+            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-slate-700">
+                        Nom du métier <span class="text-red-500">*</span>
+                    </label>
+                    {{ form_widget(form.nom, {'attr': {'class': input_class ~ ' uppercase', 'placeholder': 'Ex: PLOMBIER'}}) }}
+                </div>
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-slate-700">
+                        Image d'illustration <span class="text-red-500">*</span>
+                    </label>
+                    {{ form_widget(form.imageFile, {'attr': {'class': 'w-full px-4 py-1.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100'}}) }}
+                </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="flex justify-end gap-4 pt-6 border-t border-slate-200">
+                <a href="{{ path('app_metier_index') }}" 
+                   class="inline-flex items-center px-6 py-2 transition border rounded-lg border-slate-300 text-slate-700 hover:bg-slate-50">
+                    <i class="mr-2 fas fa-times"></i>
+                    Annuler
+                </a>
+                <button type="submit" 
+                        class="inline-flex items-center px-6 py-2 font-semibold text-white transition transform rounded-lg shadow-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 hover:scale-105">
+                    <i class="fas {{ metier.id ? 'fa-save' : 'fa-plus-circle' }} mr-2"></i>
+                    {{ metier.id ? 'Modifier' : 'Enregistrer' }}
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}
