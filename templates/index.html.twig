@@ -240,19 +240,12 @@
                                 </dl>
 
                                 <div class="mt-4">
-                                    {% if admissions_disponibles %}
-                                        {% set cible = path('app_candidature_new', {'etablissement': etablissement.id, 'metier': em.metier.id}) %}
-                                        <a href="{{ app.user ? cible : path('app_login') ~ '?redirect=' ~ cible|url_encode }}"
-                                           class="inline-flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-semibold text-white transition-all shadow-md rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600">
-                                            <i class="fas fa-paper-plane"></i>
-                                            Postuler dans cet établissement
-                                        </a>
-                                    {% else %}
-                                        <span class="inline-flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-semibold rounded-xl bg-slate-100 text-slate-500">
-                                            <i class="fas fa-lock"></i>
-                                            Candidatures fermées
-                                        </span>
-                                    {% endif %}
+                                    {% set cible = path('app_candidature_new', {'etablissement': etablissement.id, 'metier': em.metier.id}) %}
+                                    <a href="{{ app.user ? cible : path('app_login') ~ '?redirect=' ~ cible|url_encode }}"
+                                       class="inline-flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-semibold text-white transition-all shadow-md rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600">
+                                        <i class="fas fa-paper-plane"></i>
+                                        Candidater ici
+                                    </a>
                                 </div>
                             </div>
                         {% else %}
@@ -455,11 +448,6 @@
                     Visite médicale d'aptitude physique pour valider l'admission définitive.
                 </p>
             </div>
-        </div>
-
-        <div class="mt-8 p-4 text-center bg-indigo-50 border border-indigo-100 rounded-xl text-sm text-indigo-900">
-            <i class="fas fa-info-circle mr-2 text-indigo-600"></i>
-            Les résultats de la sélection seront communiqués sur le site internet <strong>www.daip.ci</strong>.
         </div>
     </div>
 </section>
