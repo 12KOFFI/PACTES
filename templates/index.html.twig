@@ -237,7 +237,7 @@
 
                                 <div class="mt-4">
                                     {% set cible = path('app_candidature_new', {'etablissement': etablissement.id, 'metier': em.metier.id}) %}
-                                    <a href="{{ app.user ? cible : path('app_login') ~ '?redirect=' ~ cible|url_encode }}"
+                                    <a href="{{ app.user ? cible : path('app_register') ~ '?redirect=' ~ cible|url_encode }}"
                                        class="inline-flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-semibold text-white transition-all shadow-md rounded-xl hover:opacity-90 active:scale-[0.99]"
                                        style="background-color: #ea580c; color: #ffffff; background-image: none;">
                                         <i class="fas fa-paper-plane text-white"></i>
