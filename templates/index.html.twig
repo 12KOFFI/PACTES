@@ -190,6 +190,61 @@
 
 <!-- ==================== SECTION ÉTABLISSEMENTS : UNE CARTE PAR ÉTABLISSEMENT ==================== -->
 <section id="etablissements" class="py-12 bg-slate-100 sm:py-20 border-t border-slate-200">
+    <style>
+        .etablissement-card {
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                        box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                        border-color 0.35s ease;
+            will-change: transform, box-shadow;
+        }
+        .etablissement-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 22px 38px -12px rgba(79, 70, 229, 0.18), 0 8px 16px -6px rgba(0, 0, 0, 0.05);
+            border-color: #818cf8 !important;
+        }
+        .etablissement-card .header-icon {
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease;
+        }
+        .etablissement-card:hover .header-icon {
+            transform: scale(1.12) rotate(4deg);
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+        .etablissement-card .header-glow {
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+        }
+        .etablissement-card:hover .header-glow {
+            transform: scale(1.6);
+            opacity: 0.35;
+        }
+        .etablissement-card .stat-badge {
+            transition: transform 0.35s ease, background-color 0.3s ease;
+        }
+        .etablissement-card:hover .stat-badge {
+            transform: translateY(-2px);
+        }
+        .etablissement-card .cta-btn {
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        box-shadow 0.25s ease, 
+                        background-color 0.2s ease, 
+                        filter 0.2s ease;
+        }
+        .etablissement-card:hover .cta-btn {
+            box-shadow: 0 8px 20px -4px rgba(234, 88, 12, 0.4);
+        }
+        .etablissement-card .cta-btn:hover {
+            transform: translateY(-2px);
+            background-color: #c2410c !important;
+            box-shadow: 0 12px 24px -4px rgba(234, 88, 12, 0.5);
+            filter: brightness(1.03);
+        }
+        .etablissement-card .cta-btn i {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .etablissement-card .cta-btn:hover i {
+            transform: translate(4px, -3px) rotate(-10deg);
+        }
+    </style>
+
     <div class="container w-full max-w-6xl px-4 mx-auto">
         <div class="mb-10 text-center">
             <div class="inline-flex items-center rounded-full border border-indigo-200 bg-white px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm">
@@ -206,15 +261,18 @@
 
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {% for etablissement in etablissements %}
-                <article class="flex flex-col overflow-hidden transition-all duration-300 bg-white border shadow-sm border-slate-200 rounded-2xl hover:shadow-lg hover:-translate-y-0.5">
-                    <header class="p-6 bg-gradient-to-br from-indigo-600 to-blue-700 text-white">
-                        <div class="flex items-center justify-center w-11 h-11 mb-3 rounded-xl bg-white/15">
-                            <i class="text-xl fas fa-university"></i>
+                <article class="etablissement-card group flex flex-col overflow-hidden bg-white border border-slate-200 rounded-3xl shadow-sm">
+                    <header class="p-6 bg-gradient-to-br from-indigo-600 via-indigo-700 to-blue-800 text-white relative overflow-hidden">
+                        <!-- Lueur décorative en arrière-plan -->
+                        <div class="header-glow absolute -right-6 -top-6 w-24 h-24 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+
+                        <div class="header-icon flex items-center justify-center w-12 h-12 mb-3 rounded-2xl bg-white/15 backdrop-blur-md shadow-sm">
+                            <i class="text-xl fas fa-university text-white"></i>
                         </div>
-                        <h3 class="text-lg font-bold leading-snug">{{ etablissement.nom }}</h3>
-                        <p class="mt-1 text-xs text-indigo-100">
-                            <i class="mr-1 fas fa-map-marker-alt"></i>
-                            {% if etablissement.localite %}{{ etablissement.localite.nom }}{% else %}Localité : À COMPLÉTER{% endif %}
+                        <h3 class="text-lg font-bold leading-snug group-hover:text-white transition-colors">{{ etablissement.nom }}</h3>
+                        <p class="mt-1.5 text-xs text-indigo-100 flex items-center gap-1.5">
+                            <i class="fas fa-map-marker-alt text-indigo-300"></i>
+                            <span>{% if etablissement.localite %}{{ etablissement.localite.nom }}{% else %}Localité : À COMPLÉTER{% endif %}</span>
                         </p>
                     </header>
 
@@ -222,14 +280,14 @@
                         {% for em in etablissement.etablissementMetiers %}
                             <div class="{{ not loop.first ? 'mt-5 pt-5 border-t border-slate-100' : '' }}">
                                 <p class="text-xs font-semibold tracking-wider uppercase text-slate-500">Métier</p>
-                                <p class="mt-1 text-base font-bold text-slate-900">{{ em.metier.nom }}</p>
+                                <p class="mt-1 text-base font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{{ em.metier.nom }}</p>
 
                                 <dl class="grid grid-cols-2 gap-3 mt-4 text-sm">
-                                    <div class="p-3 rounded-xl bg-indigo-50">
+                                    <div class="stat-badge p-3 rounded-xl bg-indigo-50 border border-indigo-100/60">
                                         <dt class="text-xs text-slate-500">Postes</dt>
                                         <dd class="text-xl font-bold text-indigo-700">{{ em.nbrplace ?? '—' }}</dd>
                                     </div>
-                                    <div class="p-3 rounded-xl bg-slate-50">
+                                    <div class="stat-badge p-3 rounded-xl bg-slate-50 border border-slate-100">
                                         <dt class="text-xs text-slate-500">Durée</dt>
                                         <dd class="text-base font-bold text-slate-800">{{ em.dureeFormation ?: '—' }}</dd>
                                     </div>
@@ -238,7 +296,7 @@
                                 <div class="mt-4">
                                     {% set cible = path('app_candidature_new', {'etablissement': etablissement.id, 'metier': em.metier.id}) %}
                                     <a href="{{ app.user ? cible : path('app_register') ~ '?redirect=' ~ cible|url_encode }}"
-                                       class="inline-flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-semibold text-white transition-all shadow-md rounded-xl hover:opacity-90 active:scale-[0.99]"
+                                       class="cta-btn inline-flex items-center justify-center w-full gap-2 px-4 py-3 text-sm font-semibold text-white shadow-md rounded-xl active:scale-[0.99]"
                                        style="background-color: #ea580c; color: #ffffff; background-image: none;">
                                         <i class="fas fa-paper-plane text-white"></i>
                                         <span class="text-white">Candidater ici</span>
