@@ -19,17 +19,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private int $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private string $email;
+    private string $email = '';
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
     #[ORM\Column(type: 'string')]
-    private string $password;
+    private string $password = '';
     
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $nom;
+    private ?string $nom = null;
 
     #[ORM\Column(type: 'boolean')]
     private bool $isActive = true;
@@ -38,52 +38,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $updatedAt;
+    private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $lastLoginAt;
+    private ?\DateTimeImmutable $lastLoginAt = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $prenoms;
+    private ?string $prenoms = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $nomjeunefille;
+    private ?string $nomjeunefille = null;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
-    private ?string $sexe;
+    private ?string $sexe = null;
 
     #[ORM\Column(type: 'date', nullable: true)]
-    private ?\DateTimeInterface $datenaissance;
+    private ?\DateTimeInterface $datenaissance = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $lieunaissance;
+    private ?string $lieunaissance = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private ?string $residence;
+    private ?string $residence = null;
 
     #[ORM\Column(type: 'string', length: 15, nullable: true)]
-    private ?string $situationmat;
+    private ?string $situationmat = null;
 
     #[ORM\Column(type: 'string', length: 22, nullable: true)]
-    private ?string $contact;
+    private ?string $contact = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $numextrait;
+    private ?string $numextrait = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private ?string $nationalite;
+    private ?string $nationalite = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private ?string $nompere;
+    private ?string $nompere = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private ?string $nommere;
+    private ?string $nommere = null;
 
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->nationalite = 'CI';
     }
 
     public function getId(): ?int

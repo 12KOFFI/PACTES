@@ -346,26 +346,6 @@ class HomeController extends AbstractController
                 'nom' => 'Projet PACTE',
                 'image' => '/image/pacte.png',
                 'lien' => '#'
-            ],
-            [
-                'nom' => 'METFPA',
-                'image' => '/image/metfpa.png',
-                'lien' => 'https://formation-professionnelle.gouv.ci'
-            ],
-            [
-                'nom' => 'Banque Mondiale',
-                'image' => '/image/partenaire/worldbank.png',
-                'lien' => 'https://www.banquemondiale.org'
-            ],
-            [
-                'nom' => 'Banque Centrale Populaire',
-                'image' => '/image/partenaire/bcp.png',
-                'lien' => '#'
-            ],
-            [
-                'nom' => 'C2D',
-                'image' => '/image/partenaire/c2d.png',
-                'lien' => '#'
             ]
         ];
     }
