@@ -95,19 +95,19 @@
     <div id="graffiti-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
     
     <div class="container mx-auto px-4 relative z-10 w-full max-w-full">
-        <div class="grid lg:grid-cols-5 gap-8 lg:gap-12 items-start">
-            <!-- Colonne gauche : Texte (3/5) -->
-            <div class="lg:col-span-3 space-y-4 text-slate-700 leading-relaxed">
+        <div class="grid lg:grid-cols-5 gap-8 lg:gap-12 items-center">
+            <!-- Colonne gauche : Texte -->
+            <div class="space-y-4 text-slate-700 leading-relaxed">
                 <p class="text-base sm:text-lg md:text-xl text-slate-800 font-light leading-relaxed">
                     Il est ouvert, au titre de l'année 2026, un recrutement de 
                     <span class="relative inline-block px-2">
                         <span class="absolute inset-0 bg-indigo-100 rounded-lg -rotate-1"></span>
                         <strong class="relative text-indigo-700 font-bold">deux cent cinquante (250) jeunes</strong>
                     </span>
-                    pour la formation au Certificat de Qualification Professionnelle (CQP) dans divers métiers, notamment d'<strong>installateur de systèmes solaires photovoltaïques</strong>. 
+                    pour la formation  au métier d'<strong>installateur de systèmes solaires photovoltaïques</strong>. 
                     Les candidatures sont reçues en ligne sur le site 
                     <a href="https://www.daip.ci" class="text-indigo-600 font-medium hover:text-indigo-700 underline underline-offset-2 transition break-all" target="_blank">www.daip.ci</a> 
-                    ou de façon physique dans les différentes structures de formation.
+                 
                 </p>
                 
                 <p class="text-base sm:text-lg md:text-xl text-slate-800 font-light">
@@ -161,8 +161,8 @@
                 </div>
             </div>
             
-            <!-- Colonne droite : Illustration (2/5) - FIXED: hide on very small screens if needed -->
-            <div class="lg:col-span-2 relative hidden sm:block">
+            <!-- Colonne droite : Illustration (Agrandie 50%) -->
+            <div class="relative hidden sm:block">
                 <!-- Illustration principale -->
                 <div class="relative rounded-2xl overflow-hidden shadow-2xl">
                     <img src="{{ asset('svg/solar_installation.svg') }}" alt="Illustration installateur systèmes solaires énergies renouvelables" class="w-full h-auto object-cover" onerror="this.onerror=null; this.src='{{ asset('svg/solar_installation.svg') }}'">
@@ -351,115 +351,237 @@
 </section>
 
 <!-- ==================== PIÈCES À FOURNIR SECTION ==================== -->
-<section id="pieces" class="py-12 bg-slate-50 sm:py-20 border-t border-slate-200">
-    <div class="container w-full max-w-5xl px-4 mx-auto">
-        <div class="mb-10 text-center">
-            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-white px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm">
-                <i class="mr-2 fas fa-file-alt"></i>
+<section id="pieces" class="py-14 sm:py-20 bg-gradient-to-b from-slate-50 via-white to-slate-50 border-t border-slate-200/80">
+    <div class="container w-full max-w-6xl px-4 mx-auto">
+        <div class="mb-12 text-center">
+            <div class="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50/80 px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm backdrop-blur-sm">
+                <i class="fas fa-folder-open text-indigo-600"></i>
                 DOSSIER DE CANDIDATURE EN LIGNE
             </div>
-            <h2 class="text-2xl font-bold sm:text-3xl md:text-4xl text-slate-900">
+            <h2 class="text-2xl font-extrabold sm:text-3xl md:text-4xl text-slate-900 tracking-tight">
                 Les trois (03) pièces demandées
             </h2>
-            <p class="max-w-2xl mx-auto mt-2 text-sm sm:text-base text-slate-600">
-                Le dossier de candidature en ligne devra comporter impérativement les pièces suivantes :
+            <p class="max-w-2xl mx-auto mt-3 text-sm sm:text-base text-slate-600">
+                Votre dossier de candidature en ligne devra comporter impérativement les pièces justificatives suivantes :
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             <!-- Pièce 1 -->
-            <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition">
-                <div class="flex items-center justify-center w-12 h-12 mb-4 bg-indigo-100 rounded-xl">
-                    <i class="text-xl text-indigo-600 fas fa-id-card"></i>
+            <div class="relative bg-white rounded-3xl p-6 sm:p-8 shadow-lg border border-indigo-100 hover:border-indigo-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group flex flex-col justify-between overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 to-blue-500"></div>
+                <div>
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="flex items-center justify-center w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl group-hover:scale-110 transition-transform duration-300 shadow-md shadow-indigo-100">
+                            <i class="text-2xl fas fa-id-card"></i>
+                        </div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200">
+                            Pièce n°1
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">
+                        Pièce d'identité
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                        Une copie lisible de la Carte Nationale d’Identité (CNI) en cours de validité, de l’attestation d’identité ou du passeport biométrique.
+                    </p>
                 </div>
-                <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Pièce n°1</span>
-                <h3 class="mt-1 mb-2 text-lg font-bold text-slate-900">Pièce d'identité</h3>
-                <p class="text-sm text-slate-600 leading-relaxed">
-                    Une copie de la Carte Nationale d’Identité (CNI) ou l’attestation d’identité ou le passeport.
-                </p>
+                <div class="pt-4 border-t border-slate-100 space-y-1.5 text-xs text-slate-600 font-medium">
+                    <div class="flex items-center gap-2 text-indigo-700">
+                        <i class="fas fa-check-circle text-xs"></i>
+                        <span>CNI, Attestation ou Passeport</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-slate-500">
+                        <i class="fas fa-file-pdf text-xs"></i>
+                        <span>Format PDF ou Image (JPG, PNG)</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Pièce 2 -->
-            <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition">
-                <div class="flex items-center justify-center w-12 h-12 mb-4 bg-purple-100 rounded-xl">
-                    <i class="text-xl text-purple-600 fas fa-graduation-cap"></i>
+            <div class="relative bg-white rounded-3xl p-6 sm:p-8 shadow-lg border border-purple-100 hover:border-purple-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group flex flex-col justify-between overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-500 to-indigo-500"></div>
+                <div>
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="flex items-center justify-center w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl group-hover:scale-110 transition-transform duration-300 shadow-md shadow-purple-100">
+                            <i class="text-2xl fas fa-graduation-cap"></i>
+                        </div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-200">
+                            Pièce n°2
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-purple-600 transition-colors">
+                        Justificatif de niveau / compétence
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                        Une copie du diplôme requis (CAP, BT, BTS en électricité/génie électrique), de l’attestation de réussite, du relevé de notes ou justification VAE.
+                    </p>
                 </div>
-                <span class="text-xs font-bold uppercase tracking-wider text-purple-600">Pièce n°2</span>
-                <h3 class="mt-1 mb-2 text-lg font-bold text-slate-900">Justificatif de niveau / compétence</h3>
-                <p class="text-sm text-slate-600 leading-relaxed">
-                    Une copie du diplôme requis, de l’attestation de réussite, du relevé de notes ou tout autre document prouvant l’exercice d’une activité professionnelle liée au métier.
-                </p>
+                <div class="pt-4 border-t border-slate-100 space-y-1.5 text-xs text-slate-600 font-medium">
+                    <div class="flex items-center gap-2 text-purple-700">
+                        <i class="fas fa-check-circle text-xs"></i>
+                        <span>Diplôme CAP, BT, BTS ou relevé</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-slate-500">
+                        <i class="fas fa-certificate text-xs"></i>
+                        <span>Ou attestation de compétences (VAE)</span>
+                    </div>
+                </div>
             </div>
 
             <!-- Pièce 3 -->
-            <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition">
-                <div class="flex items-center justify-center w-12 h-12 mb-4 bg-emerald-100 rounded-xl">
-                    <i class="text-xl text-emerald-600 fas fa-heartbeat"></i>
+            <div class="relative bg-white rounded-3xl p-6 sm:p-8 shadow-lg border border-emerald-100 hover:border-emerald-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group flex flex-col justify-between overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
+                <div>
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="flex items-center justify-center w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl group-hover:scale-110 transition-transform duration-300 shadow-md shadow-emerald-100">
+                            <i class="text-2xl fas fa-heartbeat"></i>
+                        </div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            Pièce n°3
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">
+                        Couverture Maladie Universelle
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                        La carte de la Couverture Maladie Universelle (CMU) ou le récépissé officiel d’enrôlement délivré par la CNAM.
+                    </p>
                 </div>
-                <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Pièce n°3</span>
-                <h3 class="mt-1 mb-2 text-lg font-bold text-slate-900">Couverture Maladie Universelle</h3>
-                <p class="text-sm text-slate-600 leading-relaxed">
-                    La carte de la Couverture Maladie Universelle (CMU).
+                <div class="pt-4 border-t border-slate-100 space-y-1.5 text-xs text-slate-600 font-medium">
+                    <div class="flex items-center gap-2 text-emerald-700">
+                        <i class="fas fa-check-circle text-xs"></i>
+                        <span>Carte CMU biométrique</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-slate-500">
+                        <i class="fas fa-id-badge text-xs"></i>
+                        <span>Ou récépissé officiel d'enrôlement</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conseil numérisation -->
+        <div class="mt-10 p-4 sm:p-5 bg-white border border-indigo-100 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0 text-indigo-600">
+                    <i class="fas fa-lightbulb text-lg"></i>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-700">
+                    <strong class="text-slate-900 font-semibold">Conseil important :</strong> Préparez des fichiers bien nets et lisibles (formats <strong>PDF, JPG, PNG</strong> — max. 2 Mo par document) pour faciliter la validation de votre candidature.
                 </p>
             </div>
+            <a href="{{ path('app_candidature_index') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium text-xs sm:text-sm transition-all shadow-md hover:shadow-indigo-200 flex-shrink-0">
+                <i class="fas fa-upload"></i>
+                <span>Déposer ma candidature</span>
+            </a>
         </div>
     </div>
 </section>
 
 <!-- ==================== PROCESSUS DE SÉLECTION SECTION ==================== -->
-<section id="processus" class="py-12 bg-white sm:py-20 border-t border-slate-200">
-    <div class="container w-full max-w-5xl px-4 mx-auto">
-        <div class="mb-10 text-center">
-            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm">
-                <i class="mr-2 fas fa-tasks"></i>
-                SÉLECTION DES CANDIDATS
+<section id="processus" class="py-14 sm:py-20 bg-white border-t border-slate-200/80">
+    <div class="container w-full max-w-6xl px-4 mx-auto">
+        <div class="mb-12 text-center">
+            <div class="inline-flex items-center gap-2 rounded-full border border-purple-200 bg-purple-50/80 px-4 py-1.5 text-xs sm:text-sm font-semibold text-purple-700 mb-4 shadow-sm backdrop-blur-sm">
+                <i class="fas fa-route text-purple-600"></i>
+                PROCESSUS OFFICIEL DE SÉLECTION
             </div>
-            <h2 class="text-2xl font-bold sm:text-3xl md:text-4xl text-slate-900">
+            <h2 class="text-2xl font-extrabold sm:text-3xl md:text-4xl text-slate-900 tracking-tight">
                 Les trois (03) étapes de sélection
             </h2>
-            <p class="max-w-2xl mx-auto mt-2 text-sm sm:text-base text-slate-600">
-                La sélection des candidats se déroule selon les étapes officielles du communiqué :
+            <p class="max-w-2xl mx-auto mt-3 text-sm sm:text-base text-slate-600">
+                La sélection des candidats au programme se déroule rigoureusement selon les étapes officielles :
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             <!-- Étape 1 -->
-            <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
-                <div class="flex items-center gap-3 mb-3">
-                    <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white bg-indigo-600 rounded-full">1</span>
-                    <h3 class="text-lg font-bold text-slate-900">Analyse des dossiers</h3>
+            <div class="relative bg-white rounded-3xl p-6 sm:p-8 shadow-lg border border-indigo-200/80 hover:border-indigo-400 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-indigo-700 text-white rounded-2xl flex items-center justify-center font-extrabold text-2xl shadow-lg shadow-indigo-200 group-hover:scale-110 transition-transform">
+                            1
+                        </div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                            <i class="far fa-calendar-alt"></i> Du 2 au 5 nov. 2026
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-indigo-600 transition-colors">
+                        Analyse des dossiers
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Vérification approfondie de la conformité des pièces fournies, de la nationalité, de la tranche d’âge (18 à 35 ans) et des critères d'éligibilité académiques ou professionnels.
+                    </p>
                 </div>
-                <p class="text-sm text-slate-600 leading-relaxed">
-                    Vérification de la conformité des pièces fournies et des critères d'éligibilité définis.
-                </p>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">
+                        Phase 1 • Éligibilité
+                    </span>
+                    <i class="fas fa-file-check text-indigo-400 text-sm"></i>
+                </div>
             </div>
 
             <!-- Étape 2 -->
-            <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
-                <div class="flex items-center gap-3 mb-3">
-                    <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white bg-purple-600 rounded-full">2</span>
-                    <h3 class="text-lg font-bold text-slate-900">Entretien & Épreuves</h3>
+            <div class="relative bg-white rounded-3xl p-6 sm:p-8 shadow-lg border border-purple-200/80 hover:border-purple-400 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-700 text-white rounded-2xl flex items-center justify-center font-extrabold text-2xl shadow-lg shadow-purple-200 group-hover:scale-110 transition-transform">
+                            2
+                        </div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-100">
+                            <i class="far fa-calendar-alt"></i> Du 9 au 13 nov. 2026
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-purple-600 transition-colors">
+                        Tests de sélection & Entretien
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Passation des tests écrits d'aptitude technique et entretien individuel de motivation devant le jury composé des responsables d'établissements et de la DAIP.
+                    </p>
                 </div>
-                <p class="text-sm text-slate-600 leading-relaxed">
-                    Entretien de motivation et passation des épreuves écrite et orale devant le jury.
-                </p>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <span class="text-xs font-semibold text-purple-600 bg-purple-50 px-2.5 py-1 rounded-lg">
+                        Phase 2 • Évaluation
+                    </span>
+                    <i class="fas fa-users-cog text-purple-400 text-sm"></i>
+                </div>
             </div>
 
             <!-- Étape 3 -->
-            <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
-                <div class="flex items-center gap-3 mb-3">
-                    <span class="flex items-center justify-center w-8 h-8 text-sm font-bold text-white bg-teal-600 rounded-full">3</span>
-                    <h3 class="text-lg font-bold text-slate-900">Visite médicale</h3>
+            <div class="relative bg-white rounded-3xl p-6 sm:p-8 shadow-lg border border-emerald-200/80 hover:border-emerald-400 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-700 text-white rounded-2xl flex items-center justify-center font-extrabold text-2xl shadow-lg shadow-emerald-200 group-hover:scale-110 transition-transform">
+                            3
+                        </div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                            <i class="far fa-calendar-alt"></i> Du 19 au 20 nov. 2026
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors">
+                        Visite médicale d'aptitude
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Examen médical d'aptitude physique complet assuré par des médecins assermentés pour valider définitivement l'admission à la formation d'installateur solaire.
+                    </p>
                 </div>
-                <p class="text-sm text-slate-600 leading-relaxed">
-                    Visite médicale d'aptitude physique pour valider l'admission définitive.
-                </p>
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">
+                        Phase 3 • Admission finale
+                    </span>
+                    <i class="fas fa-heartbeat text-emerald-400 text-sm"></i>
+                </div>
             </div>
         </div>
 
-        <div class="mt-8 p-4 text-center bg-indigo-50 border border-indigo-100 rounded-xl text-sm text-indigo-900">
-            <i class="fas fa-info-circle mr-2 text-indigo-600"></i>
-            Les résultats de la sélection seront communiqués sur le site internet <strong>www.daip.ci</strong>.
+        <!-- Bannière d'information résultats -->
+        <div class="mt-10 p-5 bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-50 border border-indigo-100/80 rounded-2xl shadow-sm text-center">
+            <p class="text-xs sm:text-sm text-slate-700 font-medium">
+                <i class="fas fa-bullhorn text-indigo-600 mr-2"></i>
+                Les résultats et listes officielles des candidats retenus à chaque étape seront publiés sur le site 
+                <a href="https://www.daip.ci" target="_blank" class="font-bold text-indigo-700 underline underline-offset-2 hover:text-indigo-800">www.daip.ci</a>.
+            </p>
         </div>
     </div>
 </section>
