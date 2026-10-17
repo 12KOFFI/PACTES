@@ -344,6 +344,7 @@ class HomeController extends AbstractController
         return [
             [
                 'nom' => 'Projet PACTE',
+                'signification' => 'Programme d’Action pour les Compétences en Transition Énergétique',
                 'image' => '/image/pacte.png',
                 'lien' => '#'
             ]
