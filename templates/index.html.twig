@@ -41,69 +41,50 @@
     <div class="container relative z-10 w-full max-w-full px-4 mx-auto">
         <div class="max-w-4xl mx-auto text-center">
             <!-- Badge -->
-            <div class="inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-semibold bg-white text-indigo-700 border-white mb-6 animate-fade-up animation-delay-200 shadow-sm">
+            <div class="inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-semibold bg-white text-purple-600 border-white mb-6 animate-fade-up animation-delay-200 shadow-sm">
                 <span class="flex w-2 h-2 mr-2 bg-green-400 rounded-full animate-pulse"></span>
                 RECRUTEMENT PACTE 2026
             </div>
             
-            <h1 class="mb-6 text-3xl font-bold leading-tight text-white break-words sm:text-4xl md:text-5xl lg:text-6xl animate-fade-up animation-delay-400">
-                Formation de jeunes au métier
-                <span class="block mt-2 text-transparent bg-gradient-to-r from-amber-200 via-orange-200 to-yellow-100 bg-clip-text">
-                    d'installateur de systèmes solaires photovoltaïques
+            <!-- Titre avec la police et le dégradé de design.txt -->
+            <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight animate-fade-up animation-delay-400 break-words">
+                Recrutement 250 
+                <span class="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">
+                    jeunes pour formation au CQP
                 </span>
             </h1>
 
-            <p class="max-w-2xl mx-auto mb-8 text-base text-indigo-100 sm:text-lg animate-fade-up animation-delay-600">
-                Programme de formation par apprentissage de six (06) mois sanctionné par un Certificat de Qualification Professionnelle (CQP).
+            <!-- Description -->
+            <p class="text-base sm:text-lg md:text-xl text-white/80 mb-10 max-w-2xl mx-auto px-2 animate-fade-up animation-delay-600">
+                Formation par apprentissage au métier d'installateur de systèmes solaires photovoltaïques
             </p>
-
-            <!-- Boutons d'action -->
-            <div class="flex flex-wrap items-center justify-center gap-4 mb-10 animate-fade-up animation-delay-800">
-                {% if app.user %}
-                    <a href="{{ path('app_candidature_new') }}" class="inline-flex items-center gap-2 px-6 py-3.5 font-bold text-white transition bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg hover:scale-105">
-                        <i class="fas fa-paper-plane"></i>
-                        Déposer ma candidature
-                    </a>
-                {% else %}
-                    <a href="{{ path('app_register') }}" class="inline-flex items-center gap-2 px-6 py-3.5 font-bold text-white transition bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl hover:from-orange-600 hover:to-amber-600 shadow-lg hover:scale-105">
-                        <i class="fas fa-user-plus"></i>
-                        Postuler en ligne
-                    </a>
-                {% endif %}
-                <a href="#presentation" class="inline-flex items-center gap-2 px-6 py-3.5 font-semibold text-white transition bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl hover:bg-white/20">
-                    <i class="fas fa-info-circle"></i>
-                    Consulter le communiqué
-                </a>
-            </div>
             
             <!-- Stats rapides -->
-            <div class="flex justify-center">
-                <div class="grid max-w-3xl grid-cols-2 gap-2 mx-auto mb-10 sm:grid-cols-4 sm:gap-4">
-                    <div class="p-3 border bg-white/5 backdrop-blur-sm rounded-xl sm:p-4 border-white/10 animate-fade-up animation-delay-800">
-                        <div class="text-xl font-bold text-white sm:text-2xl">{{ stats.metiers }}</div>
-                        <div class="text-[11px] sm:text-xs text-white/70">Métier(s)</div>
-                    </div>
-                    <div class="p-3 border bg-white/5 backdrop-blur-sm rounded-xl sm:p-4 border-white/10 animate-fade-up animation-delay-1000">
-                        <div class="text-xl font-bold text-white sm:text-2xl">{{ stats.etablissements }}</div>
-                        <div class="text-[11px] sm:text-xs text-white/70">Établissements</div>
-                    </div>
-                    <div class="p-3 border bg-white/5 backdrop-blur-sm rounded-xl sm:p-4 border-white/10 animate-fade-up animation-delay-1200">
-                        <div class="text-xl font-bold text-white sm:text-2xl">{{ stats.places }}</div>
-                        <div class="text-[11px] sm:text-xs text-white/70">Postes ouverts</div>
-                    </div>
-                    <div class="p-3 border bg-white/5 backdrop-blur-sm rounded-xl sm:p-4 border-white/10 animate-fade-up animation-delay-1400">
-                        <div class="text-xl font-bold text-white sm:text-2xl">{{ stats.candidatures }}</div>
-                        <div class="text-[11px] sm:text-xs text-white/70">Candidatures</div>
-                    </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 max-w-3xl mx-auto mb-10">
+                <div class="p-2 sm:p-4 border bg-white/5 backdrop-blur-sm rounded-xl border-white/10 animate-fade-up animation-delay-800">
+                    <div class="text-lg sm:text-2xl font-bold text-white">{{ stats.metiers }}</div>
+                    <div class="text-[10px] sm:text-xs text-white/60">Métier(s)</div>
+                </div>
+                <div class="p-2 sm:p-4 border bg-white/5 backdrop-blur-sm rounded-xl border-white/10 animate-fade-up animation-delay-1000">
+                    <div class="text-lg sm:text-2xl font-bold text-white">{{ stats.etablissements }}</div>
+                    <div class="text-[10px] sm:text-xs text-white/60">Établissements</div>
+                </div>
+                <div class="p-2 sm:p-4 border bg-white/5 backdrop-blur-sm rounded-xl border-white/10 animate-fade-up animation-delay-1200">
+                    <div class="text-lg sm:text-2xl font-bold text-white">{{ stats.places }}</div>
+                    <div class="text-[10px] sm:text-xs text-white/60">Postes ouverts</div>
+                </div>
+                <div class="p-2 sm:p-4 border bg-white/5 backdrop-blur-sm rounded-xl border-white/10 animate-fade-up animation-delay-1400">
+                    <div class="text-lg sm:text-2xl font-bold text-white">{{ stats.candidatures }}</div>
+                    <div class="text-[10px] sm:text-xs text-white/60">Candidatures</div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Scroll indicator -->
-    <a href="#presentation" class="absolute transform -translate-x-1/2 bottom-4 left-1/2 animate-bounce">
-        <div class="flex justify-center w-6 h-10 border-2 rounded-full border-white/30">
-            <div class="w-1 h-3 mt-2 rounded-full bg-white/60 animate-pulse"></div>
+    <a href="#presentation" class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <div class="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center">
+            <div class="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse"></div>
         </div>
     </a>
 </section>
@@ -115,10 +96,7 @@
 
     <div class="container relative z-10 w-full max-w-6xl px-4 mx-auto">
         <div class="mb-10 text-center">
-            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm">
-                <i class="mr-2 fas fa-bullhorn"></i>
-                COMMUNIQUÉ OFFICIEL N°___________/MENAET/CAB-MDET (À COMPLÉTER)
-            </div>
+          
             <h2 class="text-2xl font-bold sm:text-3xl md:text-4xl text-slate-900">
                 Présentation du programme de recrutement 2026
             </h2>
@@ -138,9 +116,7 @@
                     ou de façon physique dans les différentes structures de formation.
                 </p>
 
-                <p class="text-sm leading-relaxed sm:text-base text-slate-600">
-                    La formation, dispensée selon la modalité de l’<strong>Apprentissage</strong>, durera <strong>six (06) mois</strong>. Les <strong>formations théoriques</strong> se dérouleront au sein des structures de formation professionnelle impliquées (Lycée Professionnel des Métiers de l'Énergie Renouvelable, Lycée Professionnel de Jacqueville, Lycée Professionnel de Korhogo) et les <strong>formations pratiques</strong> dans les entreprises partenaires.
-                </p>
+              
 
                 <p class="pt-2 text-base font-medium sm:text-lg text-slate-800">
                     Pour faire acte de candidature vous devez remplir les conditions suivantes :
@@ -509,33 +485,184 @@
     </div>
 </section>
 
-<!-- ==================== CALENDRIER SECTION ==================== -->
-<section id="calendrier" class="py-12 bg-slate-50 sm:py-20 border-t border-slate-200">
-    <div class="container w-full max-w-5xl px-4 mx-auto">
-        <div class="mb-10 text-center">
-            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-white px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm">
-                <i class="mr-2 fas fa-calendar-alt"></i>
-                CALENDRIER DE RÉCEPTION
+<!-- ==================== CALENDRIER DES OPÉRATIONS SECTION ==================== -->
+<section id="calendrier" class="py-12 sm:py-20 bg-gradient-to-br from-green-50 to-emerald-50 border-y border-green-200">
+    <div class="container mx-auto px-4 w-full max-w-full">
+        <div class="text-center mb-8 sm:mb-12">
+            <div class="inline-flex items-center rounded-full border border-green-200 bg-white px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-green-700 mb-4 shadow-sm">
+                <i class="fas fa-calendar-alt mr-2"></i>
+                CHRONOGRAMME
             </div>
-            <h2 class="text-2xl font-bold sm:text-3xl md:text-4xl text-slate-900">
-                Période des candidatures
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-4 px-2">
+                Calendrier des opérations
             </h2>
+            <p class="text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto px-4">
+                Les dates clés à retenir pour votre candidature
+            </p>
         </div>
 
-        <div class="max-w-2xl mx-auto p-8 bg-white border border-slate-200 rounded-2xl shadow-sm text-center">
-            <div class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-indigo-100 rounded-full">
-                <i class="text-3xl text-indigo-600 fas fa-calendar-check"></i>
+        <div class="grid lg:grid-cols-5 gap-6 lg:gap-8 items-start max-w-6xl mx-auto">
+            <!-- Colonne gauche : Illustration SVG -->
+            <div class="relative col-span-2 hidden lg:block">
+                <div class="relative rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-white to-slate-100 p-8 border border-slate-100">
+                    <img src="{{ asset('svg/work-in-progress.svg') }}" alt="Calendrier des opérations" class="w-full h-auto object-contain" onerror="this.onerror=null; this.src='{{ asset('svg/done-checking.svg') }}'">
+                </div>
+                
+                <!-- Badge flottant -->
+                <div class="absolute -bottom-4 -right-4 bg-white rounded-xl shadow-lg p-3 animate-float hidden md:block border border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-clock text-green-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-green-600">Ne tardez pas !</p>
+                            <p class="text-xs text-slate-500">Inscriptions limitées</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <h3 class="text-xl font-bold text-slate-900 mb-2">
-                Du lundi 19 au samedi 31 octobre 2026
-            </h3>
-            <p class="text-base text-slate-600 mb-6">
-                Les candidatures sont reçues exclusivement en ligne sur le site officiel :
+
+            <!-- Colonne droite : Timeline -->
+            <div class="space-y-4 sm:space-y-6 col-span-3 px-2">
+                <!-- Étape 1 -->
+                <div class="relative flex items-start gap-3 sm:gap-4 group">
+                    <div class="w-8 h-8 sm:w-12 sm:h-12 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition group-hover:bg-indigo-200 shadow-sm">
+                        <span class="text-sm sm:text-lg font-bold text-indigo-600">1</span>
+                    </div>
+                    <div class="flex-1 bg-white rounded-xl p-4 sm:p-5 shadow-md border border-indigo-100">
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900">Dépôt des candidatures</h4>
+                        <p class="text-sm sm:text-base text-indigo-600 font-semibold mt-1">Du lundi 19 au samedi 31 octobre 2026</p>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-2">Dépôt en ligne sur www.daip.ci ou dans les structures de formation</p>
+                    </div>
+                </div>
+
+                <!-- Étape 2 -->
+                <div class="relative flex items-start gap-3 sm:gap-4 group">
+                    <div class="w-8 h-8 sm:w-12 sm:h-12 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition group-hover:bg-purple-200 shadow-sm">
+                        <span class="text-sm sm:text-lg font-bold text-purple-600">2</span>
+                    </div>
+                    <div class="flex-1 bg-white rounded-xl p-4 sm:p-5 shadow-md border border-purple-100">
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900">Étude des dossiers</h4>
+                        <p class="text-sm sm:text-base text-purple-600 font-semibold mt-1">Novembre 2026 (À COMPLÉTER)</p>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-2">Analyse de la conformité des pièces fournies et des critères d'éligibilité</p>
+                    </div>
+                </div>
+
+                <!-- Étape 3 -->
+                <div class="relative flex items-start gap-3 sm:gap-4 group">
+                    <div class="w-8 h-8 sm:w-12 sm:h-12 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition group-hover:bg-pink-200 shadow-sm">
+                        <span class="text-sm sm:text-lg font-bold text-pink-600">3</span>
+                    </div>
+                    <div class="flex-1 bg-white rounded-xl p-4 sm:p-5 shadow-md border border-pink-100">
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900">Entretiens de sélection</h4>
+                        <p class="text-sm sm:text-base text-pink-600 font-semibold mt-1">Novembre 2026 (À COMPLÉTER)</p>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-2">Évaluation des candidats par les jurys (épreuves écrite et orale)</p>
+                    </div>
+                </div>
+
+                <!-- Étape 4 -->
+                <div class="relative flex items-start gap-3 sm:gap-4 group">
+                    <div class="w-8 h-8 sm:w-12 sm:h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition group-hover:bg-green-200 shadow-sm">
+                        <span class="text-sm sm:text-lg font-bold text-green-600">4</span>
+                    </div>
+                    <div class="flex-1 bg-white rounded-xl p-4 sm:p-5 shadow-md border border-green-100">
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900">Début des formations</h4>
+                        <p class="text-sm sm:text-base text-green-600 font-semibold mt-1">Session 2026</p>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-2">Rentrée des apprentis dans les établissements de formation et entreprises partenaires</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== SECTION PARTENAIRES ==================== -->
+<section id="partenaires" class="py-12 sm:py-16 bg-gradient-to-br from-slate-50 to-white border-t border-slate-200">
+    <div class="container mx-auto px-4 w-full max-w-full">
+        <div class="text-center mb-8 sm:mb-10">
+            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-600 mb-4 shadow-sm">
+                <i class="fas fa-handshake mr-2"></i>
+                ILS NOUS FONT CONFIANCE
+            </div>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 mb-2 px-2">
+                Nos partenaires institutionnels et techniques
+            </h2>
+            <p class="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto px-4">
+                Ils accompagnent la DAIP et le projet PACTE dans leur mission de formation et d'insertion professionnelle
             </p>
-            <a href="https://www.daip.ci" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 font-mono font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-xl hover:bg-indigo-100 transition">
-                <i class="fas fa-globe"></i>
-                www.daip.ci
-            </a>
+        </div>
+
+        <!-- CARROUSEL AVEC FLÈCHES SUR TOUS LES ÉCRANS -->
+        <div class="relative w-full flex justify-center"
+             x-data="partenairesCarousel"
+             @mouseenter="stopAutoplay"
+             @mouseleave="startAutoplay">
+            
+            <!-- Conteneur principal -->
+            <div class="w-full max-w-6xl px-4 md:px-8 relative">
+                
+                <!-- Bouton précédent -->
+                <button @click="prevSlide; $el.blur()" 
+                        class="absolute -left-2 sm:-left-3 md:-left-4 top-1/2 transform -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-white shadow-lg hover:bg-indigo-600 hover:text-white transition-all duration-300 flex items-center justify-center border border-indigo-200 z-20 opacity-80 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        title="Précédent"
+                        aria-label="Voir le partenaire précédent">
+                    <i class="fas fa-chevron-left text-xs sm:text-sm md:text-base"></i>
+                </button>
+                
+                <!-- Conteneur du carrousel -->
+                <div class="overflow-hidden py-4">
+                    <div class="flex transition-transform duration-500 ease-out" 
+                         :style="'transform: translateX(-' + (currentSlide * 100 / slidesPerView) + '%)'">
+                        
+                        <template x-for="partenaire in partenaires" :key="partenaire.nom">
+                            <!-- Slide avec largeur dynamique -->
+                            <div class="flex-shrink-0 px-2 sm:px-3" :style="'width: ' + (100 / slidesPerView) + '%'">
+                                <div class="flex justify-center w-full">
+                                    <div class="w-full max-w-[260px] xs:max-w-[280px] sm:max-w-[300px] md:max-w-[320px]">
+                                        <a :href="partenaire.lien" 
+                                           target="_blank"
+                                           class="block group relative overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white border border-slate-100">
+                                            
+                                            <!-- Conteneur logo avec ratio équilibré -->
+                                            <div class="relative w-full h-44 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/50 rounded-2xl overflow-hidden flex flex-col items-center justify-center p-6">
+                                                <img :src="partenaire.image"
+                                                     :alt="partenaire.nom"
+                                                     class="max-h-20 max-w-[80%] w-auto h-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                                                     x-on:error="$el.src = '{{ asset('image/pacte.png') }}'">
+
+                                                <!-- Overlay nom -->
+                                                <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-900/85 via-slate-900/40 to-transparent p-2.5 text-center">
+                                                    <h3 class="text-white font-bold text-xs sm:text-sm drop-shadow-md line-clamp-1 px-1" 
+                                                        x-text="partenaire.nom"></h3>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Bouton suivant -->
+                <button @click="nextSlide; $el.blur()" 
+                        class="absolute -right-2 sm:-right-3 md:-right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-white shadow-lg hover:bg-indigo-600 hover:text-white transition-all duration-300 flex items-center justify-center border border-indigo-200 z-20 opacity-80 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        title="Suivant"
+                        aria-label="Voir le partenaire suivant">
+                    <i class="fas fa-chevron-right text-xs sm:text-sm md:text-base"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Indicateurs de slide -->
+        <div class="flex justify-center mt-6 sm:mt-8 space-x-2">
+            <template x-for="index in Math.ceil(partenaires.length / slidesPerView)" :key="index">
+                <button @click="goToSlide(index - 1)" 
+                        class="h-2 sm:h-2.5 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        :class="currentSlide === index - 1 ? 'w-6 sm:w-8 bg-indigo-600' : 'w-2 sm:w-2.5 bg-slate-300 hover:bg-indigo-400'"
+                        :aria-label="'Aller à la slide ' + index">
+                </button>
+            </template>
         </div>
     </div>
 </section>
@@ -634,5 +761,105 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 {% endif %}
+
+<script>
+// ==================== CARROUSEL PARTENAIRES ====================
+(function() {
+    let partenairesData = {{ partenaires|default([])|json_encode|raw }};
+
+    if (partenairesData && partenairesData.length > 0) {
+        partenairesData = partenairesData.map(function(partenaire) {
+            if (partenaire.image && partenaire.image.startsWith('/public/')) {
+                partenaire.image = partenaire.image.replace('/public', '');
+            } else if (partenaire.image && partenaire.image.startsWith('public/')) {
+                partenaire.image = '/' + partenaire.image.replace('public/', '');
+            } else if (partenaire.image && !partenaire.image.startsWith('/')) {
+                partenaire.image = '/' + partenaire.image;
+            }
+            return partenaire;
+        });
+    }
+
+    let carouselInstance = null;
+
+    window.partenairesCarousel = function() {
+        if (carouselInstance) {
+            return carouselInstance;
+        }
+
+        carouselInstance = {
+            partenaires: partenairesData || [],
+            currentSlide: 0,
+            slidesPerView: 1,
+            autoplayInterval: null,
+            _eventListenersAdded: false,
+
+            init() {
+                if (!this.partenaires || this.partenaires.length === 0) return;
+                if (!this._eventListenersAdded) {
+                    this._eventListenersAdded = true;
+                    this.updateSlidesPerView();
+                    window.addEventListener('resize', () => this.updateSlidesPerView());
+                    this.startAutoplay();
+                }
+            },
+
+            updateSlidesPerView() {
+                const width = window.innerWidth;
+                let newValue;
+                if (width < 640) {
+                    newValue = 1;
+                } else if (width < 768) {
+                    newValue = 2;
+                } else if (width < 1024) {
+                    newValue = 3;
+                } else {
+                    newValue = 4;
+                }
+                this.slidesPerView = Math.max(1, Math.min(newValue, this.partenaires.length));
+                const totalSlides = Math.ceil(this.partenaires.length / this.slidesPerView);
+                if (this.currentSlide >= totalSlides) {
+                    this.currentSlide = Math.max(0, totalSlides - 1);
+                }
+            },
+
+            startAutoplay() {
+                this.stopAutoplay();
+                if (this.partenaires.length > this.slidesPerView) {
+                    this.autoplayInterval = setInterval(() => this.nextSlide(), 5000);
+                }
+            },
+
+            stopAutoplay() {
+                if (this.autoplayInterval) {
+                    clearInterval(this.autoplayInterval);
+                    this.autoplayInterval = null;
+                }
+            },
+
+            nextSlide() {
+                if (!this.partenaires?.length) return;
+                const totalSlides = Math.ceil(this.partenaires.length / this.slidesPerView);
+                if (totalSlides <= 1) return;
+                this.currentSlide = (this.currentSlide + 1) % totalSlides;
+            },
+
+            prevSlide() {
+                if (!this.partenaires?.length) return;
+                const totalSlides = Math.ceil(this.partenaires.length / this.slidesPerView);
+                if (totalSlides <= 1) return;
+                this.currentSlide = (this.currentSlide - 1 + totalSlides) % totalSlides;
+            },
+
+            goToSlide(index) {
+                const totalSlides = Math.ceil(this.partenaires.length / this.slidesPerView);
+                if (index >= 0 && index < totalSlides) this.currentSlide = index;
+            }
+        };
+
+        return carouselInstance;
+    };
+})();
+</script>
 
 {% endblock %}
