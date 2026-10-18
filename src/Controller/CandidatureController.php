@@ -570,6 +570,12 @@ class CandidatureController extends AbstractController
             }
         }
 
+        // Mettre à jour le diplôme
+        $diplome = $request->request->get('diplome');
+        if ($diplome !== null) {
+            $candidature->setDiplome($diplome !== '' ? $diplome : null);
+        }
+
         // Traiter les fichiers uploadés
         $dir = $this->params->get('dir_media') . $candidature->getNumero() . '/';
         $this->fileUploader->mkdir($dir);
@@ -1420,7 +1426,7 @@ class CandidatureController extends AbstractController
             return $this->redirectToRoute('app_candidature_impressions');
         }
 
-        $headers = ['N°', 'Numéro', 'Nom', 'Prénoms', 'Sexe', 'Contact', 'Établissement', 'Métier'];
+        $headers = ['N°', 'Numéro', 'Nom', 'Prénoms', 'Sexe', 'Contact', 'Établissement', 'Métier', 'Diplôme'];
         $datas = [];
         foreach ($candidatures as $index => $candidature) {
             $candidat = $candidature->getUser();
@@ -1433,6 +1439,7 @@ class CandidatureController extends AbstractController
                 $candidat?->getContact() ?? '',
                 $candidature->getEtablissement()?->getNom() ?? '',
                 $candidature->getMetier()?->getNom() ?? '',
+                $candidature->getDiplome() ?? '',
             ];
         }
 
@@ -2112,6 +2119,10 @@ class CandidatureController extends AbstractController
                 $candidature->setEtablissement($etablissement);
             }
         }
+
+        if ($diplome = $request->query->get('diplome')) {
+            $candidature->setDiplome($diplome);
+        }
     }
 
     private function displayFormErrors($form): void
@@ -2200,7 +2211,7 @@ class CandidatureController extends AbstractController
             'nom' => $em->getMetier()->getNom(),
             'secteur_nom' => null,
             'nbrplace' => $em->getNbrplace(),
-            'niveau' => $em->getNiveauRequis(),
+            'niveau' => $em->getNiveauRequis() ?: 'CAP - BT - BTS',
             'duree' => $em->getDureeFormation()
         ], $etabMetiers);
     }
@@ -2321,10 +2332,17 @@ class CandidatureController extends AbstractController
     {
         $dirImage = $this->params->get('dir_image');
 
-        // Aucune photo dans le processus PACTE. Les logos absents donnent une chaîne vide (secours texte dans les gabarits).
+        $entetePath = file_exists($dirImage . 'pacte/logo-ministere.png')
+            ? $dirImage . 'pacte/logo-ministere.png'
+            : $dirImage . 'entete_generique_e2c.png';
+
+        $logoPath = file_exists($dirImage . 'pacte/logo-pacte.png')
+            ? $dirImage . 'pacte/logo-pacte.png'
+            : $dirImage . 'pacte.png';
+
         return [
-            'entete' => $this->pdfGenerator->imageToBase64($dirImage . 'pacte/logo-ministere.png'),
-            'logo' => $this->pdfGenerator->imageToBase64($dirImage . 'pacte/logo-pacte.png')
+            'entete' => $this->pdfGenerator->imageToBase64($entetePath),
+            'logo'   => $this->pdfGenerator->imageToBase64($logoPath)
         ];
     }
     private function handleInvalidConvocation(): Response

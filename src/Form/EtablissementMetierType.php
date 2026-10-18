@@ -61,6 +61,7 @@ class EtablissementMetierType extends AbstractType
             ->add('niveauRequis', ChoiceType::class, [
                 'attr' => ['class' => 'form-select'],
                 'choices' => [
+                    'CAP - BT - BTS' => 'CAP - BT - BTS',
                     'CEP' => 'CEP',
                     '5ème' => '5ème',
                     '3ème' => '3ème',

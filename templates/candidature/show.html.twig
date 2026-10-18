@@ -136,6 +136,10 @@
                     <p class="text-sm font-medium text-slate-800">{{ candidature.metier ? candidature.metier.nom : '-' }}</p>
                 </div>
                 <div>
+                    <p class="text-xs uppercase tracking-wide text-slate-400">Diplôme</p>
+                    <p class="text-sm font-medium text-slate-800">{{ candidature.diplome|default('-') }}</p>
+                </div>
+                <div>
                     <p class="text-xs uppercase tracking-wide text-slate-400">Niveau</p>
                     <p class="text-sm font-medium text-slate-800">{{ candidature.niveau|default('-') }}</p>
                 </div>

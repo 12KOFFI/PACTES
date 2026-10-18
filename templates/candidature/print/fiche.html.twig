@@ -2,11 +2,13 @@
 <html lang='fr'>
 <head>
     <meta charset='UTF-8'>
-    <title>PACTE - FICHE D'INSCRIPTION CANDIDAT</title>
+    <title>PACTE - FICHE D'INSCRIPTION CANDIDAT PROJET PACTE</title>
     <style>
         @page {
             size: A4 portrait;
-            margin: 0.65cm 1cm 2.15cm 1cm;
+            /* Marge à 0 : le générateur PDF ignore/écrase la marge @page.
+               Les marges réelles de la feuille sont donc créées par le padding du body. */
+            margin: 0;
         }
         * {
             box-sizing: border-box;
@@ -14,155 +16,153 @@
             padding: 0;
         }
         body {
+            /* Marges A4 standard : 2 cm (56.7pt) haut / gauche / droite,
+               marge basse agrandie pour laisser la place au pied de page. */
+            padding: 56.7pt 56.7pt 100pt 56.7pt;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            font-size: 13px;
-            color: #0f172a;
-            line-height: 1.5;
-            background: #fff;
+            font-size: 11.2pt;
+            color: #000000;
+            line-height: 1.4;
+            background: #ffffff;
         }
 
         /* ===== En-tête ===== */
         .header-section {
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 8pt;
         }
         .header-section img {
-            max-width: 100%;
+            width: 100%;
+            max-width: 550pt;
             height: auto;
-            max-height: 85px;
+            max-height: 52pt;
+            display: block;
+            margin: 0 auto;
         }
 
-        /* ===== Titre ===== */
-        .title-badge {
+        .title-box {
+            border: 0.75pt solid #000000;
+            border-radius: 5pt;
+            height: 27pt;
+            line-height: 27pt;
             text-align: center;
-            background: #0055a4;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 1.3em;
-            letter-spacing: 0.8px;
-            padding: 8px 12px;
-            border-radius: 6px;
-            margin-bottom: 22px;
+            font-weight: bold;
+            font-size: 13.5pt;
+            letter-spacing: 0.3pt;
             text-transform: uppercase;
+            color: #000000;
+            background: #ffffff;
+            margin-bottom: 22pt;
         }
 
-        /* ===== Cartes d'information ===== */
-        .info-card {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-left: 4px solid #0055a4; /* Bande bleue d'accentuation */
-            border-radius: 6px;
-            padding: 14px 18px;
-            margin-bottom: 18px; /* Espacement aéré entre les blocs */
+        /* ===== Sections ===== */
+        .section-block {
+            margin-bottom: 18pt;
             position: relative;
         }
-        .card-title {
-            font-weight: 700;
+        .section-title {
+            font-weight: bold;
             color: #0055a4;
-            font-size: 1.05em;
-            border-bottom: 1.5px solid #cbd5e1;
-            padding-bottom: 6px;
-            margin-bottom: 12px;
+            font-size: 11.7pt;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            margin-bottom: 8pt;
+            letter-spacing: 0.2pt;
+        }
+        .section-content {
+            margin-left: 11.25pt;
         }
 
-        /* ===== Lignes & Champs ===== */
-        .row-table {
+        /* ===== Tableau Clé / Valeur ===== */
+        .info-table {
             width: 100%;
             border-collapse: collapse;
         }
-        .row-table td {
-            padding: 5px 0;
-            vertical-align: top;
+        .info-table td {
+            padding: 3.5pt 0;
+            vertical-align: middle;
         }
-        .label {
-            font-weight: 700;
-            color: #334155;
-            width: 180px;
+        .info-table td.lbl {
+            width: 114.75pt;
+            font-size: 9.8pt;
+            font-weight: bold;
+            color: #444444;
+            white-space: nowrap;
         }
-        .colon {
-            width: 15px;
-            color: #64748b;
-            font-weight: 700;
+        .info-table td.val {
+            font-size: 11.2pt;
+            color: #000000;
         }
-        .value {
-            font-weight: 600;
-            color: #0f172a;
+        .info-table td.val-bold {
+            font-size: 11.2pt;
+            font-weight: bold;
+            color: #000000;
         }
 
-        /* ===== QR Code ===== */
+        /* ===== QR Code encadré ===== */
         .qr-code-box {
             position: absolute;
-            top: 14px;
-            right: 18px;
+            top: 0;
+            right: 0;
             text-align: center;
+            width: 60pt;
+        }
+        .qr-card {
+            border: 0.75pt solid #dddddd;
             background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            padding: 5px;
+            padding: 3pt;
+            width: 53pt;
+            height: 53pt;
+            margin: 0 auto;
         }
-        .qr-code-box img {
-            width: 75px;
-            height: 75px;
+        .qr-card img {
+            width: 47pt;
+            height: 47pt;
             display: block;
+            margin: 0 auto;
         }
-        .qr-code-box small {
-            font-size: 8px;
-            font-weight: 700;
-            color: #0055a4;
-            margin-top: 3px;
-            display: block;
-            text-transform: uppercase;
+        .qr-label {
+            font-size: 5.5pt;
+            color: #666666;
+            margin-top: 3pt;
+            text-align: center;
+            white-space: nowrap;
         }
 
-        /* ===== Pied de page (Fixé en bas de la page A4) ===== */
+        /* ===== Pied de page ===== */
         .footer-wrap {
             position: fixed;
-            left: 1cm;
-            right: 1cm;
-            bottom: 0.35cm;
-            height: 1.35cm;
+            left: 0;
+            right: 0;
+            bottom: 28pt;
             text-align: center;
-            background: #ffffff;
-            border-top: 1px solid #cbd9e7;
-            padding-top: 3px;
         }
-
-        .project-logo {
+        .footer-logo {
             display: block;
             width: auto;
-            max-width: 180px;
-            max-height: 35px;
-            margin: 0 auto 2px auto;
+            max-width: 110pt;
+            max-height: 28pt;
+            margin: 0 auto 5pt auto;
         }
-
-        .footer {
-            color: #64748b;
-            font-size: 8px;
-            line-height: 1.25;
-            font-weight: 500;
-        }
-
-        .footer-date {
-            color: #0055a4;
-            margin-bottom: 1px;
-        }
-
-        .footer-copyright {
-            color: #64748b;
+        .footer-text {
+            color: #000000;
+            font-size: 8.2pt;
+            line-height: 1.35;
         }
     </style>
 </head>
 <body>
 
-    <!-- En-tête -->
+    <!-- En-tête officiel -->
     <div class="header-section">
-        {% if image.entete %}<img src='{{ image.entete }}' alt='En-tête'>{% else %}<div style='text-align:center;font-size:28px;font-weight:bold'>PACTE</div>{% endif %}
+        {% if image.entete %}
+            <img src='{{ image.entete }}' alt='En-tête'>
+        {% else %}
+            <div style='text-align:center;font-size:20pt;font-weight:bold;'>PACTE</div>
+        {% endif %}
     </div>
 
-    <!-- Titre principal -->
-    <div class='title-badge'>Fiche d'Inscription Candidat</div>
+    <!-- Boîte Titre -->
+    <div class="title-box">FICHE D'INSCRIPTION CANDIDAT PROJET PACTE</div>
 
     {% set user = candidature.user %}
     {% set etablissement = candidature.etablissement %}
@@ -170,104 +170,105 @@
     {% set metier = candidature.metier %}
     {% set etablissementMetier = (etablissement and metier) ? etablissement.etablissementMetiers|filter(em => em.metier and em.metier.id == metier.id)|first : null %}
 
-    <!-- Section 1 : Candidat -->
-    <div class="info-card">
-        <div class="card-title">1. Informations sur le Candidat</div>
-        
+    <!-- 1. CANDIDAT -->
+    <div class="section-block">
+        <div class="section-title">1. CANDIDAT</div>
+
         <div class="qr-code-box">
-            <img src='https://api.qrserver.com/v1/create-qr-code/?size=75x75&data={{ candidature.numero }}' alt='QR Code'>
-            <small>Scan vérification</small>
+            <div class="qr-card">
+                <img src='https://api.qrserver.com/v1/create-qr-code/?size=70x70&data={{ candidature.numero }}' alt='QR Code'>
+            </div>
+            <div class="qr-label">Scan pour vérifier</div>
         </div>
-        
-        <div style="padding-right: 105px;">
-            <table class="row-table">
+
+        <div class="section-content" style="padding-right: 70pt;">
+            <table class="info-table">
                 <tr>
-                    <td class="label">N° de Candidature</td>
-                    <td class="colon">:</td>
-                    <td class="value" style="color: #0055a4; font-weight: 800; font-size: 1.05em;">{{ candidature.numero }}</td>
+                    <td class="lbl">Numéro :</td>
+                    <td class="val-bold">{{ candidature.numero }}</td>
                 </tr>
                 <tr>
-                    <td class="label">Nom & Prénoms</td>
-                    <td class="colon">:</td>
-                    <td class="value">
-                        {% set civilite = (user and user.sexe == 'MASCULIN') ? 'M.' : 'Mme' %}
-                        <strong>{{ civilite }} {{ user ? user.nom|upper : '' }} {{ user ? user.prenoms|title : '' }}</strong>
+                    <td class="lbl">Nom & Prénoms :</td>
+                    <td class="val-bold">
+                        {% set civilite = (user and user.sexe == 'FEMININ') ? 'Mme' : 'M.' %}
+                        {{ civilite }} {{ user ? user.nom|upper : '' }} {{ user ? user.prenoms|title : '' }}
                         {% if user and user.nomjeunefille %}
-                            <span style="color:#64748b; font-weight:500;"> (née {{ user.nomjeunefille|upper }})</span>
+                            <span style="font-weight: normal; color: #444444;"> (née {{ user.nomjeunefille|upper }})</span>
                         {% endif %}
                     </td>
                 </tr>
                 <tr>
-                    <td class="label">Date & Lieu de naissance</td>
-                    <td class="colon">:</td>
-                    <td class="value">{{ user and user.datenaissance ? user.datenaissance|date('d/m/Y') : '-' }} à {{ user ? user.lieunaissance|upper : '-' }}</td>
+                    <td class="lbl">Né(e) le :</td>
+                    <td class="val">{{ user and user.datenaissance ? user.datenaissance|date('d/m/Y') : '-' }} à {{ user and user.lieunaissance ? user.lieunaissance|upper : '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="label">Contact</td>
-                    <td class="colon">:</td>
-                    <td class="value">{{ user ? user.contact : '-' }}</td>
+                    <td class="lbl">Contact :</td>
+                    <td class="val">{{ user ? user.contact : '-' }}</td>
                 </tr>
                 <tr>
-                    <td class="label">Date d'inscription</td>
-                    <td class="colon">:</td>
-                    <td class="value">{{ candidature.creation|date('d/m/Y à H:i', 'Africa/Abidjan') }}</td>
+                    <td class="lbl">Date d'inscription :</td>
+                    <td class="val">{{ candidature.creation|date('d/m/Y à H:i', 'Africa/Abidjan') }}</td>
                 </tr>
             </table>
         </div>
     </div>
 
-    <!-- Section 2 : Centre de Formation -->
-    <div class="info-card">
-        <div class="card-title">2. Centre de Formation</div>
-        <table class="row-table">
-            <tr>
-                <td class="label">Établissement</td>
-                <td class="colon">:</td>
-                <td class="value"><strong>{{ etablissement ? etablissement.nom : '-' }}</strong></td>
-            </tr>
-            {% if localite %}
-            <tr>
-                <td class="label">Localité</td>
-                <td class="colon">:</td>
-                <td class="value">{{ localite.nom|upper }}</td>
-            </tr>
-            {% endif %}
-        </table>
+    <!-- 2. CENTRE DE FORMATION -->
+    <div class="section-block">
+        <div class="section-title">2. CENTRE DE FORMATION</div>
+        <div class="section-content">
+            <table class="info-table">
+                <tr>
+                    <td class="lbl">Établissement :</td>
+                    <td class="val-bold">{{ etablissement ? etablissement.nom : '-' }}</td>
+                </tr>
+                <tr>
+                    <td class="lbl">Localité :</td>
+                    <td class="val">
+                        {% if localite %}
+                            {{ localite.nom|title }}{% if localite.parent %} - DR {{ localite.parent.nom|upper }}{% endif %}
+                        {% elseif etablissement and etablissement.definition %}
+                            {{ etablissement.definition }}
+                        {% elseif etablissement and etablissement.id == 1 %}
+                            Abidjan
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
 
-    <!-- Section 3 : Métier & Formation -->
-    <div class="info-card">
-        <div class="card-title">3. Métier et Formation</div>
-        <table class="row-table">
-            <tr>
-                <td class="label">Métier choisi</td>
-                <td class="colon">:</td>
-                <td class="value"><strong>{{ metier ? metier.nom|upper : '-' }}</strong></td>
-            </tr>
-            {% if etablissementMetier %}
-            <tr>
-                <td class="label">Niveau requis</td>
-                <td class="colon">:</td>
-                <td class="value">{{ etablissementMetier.niveauRequis ?: '-' }}</td>
-            </tr>
-            <tr>
-                <td class="label">Durée formation</td>
-                <td class="colon">:</td>
-                <td class="value">{{ etablissementMetier.dureeFormation ?: '-' }}</td>
-            </tr>
-            {% endif %}
-        </table>
+    <!-- 3. MÉTIER ET FORMATION -->
+    <div class="section-block">
+        <div class="section-title">3. MÉTIER ET FORMATION</div>
+        <div class="section-content">
+            <table class="info-table">
+                <tr>
+                    <td class="lbl">Métier :</td>
+                    <td class="val-bold">{{ metier ? metier.nom : '-' }}</td>
+                </tr>
+                <tr>
+                    <td class="lbl">Diplôme :</td>
+                    <td class="val-bold">{{ candidature.diplome ?: '-' }}</td>
+                </tr>
+                <tr>
+                    <td class="lbl">Secteur :</td>
+                    <td class="val">Énergie Renouvelable</td>
+                </tr>
+            </table>
+        </div>
     </div>
 
-    <!-- Zone Logo & Pied de page fixe -->
+    <!-- Pied de page officiel avec Logo PACTE -->
     <div class="footer-wrap">
         {% if image.logo is defined and image.logo %}
-            <img src="{{ image.logo }}" alt="Logo Projet" class="project-logo">
+            <img src="{{ image.logo }}" alt="Logo PACTE" class="footer-logo">
         {% endif %}
-        
-        <div class="footer">
+        <div class="footer-text">
             <div>Généré le {{ now|default("now")|date('d/m/Y à H:i', 'Africa/Abidjan') }}</div>
-            <div>© {{ "now"|date('Y') }} PACTE — Tous droits réservés</div>
+            <div>© {{ "now"|date('Y') }} METFPA/DAIP</div>
         </div>
     </div>
 

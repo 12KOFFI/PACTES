@@ -5,20 +5,21 @@
 {% block body %}
 <div class="mx-auto">
     <!-- En-tête -->
-    <div class="p-8 mb-8 text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl">
-        <div class="flex items-center gap-4">
-            <div class="flex items-center justify-center w-16 h-16 rounded-full bg-white/20">
-                <i class="text-3xl fas fa-chart-line"></i>
+    <!-- En-tête -->
+    <div class="p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-lg">
+        <div class="flex items-center gap-3 sm:gap-4">
+            <div class="flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-white/20 shrink-0">
+                <i class="text-2xl sm:text-3xl fas fa-chart-line"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-bold">Tableau de bord</h1>
-                <p class="text-white/80">
+                <h1 class="text-xl sm:text-2xl font-bold">Tableau de bord</h1>
+                <p class="text-xs sm:text-sm text-white/80">
                     {% if is_admin %}
                         Administration générale
                     {% elseif is_candidat %}
                         Ma candidature
                     {% elseif is_ent %}
-                        Gestion de l'établissement : {{ etablissement.nom ?? 'Non défini' }}
+                        Gestion de l'établissement : {{ etablissement ? etablissement.nom : 'Non défini' }}
                     {% elseif is_jury %}
                         Évaluations
                     {% endif %}
@@ -28,68 +29,68 @@
         
         <!-- Statistiques rapides pour l'admin ET l'ENT -->
         {% if (is_admin or is_ent) and stats is defined %}
-        <div class="grid grid-cols-2 gap-4 mt-8 md:grid-cols-3 lg:grid-cols-7">
-            <div class="p-4 text-center bg-white/10 backdrop-blur-sm rounded-xl">
-                <div class="text-2xl font-bold">{{ stats.candidatures }}</div>
-                <div class="text-xs text-white/70">Candidatures</div>
+        <div class="grid grid-cols-2 gap-2.5 sm:gap-4 mt-6 sm:mt-8 sm:grid-cols-3 lg:grid-cols-7">
+            <div class="p-3 sm:p-4 text-center bg-white/10 backdrop-blur-sm rounded-xl">
+                <div class="text-xl sm:text-2xl font-bold">{{ stats.candidatures }}</div>
+                <div class="text-[11px] sm:text-xs text-white/70">Candidatures</div>
             </div>
-            <div class="p-4 text-center bg-white/10 backdrop-blur-sm rounded-xl">
-                <div class="text-2xl font-bold">{{ stats.candidatures_aujourdhui }}</div>
-                <div class="text-xs text-white/70">Aujourd'hui</div>
+            <div class="p-3 sm:p-4 text-center bg-white/10 backdrop-blur-sm rounded-xl">
+                <div class="text-xl sm:text-2xl font-bold">{{ stats.candidatures_aujourdhui }}</div>
+                <div class="text-[11px] sm:text-xs text-white/70">Aujourd'hui</div>
             </div>
-            <div class="p-4 text-center bg-white/10 backdrop-blur-sm rounded-xl">
-                <div class="text-2xl font-bold">{{ stats.metiers }}</div>
-                <div class="text-xs text-white/70">Métiers</div>
+            <div class="p-3 sm:p-4 text-center bg-white/10 backdrop-blur-sm rounded-xl">
+                <div class="text-xl sm:text-2xl font-bold">{{ stats.metiers }}</div>
+                <div class="text-[11px] sm:text-xs text-white/70">Métiers</div>
             </div>
             
             {% if is_admin %}
-            <div class="p-4 text-center bg-white/10 backdrop-blur-sm rounded-xl">
-                <div class="text-2xl font-bold">{{ stats.etablissements }}</div>
-                <div class="text-xs text-white/70">Établissements</div>
+            <div class="p-3 sm:p-4 text-center bg-white/10 backdrop-blur-sm rounded-xl">
+                <div class="text-xl sm:text-2xl font-bold">{{ stats.etablissements }}</div>
+                <div class="text-[11px] sm:text-xs text-white/70">Établissements</div>
             </div>
             {% endif %}
             
             <!-- Statistiques des admis -->
             {% if stats.admis is defined %}
-            <div class="p-4 text-center border bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm rounded-xl border-blue-300/30">
-                <div class="text-2xl font-bold text-blue-100">{{ stats.admis.admis }}</div>
-                <div class="text-xs text-blue-200">Admis</div>
+            <div class="p-3 sm:p-4 text-center border bg-gradient-to-r from-blue-500/20 to-indigo-500/20 backdrop-blur-sm rounded-xl border-blue-300/30">
+                <div class="text-xl sm:text-2xl font-bold text-blue-100">{{ stats.admis.admis }}</div>
+                <div class="text-[11px] sm:text-xs text-blue-200">Admis</div>
             </div>
-            <div class="p-4 text-center border bg-gradient-to-r from-emerald-500/20 to-green-500/20 backdrop-blur-sm rounded-xl border-emerald-300/30">
-                <div class="text-2xl font-bold text-emerald-100">{{ stats.admis.admis_definitifs }}</div>
-                <div class="text-xs text-emerald-200">Admis Définitifs</div>
+            <div class="p-3 sm:p-4 text-center border bg-gradient-to-r from-emerald-500/20 to-green-500/20 backdrop-blur-sm rounded-xl border-emerald-300/30">
+                <div class="text-xl sm:text-2xl font-bold text-emerald-100">{{ stats.admis.admis_definitifs }}</div>
+                <div class="text-[11px] sm:text-xs text-emerald-200">Admis Définitifs</div>
             </div>
             {% endif %}
         </div>
         {% endif %}
 
-        {# Bouton accrocheur Inscriptions Définitives pour ENT uniquement (pas ADMIN) #}
-        {% if is_ent and not is_admin %}
-        <div class="flex justify-center mt-8">
-            <a href="{{ path('app_admis_inscription') }}"
-               class="inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-extrabold text-white transition-all duration-300 shadow-lg bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-xl shadow-red-300/50 hover:from-orange-600 hover:via-red-600 hover:to-pink-600 hover:-translate-y-1 hover:shadow-xl hover:shadow-red-400/50 ring-2 ring-orange-300 ring-offset-2">
-                <i class="text-2xl fas fa-user-graduate"></i>
-                <span>Inscriptions Définitives des candidats admis</span>
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
-        {% endif %}
     </div>
 
     {% include 'partials/_flash_messages.html.twig' %}
 
     {% if participation_feminine is defined %}
-    <div class="p-6 mb-8 bg-white border shadow-xl rounded-2xl border-slate-200">
-        <h2 class="text-lg font-bold text-slate-800">Participation féminine{% if session_consultee %} — {{ session_consultee.nom }}{% endif %}</h2>
-        <p class="mb-4 text-xs text-slate-500">Indicateur statistique : objectif de {{ objectif_feminin }} %, sans aucun effet bloquant.</p>
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
+    <div class="p-4 sm:p-6 mb-6 sm:mb-8 bg-white border shadow-xl rounded-2xl border-slate-200">
+        <h2 class="text-base sm:text-lg font-bold text-slate-800">Participation féminine{% if session_consultee %} — {{ session_consultee.nom }}{% endif %}</h2>
+        <p class="mb-4 text-xs text-slate-500">Indicateur statistique : objectif de {{ objectif_feminin }} % , de participation féminine </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {% for etape in participation_feminine %}
-                <div class="p-4 rounded-xl bg-slate-50">
-                    <p class="text-xs font-semibold text-slate-500">{{ etape.libelle }}</p>
-                    <p class="mt-1 text-2xl font-bold {{ etape.pourcentage is not null and etape.pourcentage >= objectif_feminin ? 'text-green-600' : 'text-amber-600' }}">
-                        {{ etape.pourcentage is null ? '—' : etape.pourcentage ~ ' %' }}
-                    </p>
-                    <p class="text-xs text-slate-500">{{ etape.feminin }} / {{ etape.total }}</p>
+                <div class="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <span class="inline-block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Étape {{ loop.index }}</span>
+                        <p class="text-xs font-bold text-slate-700 leading-snug">{{ etape.libelle }}</p>
+                        {% if etape.sous_titre is defined and etape.sous_titre %}
+                            <p class="text-[11px] text-slate-400 mt-0.5">{{ etape.sous_titre }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-xl sm:text-2xl font-extrabold {{ etape.pourcentage is not null and etape.pourcentage >= objectif_feminin ? 'text-green-600' : 'text-amber-600' }}">
+                            {{ etape.pourcentage is null ? '—' : etape.pourcentage ~ ' %' }}
+                        </p>
+                        <div class="flex items-center justify-between text-xs text-slate-500 mt-1">
+                            <span>{{ etape.feminin }} femmes</span>
+                            <span class="text-slate-400">sur {{ etape.total }}</span>
+                        </div>
+                    </div>
                 </div>
             {% endfor %}
         </div>
@@ -97,7 +98,7 @@
     {% endif %}
 
     {% if admis_par_etablissement is defined %}
-    <div class="p-6 mb-8 bg-white border shadow-xl rounded-2xl border-slate-200">
+    <div class="p-4 sm:p-6 mb-6 sm:mb-8 bg-white border shadow-xl rounded-2xl border-slate-200">
         <h2 class="mb-3 text-lg font-bold text-slate-800">Admis par établissement{% if session_consultee %} — {{ session_consultee.nom }}{% endif %}</h2>
         {% for ligne in admis_par_etablissement %}
             <div class="flex justify-between py-1 text-sm border-b border-slate-100"><span>{{ ligne.etablissement }}</span><strong>{{ ligne.admis }}</strong></div>
@@ -114,18 +115,20 @@
             <!-- Dernières candidatures (pour admin ET ent) -->
             {% if (is_admin or is_ent) and dernieres_candidatures is defined %}
             <div class="overflow-hidden bg-white border shadow-xl rounded-2xl border-slate-200">
-                <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-indigo-50 to-purple-50">
-                    <h2 class="flex items-center text-lg font-semibold text-indigo-800">
+                <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+                    <h2 class="flex items-center text-base sm:text-lg font-semibold text-indigo-800">
                         <i class="mr-2 fas fa-clock"></i>
-                        {% if is_ent %}
+                        {% if is_ent and etablissement %}
                             Candidatures de {{ etablissement.nom }}
+                        {% elseif is_ent %}
+                            Candidatures de l'établissement
                         {% else %}
                             Dernières candidatures
                         {% endif %}
                     </h2>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full">
+                    <table class="w-full min-w-[500px]">
                         <thead class="border-b bg-slate-50 border-slate-200">
                             <tr>
                                 <th class="px-3 py-3 text-xs font-medium text-left uppercase text-slate-600">N°</th>
@@ -181,18 +184,20 @@
             <!-- Inscriptions définitives (pour admin ET ent) -->
             {% if (is_admin or is_ent) %}
             <div class="overflow-hidden bg-white border shadow-xl rounded-2xl border-slate-200">
-                <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-green-50 to-emerald-50">
-                    <h2 class="flex items-center text-lg font-semibold text-green-800">
+                <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200 bg-gradient-to-r from-green-50 to-emerald-50">
+                    <h2 class="flex items-center text-base sm:text-lg font-semibold text-green-800">
                         <i class="mr-2 fas fa-user-graduate"></i>
-                        {% if is_ent %}
+                        {% if is_ent and etablissement %}
                             Les admis définitifs - {{ etablissement.nom }}
+                        {% elseif is_ent %}
+                            Les admis définitifs
                         {% else %}
                             Les admis définitifs
                         {% endif %}
                     </h2>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full">
+                    <table class="w-full min-w-[460px]">
                         <thead class="border-b bg-slate-50 border-slate-200">
                             <tr>
                                 <th class="px-4 py-3 text-xs font-medium text-left uppercase text-slate-600">N° Inscription</th>
@@ -220,9 +225,9 @@
                         </tbody>
                     </table>
                 </div>
-                {% if is_ent %}
+                {% if is_admin %}
                 <div class="px-6 py-3 border-t bg-green-50 border-slate-200">
-                    <a href="{{ path('app_admis_etablissement') }}" class="inline-flex items-center px-3 py-1.5 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition">
+                    <a href="{{ path('app_admis_index') }}" class="inline-flex items-center px-3 py-1.5 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition">
                         <i class="mr-1 fas fa-list"></i>
                         Voir la liste complète
                     </a>
@@ -234,14 +239,14 @@
             {% if is_candidat and mes_candidatures is defined %}
             <!-- Mes candidatures (Candidat) -->
             <div class="overflow-hidden bg-white border shadow-xl rounded-2xl border-slate-200">
-                <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-indigo-50 to-purple-50">
-                    <h2 class="flex items-center text-lg font-semibold text-indigo-800">
+                <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+                    <h2 class="flex items-center text-base sm:text-lg font-semibold text-indigo-800">
                         <i class="mr-2 fas fa-file-alt"></i>
                         Ma candidature
                     </h2>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full">
+                    <table class="w-full min-w-[460px]">
                         <thead class="border-b bg-slate-50 border-slate-200">
                             <tr>
                                 <th class="px-2 py-3 text-xs font-medium text-left uppercase text-slate-600">N°</th>
@@ -296,11 +301,13 @@
             <!-- Derniers inscrits (pour admin ET ent) -->
             {% if (is_admin or is_ent) and derniers_inscrits is defined %}
             <div class="overflow-hidden bg-white border shadow-xl rounded-2xl border-slate-200">
-                <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-indigo-50 to-purple-50">
-                    <h2 class="flex items-center text-lg font-semibold text-indigo-800">
+                <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+                    <h2 class="flex items-center text-base sm:text-lg font-semibold text-indigo-800">
                         <i class="mr-2 fas fa-user-plus"></i>
-                        {% if is_ent %}
+                        {% if is_ent and etablissement %}
                             Derniers candidats - {{ etablissement.nom }}
+                        {% elseif is_ent %}
+                            Derniers candidats
                         {% else %}
                             Nouveaux inscrits
                         {% endif %}
@@ -308,7 +315,7 @@
                 </div>
                 <div class="divide-y divide-slate-200">
                     {% for user in derniers_inscrits|slice(0,5) %}
-                    <div class="px-6 py-3 transition hover:bg-slate-50">
+                    <div class="px-4 sm:px-6 py-3 transition hover:bg-slate-50">
                         <div class="flex items-center gap-3">
                             <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 bg-indigo-100 rounded-full">
                                 <i class="text-xs text-indigo-600 fas fa-user"></i>
@@ -337,9 +344,9 @@
         </div>
         
         <div class="flex-shrink-0 text-right">
-            <span class="block text-xs font-medium text-slate-400">Nouveau</span>
-            <span class="block text-[11px] font-bold {{ mainRoleInfo[2] }} mt-0.5">
-                Inscrit le : {{ user.createdAt ? user.createdAt|date('d/m/Y') : 'Non renseigné' }}
+            <span class="hidden sm:block text-xs font-medium text-slate-400">Nouveau</span>
+            <span class="block text-[11px] font-bold {{ mainRoleInfo[2] }} mt-0.5 whitespace-nowrap">
+                <span class="hidden sm:inline">Inscrit le : </span>{{ user.createdAt ? user.createdAt|date('d/m/Y') : 'Non renseigné' }}
             </span>
         </div>
     </div>
@@ -356,14 +363,14 @@
 
             <!-- Actions rapides -->
             <div class="overflow-hidden bg-white border shadow-xl rounded-2xl border-slate-200">
-                <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-indigo-50 to-purple-50">
-                    <h2 class="flex items-center text-lg font-semibold text-indigo-800">
+                <div class="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+                    <h2 class="flex items-center text-base sm:text-lg font-semibold text-indigo-800">
                         <i class="mr-2 fas fa-bolt"></i>
                         Actions rapides
                     </h2>
                 </div>
-                <div class="p-6">
-                    <div class="grid grid-cols-2 gap-3">
+                <div class="p-4 sm:p-6">
+                    <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
                         {% if is_admin %}
                             <a href="{{ path('app_candidature_index') }}" class="flex flex-col items-center p-3 transition rounded-lg bg-indigo-50 hover:bg-indigo-100">
                                 <i class="mb-1 text-xl text-indigo-600 fas fa-list"></i>
@@ -398,18 +405,11 @@
                                 <i class="mb-1 text-xl text-green-600 fas fa-user-graduate"></i>
                                 <span class="text-xs text-green-700">Liste des admis</span>
                             </a>
-                            <a href="{{ path('app_admis_inscription') }}" class="flex flex-col items-center p-3 transition rounded-lg bg-red-50 hover:bg-red-100">
-                                <i class="mb-1 text-xl text-red-600 fas fa-user-plus"></i>
-                                <span class="text-xs text-red-700">Inscription définitive</span>
-                            </a>
-                            <a href="{{ path('app_admis_etablissement') }}" class="flex flex-col items-center p-3 transition rounded-lg bg-emerald-50 hover:bg-emerald-100">
-                                <i class="mb-1 text-xl fas fa-list text-emerald-600"></i>
-                                <span class="text-xs text-emerald-700">Liste des admis définitifs</span>
-                            </a>
                             <a href="{{ path('app_candidature_impressions') }}" class="flex flex-col items-center p-3 transition rounded-lg bg-purple-50 hover:bg-purple-100">
                                 <i class="mb-1 text-xl text-purple-600 fas fa-print"></i>
                                 <span class="text-xs text-purple-700">Impressions</span>
                             </a>
+                        {% if etablissement %}
                             <a href="{{ path('app_candidature_stat', {'etablissement': etablissement.id}) }}" class="flex flex-col items-center p-3 transition rounded-lg bg-blue-50 hover:bg-blue-100">
                                  <i class="mb-1 text-xl text-blue-600 fas fa-chart-bar"></i>
                                  <span class="text-xs text-blue-700">Statistiques</span>
@@ -418,6 +418,7 @@
                                 <i class="mb-1 text-xl fas fa-building text-amber-600"></i>
                                 <span class="text-xs text-amber-700">Mon établissement</span>
                             </a>
+                        {% endif %}
                         </div>
                         {% elseif is_candidat %}
                             <a href="{{ path('app_candidature_new') }}" class="flex flex-col items-center p-3 transition rounded-lg bg-indigo-50 hover:bg-indigo-100">
@@ -439,107 +440,4 @@
         </div>
     </div>
 </div>
-{% if is_ent and not is_admin %}
-
-<!-- Modal Nouvelles Fonctionnalités -->
-<div id="featureModal" class="fixed inset-0 z-50 flex items-end justify-center hidden pb-4 sm:items-center sm:pb-0" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-    <!-- Backdrop -->
-    <div class="fixed inset-0 transition-opacity duration-300 opacity-0 bg-slate-900/60 backdrop-blur-sm" id="featureModalBackdrop"></div>
-
-    <!-- Modal Panel -->
-    <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-md mx-4 sm:mx-auto overflow-hidden transform opacity-0 translate-y-10 sm:translate-y-0 sm:scale-95 transition-all duration-300 flex flex-col max-h-[90vh]" id="featureModalPanel">
-        
-        <!-- Decoration Header -->
-        <div class="h-1.5 sm:h-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
-
-        <!-- Close Button -->
-        <button type="button" id="closeModalBtn" class="absolute z-10 flex items-center justify-center w-8 h-8 transition-colors rounded-full top-3 right-3 sm:top-4 sm:right-4 bg-slate-50 text-slate-400 hover:text-slate-600 hover:bg-slate-200 focus:outline-none">
-            <i class="fas fa-times"></i>
-        </button>
-
-        <div class="p-6 overflow-y-auto sm:p-8">
-            <!-- Icon -->
-            <div class="flex items-center justify-center w-12 h-12 mb-4 rounded-full shadow-inner sm:w-16 sm:h-16 bg-gradient-to-br from-indigo-100 to-purple-100 sm:mb-6">
-                <i class="text-xl text-indigo-600 fas fa-rocket sm:text-2xl"></i>
-            </div>
-
-            <!-- Content -->
-            <h3 class="mb-2 text-xl font-bold sm:text-2xl text-slate-800 sm:mb-3" id="modal-title">
-                Nouvelles fonctionnalités disponibles
-            </h3>
-            <p class="mb-6 text-sm leading-relaxed sm:text-base text-slate-600 sm:mb-8">
-                Vous pouvez désormais gérer et transmettre facilement les conventions avec vos entreprises partenaires ainsi que les contrats d’apprentissage de vos apprentis, directement depuis la plateforme.
-            </p>
-
-            <!-- Actions -->
-            <div class="flex flex-col gap-3">
-                <a href="{{ path('app_admis_etablissement') }}" class="group relative w-full flex items-center justify-center py-2.5 sm:py-3 px-4 border border-transparent rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all shadow-md hover:shadow-lg text-sm sm:text-base text-center">
-                    <i class="mr-2 text-indigo-300 transition-colors fas fa-file-signature group-hover:text-indigo-200"></i>
-                    <span class="font-semibold">Ajouter un contrat d’apprentissage</span>
-                </a>
-            
-            </div>
-
-            <!-- Footer Actions -->
-            <div class="flex flex-col items-center justify-between gap-4 pt-4 mt-6 border-t sm:mt-8 sm:pt-5 border-slate-100 sm:flex-row">
-                <a href="{{ asset('uploads/guide_conventions_contrats.docx') }}" target="_blank" class="w-full sm:w-auto group inline-flex justify-center items-center text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors bg-indigo-50 hover:bg-indigo-100 px-4 py-2.5 rounded-xl">
-                    <i class="mr-2 text-indigo-400 transition-colors fas fa-file-word group-hover:text-indigo-600"></i>
-                    Consulter le guide d'utilisation
-                </a>
-                <button id="dismissModalBtn" class="text-sm underline transition-colors text-slate-500 hover:text-slate-700 underline-offset-2 focus:outline-none">
-                    Ne plus afficher
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('featureModal');
-    if (!modal) return;
-    
-    const backdrop = document.getElementById('featureModalBackdrop');
-    const panel = document.getElementById('featureModalPanel');
-    const closeBtn = document.getElementById('closeModalBtn');
-    const dismissBtn = document.getElementById('dismissModalBtn');
-    
-    // Vérifier si le modal a déjà été masqué
-    const modalDismissed = localStorage.getItem('featureModalDismissed');
-    
-    if (modalDismissed !== 'true') {
-        // Afficher le modal avec animation
-        modal.classList.remove('hidden');
-        
-        // Petit délai pour permettre au navigateur de rendre le display:block avant d'animer
-        setTimeout(() => {
-            backdrop.classList.remove('opacity-0');
-            panel.classList.remove('opacity-0', 'translate-y-10', 'sm:scale-95');
-            panel.classList.add('opacity-100', 'translate-y-0', 'sm:scale-100');
-        }, 50);
-    }
-    
-    function hideModal() {
-        backdrop.classList.remove('opacity-100');
-        backdrop.classList.add('opacity-0');
-        
-        panel.classList.remove('opacity-100', 'translate-y-0', 'sm:scale-100');
-        panel.classList.add('opacity-0', 'translate-y-10', 'sm:scale-95');
-        
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300); // Correspond à la durée de transition
-    }
-    
-    function dismissModalForever() {
-        localStorage.setItem('featureModalDismissed', 'true');
-        hideModal();
-    }
-    
-    closeBtn.addEventListener('click', hideModal);
-    backdrop.addEventListener('click', hideModal);
-    dismissBtn.addEventListener('click', dismissModalForever);
-});
-</script>
-{% endif %}
 {% endblock %}

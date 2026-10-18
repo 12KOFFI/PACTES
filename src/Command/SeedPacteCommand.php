@@ -117,10 +117,13 @@ class SeedPacteCommand extends Command
                         ->setEtablissement($etablissements[$id])
                         ->setMetier($metiers[self::METIER_PV])
                         ->setNbrplace($def['places'])
+                        ->setNiveauRequis('CAP - BT - BTS')
                         ->setDureeFormation('6 mois')
                         ->setEstActif(true);
                     $this->em->persist($em);
                     $io->text('Association créée : ' . $def['nom'] . ' (' . $def['places'] . ' places)');
+                } else {
+                    $existe->setNiveauRequis('CAP - BT - BTS');
                 }
             }
 

@@ -173,111 +173,6 @@ class AdmisController extends AbstractController
         ]);
     }
 
-    #[Route('/etablissement', name: 'app_admis_etablissement', methods: ['GET'])]
-    #[IsGranted('ROLE_ENT')]
-    public function indexEtablissement(Request $request, \Knp\Component\Pager\PaginatorInterface $paginator): Response
-    {
-        $user = $this->getUser();
-        $etablissement = $this->entityManager->getRepository(Etablissement::class)
-            ->findOneBy(['user' => $user]);
-
-        if (!$etablissement) {
-            $this->addFlash('error', 'Aucun établissement associé à votre compte.');
-            return $this->redirectToRoute('app_dashboard');
-        }
-
-        $qb = $this->entityManager->getRepository(Admis::class)
-            ->createQueryBuilder('a')
-            ->innerJoin('a.user', 'u')
-            ->innerJoin('a.etablissement', 'e')
-            ->innerJoin('a.metier', 'm')
-            ->leftJoin('a.candidature', 'c')
-            ->addSelect('u', 'e', 'm', 'c')
-            ->where('a.etablissement = :etablissement')
-            ->setParameter('etablissement', $etablissement);
-        AdmisAbandonsConfig::applyFilter($qb);
-
-        $searchTerm = $request->query->get('q');
-        if ($searchTerm) {
-            $qb->andWhere('u.nom LIKE :search OR u.prenoms LIKE :search OR CONCAT(u.nom, CONCAT(\' \', u.prenoms)) LIKE :search OR CONCAT(u.prenoms, CONCAT(\' \', u.nom)) LIKE :search OR u.email LIKE :search OR m.nom LIKE :search OR a.numeroInscription LIKE :search OR c.numero LIKE :search')
-               ->setParameter('search', '%' . $searchTerm . '%');
-        }
-
-        $qb->orderBy('a.dateInscription', 'DESC');
-
-        $limit = $request->query->getInt('limit', 25);
-        $admis = $paginator->paginate($qb, $request->query->getInt('page', 1), $limit);
-
-        $countQb = clone $qb;
-        $statsGenre = (clone $countQb)
-            ->select(
-                'SUM(CASE WHEN u.sexe = :homme OR u.sexe = :homme_m THEN 1 ELSE 0 END) as total_hommes',
-                'SUM(CASE WHEN u.sexe = :femme OR u.sexe = :femme_f THEN 1 ELSE 0 END) as total_femmes'
-            )
-            ->setParameter('homme', 'MASCULIN')
-            ->setParameter('homme_m', 'M')
-            ->setParameter('femme', 'FEMININ')
-            ->setParameter('femme_f', 'F')
-            ->getQuery()
-            ->getOneOrNullResult();
-        $totalHommes = (int) ($statsGenre['total_hommes'] ?? 0);
-        $totalFemmes = (int) ($statsGenre['total_femmes'] ?? 0);
-
-        // Calcul du nombre de candidats admis non encore inscrits définitivement
-        $qbNonInscrits = $this->entityManager->getRepository(Candidature::class)
-            ->createQueryBuilder('c')
-            ->select('COUNT(c.id)')
-            ->innerJoin('c.user', 'u')
-            ->where('c.resultat = :resultat')
-            ->andWhere('c.etablissement = :etablissement')
-            ->andWhere('c.id NOT IN (
-                SELECT IDENTITY(a2.candidature) 
-                FROM App\Entity\Admis a2 
-                WHERE a2.etablissement = :etablissement
-            )')
-            ->setParameter('resultat', 2)
-            ->setParameter('etablissement', $etablissement);
-
-        if ($searchTerm) {
-            $qbNonInscrits->leftJoin('c.metier', 'm')
-                ->andWhere('u.nom LIKE :search OR u.prenoms LIKE :search OR CONCAT(u.nom, CONCAT(\' \', u.prenoms)) LIKE :search OR CONCAT(u.prenoms, CONCAT(\' \', u.nom)) LIKE :search OR u.email LIKE :search OR m.nom LIKE :search OR c.numero LIKE :search')
-                ->setParameter('search', '%' . $searchTerm . '%');
-        }
-        $totalAdmisNonInscrits = (int) $qbNonInscrits->getQuery()->getSingleScalarResult();
-
-        // Calcul des abandons pour cet établissement
-        $abandonsIds = AdmisAbandonsConfig::getIds();
-        $totalAbandons = 0;
-        if (!empty($abandonsIds)) {
-            $qbAbandons = $this->entityManager->getRepository(Admis::class)
-                ->createQueryBuilder('a')
-                ->select('COUNT(a.id)')
-                ->innerJoin('a.user', 'u')
-                ->innerJoin('a.metier', 'm')
-                ->where('a.id IN (:abandons_ids)')
-                ->andWhere('a.etablissement = :etablissement')
-                ->setParameter('abandons_ids', $abandonsIds)
-                ->setParameter('etablissement', $etablissement);
-
-            if ($searchTerm) {
-                $qbAbandons->andWhere('u.nom LIKE :search OR u.prenoms LIKE :search OR CONCAT(u.nom, CONCAT(\' \', u.prenoms)) LIKE :search OR CONCAT(u.prenoms, CONCAT(\' \', u.nom)) LIKE :search OR u.email LIKE :search OR m.nom LIKE :search OR a.numeroInscription LIKE :search')
-                    ->setParameter('search', '%' . $searchTerm . '%');
-            }
-            $totalAbandons = (int) $qbAbandons->getQuery()->getSingleScalarResult();
-        }
-
-        return $this->render('admis/admis_definitifs.html.twig', [
-            'admis' => $admis,
-            'etablissement' => $etablissement,
-            'total_hommes' => $totalHommes,
-            'total_femmes' => $totalFemmes,
-            'total_admis_non_inscrits' => $totalAdmisNonInscrits,
-            'total_abandons' => $totalAbandons,
-            'limit' => $limit,
-            'searchTerm' => $searchTerm
-        ]);
-    }
-
     #[Route('/', name: 'app_admis_index', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function index(Request $request, \Knp\Component\Pager\PaginatorInterface $paginator): Response
@@ -517,204 +412,6 @@ class AdmisController extends AbstractController
         ]);
     }
 
-    #[Route('/inscription', name: 'app_admis_inscription', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ENT')]
-    public function inscription(Request $request): Response
-    {
-        $user = $this->getUser();
-        $etablissement = $this->entityManager->getRepository(Etablissement::class)
-            ->findOneBy(['user' => $user]);
-
-        if (!$etablissement) {
-            $this->addFlash('error', 'Aucun établissement associé à votre compte.');
-            return $this->redirectToRoute('app_dashboard');
-        }
-
-        // Check if registrations are open
-        if ((getenv('REGISTRATIONS_OPEN') ?? 'true') !== 'true') {
-            $this->addFlash('error', 'Les inscriptions sont actuellement fermées.');
-            return $this->redirectToRoute('app_dashboard');
-        }
-
-        // Étape 1 : Recherche de la candidature
-        $searchQuery = $request->query->get('q');
-        $candidature = null;
-        $isDejaAdmisDefinitif = false;
-
-        // Pré-remplir avec la candidature si spécifiée (depuis la liste des admis)
-        $candidatureId = $request->query->get('candidature');
-        if ($candidatureId && !$searchQuery) {
-            $candidatureFromList = $this->entityManager->getRepository(Candidature::class)->find($candidatureId);
-
-            if ($candidatureFromList && $candidatureFromList->getEtablissement() === $etablissement) {
-                // Pré-remplir le champ de recherche avec le numéro de candidature
-                $searchQuery = $candidatureFromList->getNumero();
-                $this->addFlash('success', 'Candidat pré-sélectionné depuis la liste : ' . $searchQuery . ' - ' . $candidatureFromList->getUser()->getNom() . ' ' . $candidatureFromList->getUser()->getPrenoms());
-            }
-        }
-
-        if ($searchQuery && strlen($searchQuery) >= 1) {
-            $candidature = $this->entityManager->getRepository(Candidature::class)
-                ->createQueryBuilder('c')
-                ->innerJoin('c.user', 'u')
-                ->innerJoin('c.metier', 'm')
-                ->innerJoin('c.etablissement', 'e')
-                ->addSelect('u', 'm', 'e')
-                ->where('c.resultat = 2')
-                ->andWhere('c.etablissement = :etablissement')
-                ->andWhere('c.numero = :query OR u.email = :query OR u.contact = :query')
-                ->setParameter('etablissement', $etablissement)
-                ->setParameter('query', $searchQuery)
-                ->orderBy('c.id', 'DESC')
-                ->setMaxResults(1)
-                ->getQuery()
-                ->getOneOrNullResult();
-
-            // Vérifier si déjà admis définitif
-            if ($candidature) {
-                $existingAdmis = $this->entityManager->getRepository(Admis::class)
-                    ->findOneBy(['candidature' => $candidature]);
-                $isDejaAdmisDefinitif = ($existingAdmis !== null);
-            }
-        }
-
-        // Étape 2 : Traitement du formulaire
-        if ($request->isMethod('POST')) {
-            // Récupérer l'ID depuis l'URL (query string) — insensible aux limites upload PHP
-            $candidatureId = $request->query->get('candidature_id') ?? $request->request->get('candidature_id');
-
-            // Vérifier que l'ID de candidature est bien présent avant de chercher en base
-            if (!$candidatureId) {
-                $this->addFlash('error', 'Aucune candidature sélectionnée. Veuillez d\'abord rechercher un candidat.');
-                return $this->redirectToRoute('app_admis_inscription');
-            }
-
-            $candidature = $this->entityManager->getRepository(Candidature::class)->find($candidatureId);
-
-            if (!$candidature || $candidature->getEtablissement() !== $etablissement) {
-                $this->addFlash('error', 'Candidature non valide pour votre établissement.');
-                return $this->redirectToRoute('app_admis_inscription');
-            }
-
-            // Détecter si PHP a vidé $_POST à cause de post_max_size dépassé
-            $postWasWiped = $request->isMethod('POST')
-                && empty($request->request->all())
-                && empty($request->files->all())
-                && $request->server->get('CONTENT_LENGTH', 0) > 0;
-
-            if ($postWasWiped) {
-                $this->addFlash('error', 'Le fichier est trop volumineux pour le serveur. Veuillez réduire la taille du fichier (max recommandé : 1 Mo) ou contacter l\'administrateur.');
-                return $this->redirectToRoute('app_admis_inscription', ['q' => $candidature->getNumero()]);
-            }
-
-            $existingAdmis = $this->entityManager->getRepository(Admis::class)
-                ->findOneBy(['candidature' => $candidature]);
-            $isDejaAdmisDefinitif = ($existingAdmis !== null);
-
-            // Note : l'upload de la fiche d'engagement est géré séparément
-            // via l'endpoint AJAX /admis/upload-fiche-chunk (contourne LimitRequestBody d'Apache)
-
-            // Si déjà admis définitif, on ne traite que l'upload
-            if ($isDejaAdmisDefinitif) {
-                $this->addFlash('success', 'La fiche d\'engagement a été enregistrée avec succès.');
-                // Récupérer l'admis existant pour les infos de la page de succès
-                $admis = $this->entityManager->getRepository(Admis::class)
-                    ->findOneBy(['candidature' => $candidature]);
-                if ($admis) {
-                    return $this->redirectToRoute('app_admis_inscription_success', [
-                        'numero_inscription' => $admis->getNumeroInscription(),
-                        'formation' => $admis->getMetier()?->getNom(),
-                        'etablissement' => $admis->getEtablissement()?->getNom(),
-                        'date_inscription' => $admis->getDateInscription()?->format('Y-m-d'),
-                        'candidature_id' => $candidature->getId()
-                    ]);
-                }
-                return $this->redirectToRoute('app_dashboard');
-            }
-
-            // Mise à jour des informations personnelles
-            $candidatUser = $candidature->getUser();
-            if ($candidatUser) {
-                $nom = $request->request->get('nom');
-                $prenoms = $request->request->get('prenoms');
-                $contact = $request->request->get('contact');
-                $datenaissance = $request->request->get('datenaissance');
-                $lieunaissance = $request->request->get('lieunaissance');
-
-                if ($nom) $candidatUser->setNom($nom);
-                if ($prenoms) $candidatUser->setPrenoms($prenoms);
-                if ($contact) $candidatUser->setContact($contact);
-                if ($datenaissance) {
-                    try {
-                        $candidatUser->setDatenaissance(new \DateTime($datenaissance));
-                    } catch (\Exception $e) {
-                    }
-                }
-                if ($lieunaissance) $candidatUser->setLieunaissance($lieunaissance);
-            }
-
-            // Vérifier engagement coché
-            if (!$request->request->get('engagement')) {
-                $this->addFlash('error', 'Vous devez cocher l\'engagement pour valider l\'inscription.');
-                return $this->redirectToRoute('app_admis_inscription', ['q' => $candidature->getNumero()]);
-            }
-
-            // Créer l'admis définitif
-            $admis = new Admis();
-            $admis->setUser($candidatUser);
-            $admis->setCandidature($candidature);
-            $admis->setEtablissement($candidature->getEtablissement());
-            $admis->setMetier($candidature->getMetier());
-            $admis->setDateInscription(new \DateTime());
-            $admis->setNumeroInscription($candidature->getNumero());
-            $admis->setConfirme(true);
-            $admis->setModification(new \DateTime());
-
-            $this->entityManager->persist($admis);
-            $this->entityManager->flush();
-
-            $this->addFlash('success', 'Inscription définitive enregistrée avec succès. N° : ' . $admis->getNumeroInscription());
-
-            return $this->redirectToRoute('app_admis_inscription_success', [
-                'numero_inscription' => $admis->getNumeroInscription(),
-                'formation' => $admis->getMetier()->getNom(),
-                'etablissement' => $admis->getEtablissement()->getNom(),
-                'date_inscription' => $admis->getDateInscription()->format('Y-m-d'),
-                'candidature_id' => $candidature->getId()
-            ]);
-        }
-
-        return $this->render('admis/inscription.html.twig', [
-            'searchQuery' => $searchQuery,
-            'candidature' => $candidature,
-            'step' => $candidature ? 2 : 1,
-            'is_deja_admis_definitif' => $isDejaAdmisDefinitif,
-            'etablissement' => $etablissement,
-            'notFound' => $searchQuery && !$candidature,
-        ]);
-    }
-
-    #[Route('/inscription/refus', name: 'app_admis_inscription_refus', methods: ['GET'])]
-    #[IsGranted('ROLE_ENT')]
-    public function inscriptionRefus(Request $request): Response
-    {
-        $this->addFlash('warning', 'Vous avez refusé l\'inscription définitive. Votre candidature reste active mais vous ne serez pas considéré comme admis définitivement.');
-        return $this->redirectToRoute('app_dashboard');
-    }
-
-    #[Route('/inscription/success', name: 'app_admis_inscription_success', methods: ['GET'])]
-    #[IsGranted('ROLE_ENT')]
-    public function inscriptionSuccess(Request $request): Response
-    {
-        return $this->render('admis/inscription_success.html.twig', [
-            'numero_inscription' => $request->query->get('numero_inscription'),
-            'formation' => $request->query->get('formation'),
-            'etablissement' => $request->query->get('etablissement'),
-            'date_inscription' => new \DateTime($request->query->get('date_inscription')),
-            'candidature_id' => $request->query->get('candidature_id')
-        ]);
-    }
-
     #[Route('/search', name: 'app_admis_search', methods: ['GET'])]
     #[IsGranted('ROLE_ENT')]
     public function searchPage(): Response
@@ -903,7 +600,7 @@ class AdmisController extends AbstractController
             }
             
             if ($this->isGranted('ROLE_ENT') && !$this->isGranted('ROLE_ADMIN')) {
-                return $this->redirectToRoute('app_admis_etablissement');
+                return $this->redirectToRoute('app_dashboard');
             }
             return $this->redirectToRoute('app_admis_index');
         }
@@ -1240,7 +937,7 @@ class AdmisController extends AbstractController
 
         if (!$etablissementUser || $admis->getEtablissement()->getId() !== $etablissementUser->getId()) {
             $this->addFlash('error', 'Vous n\'êtes pas autorisé à valider cette inscription.');
-            return $this->redirectToRoute('app_admis_etablissement');
+            return $this->redirectToRoute('app_dashboard');
         }
 
         $admis->setConfirme(true);
@@ -1262,7 +959,7 @@ class AdmisController extends AbstractController
 
         if (!$etablissementUser || $admis->getEtablissement()->getId() !== $etablissementUser->getId()) {
             $this->addFlash('error', 'Vous n\'êtes pas autorisé à refuser cette inscription.');
-            return $this->redirectToRoute('app_admis_etablissement');
+            return $this->redirectToRoute('app_dashboard');
         }
 
         $motif = $request->request->get('motif');

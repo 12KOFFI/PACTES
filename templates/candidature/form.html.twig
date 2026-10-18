@@ -203,7 +203,7 @@
                         Formation souhaitée
                     </h3>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">Établissement <span class="text-red-500">*</span></label>
                             <div class="{{ input_class }} bg-slate-100 text-slate-600 cursor-default flex items-center gap-2">
@@ -225,6 +225,15 @@
                                 <i class="fas fa-spinner fa-spin mr-1"></i> Chargement...
                             </div>
                         </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Diplôme <span class="text-red-500">*</span></label>
+                            <select name="diplome" id="candidature_diplome_edit" required class="{{ input_class }}">
+                                <option value="">-- Sélectionnez votre diplôme --</option>
+                                {% for dip in ['CAP', 'BT', 'BTS', 'Relevé de notes / autres documents'] %}
+                                    <option value="{{ dip }}" {{ candidature.diplome == dip ? 'selected' : '' }}>{{ dip }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
 
                     {# Informations détaillées du métier #}
@@ -240,7 +249,7 @@
                             <div class="flex items-center gap-3 p-2 bg-green-100 rounded-lg">
                                 <i class="text-green-600 fas fa-graduation-cap"></i>
                                 <div>
-                                    <p class="text-xs text-green-600">Niveau</p>
+                                    <p class="text-xs text-green-600">Diplôme requis</p>
                                     <p id="metier-niveau" class="text-sm font-medium">-</p>
                                 </div>
                             </div>
@@ -369,7 +378,7 @@
                 Formation souhaitée
             </h3>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">
                         Établissement <span class="text-red-500">*</span>
@@ -399,6 +408,14 @@
                         <i class="fas fa-spinner fa-spin mr-1"></i> Chargement...
                     </div>
                 </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">
+                        Diplôme <span class="text-red-500">*</span>
+                    </label>
+                    {{ form_widget(form.diplome, {'attr': {'class': input_class, 'id': 'candidature_diplome'}}) }}
+                    {{ form_errors(form.diplome) }}
+                </div>
             </div>
 
             <!-- Informations détaillées du métier -->
@@ -414,7 +431,7 @@
                     <div class="flex items-center gap-3 p-2 bg-green-100 rounded-lg">
                         <i class="text-green-600 fas fa-graduation-cap"></i>
                         <div>
-                            <p class="text-xs text-green-600">Niveau</p>
+                            <p class="text-xs text-green-600">Diplôme requis</p>
                             <p id="metier-niveau" class="text-sm font-medium">-</p>
                         </div>
                     </div>
@@ -683,7 +700,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 data.forEach(metier => {
                     const option = document.createElement('option');
                     option.value = metier.id;
-                    option.dataset.niveau = metier.niveau || '';
+                    option.dataset.niveau = metier.niveau || 'CAP - BT - BTS';
                     option.dataset.duree = metier.duree || '';
                     option.dataset.nbrplace = metier.nbrplace || '';
                     
@@ -727,7 +744,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        metierNiveau.textContent = selectedOption.dataset.niveau || 'Non spécifié';
+        metierNiveau.textContent = selectedOption.dataset.niveau || 'CAP - BT - BTS';
         metierDuree.textContent = selectedOption.dataset.duree || 'Non spécifié';
         metierNbrPlace.textContent = selectedOption.dataset.nbrplace || 'Non spécifié';
         metierInfo.classList.remove('hidden');
@@ -795,6 +812,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!metierSelect.value) {
                 e.preventDefault();
                 alert('Veuillez sélectionner un métier.');
+                return false;
+            }
+
+            const diplomeSelect = document.getElementById('candidature_diplome');
+            if (diplomeSelect && !diplomeSelect.value) {
+                e.preventDefault();
+                alert('Veuillez sélectionner un diplôme.');
                 return false;
             }
         });

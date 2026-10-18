@@ -7,7 +7,7 @@
 } %}
 
 {# Sidebar responsive - lg = 1024px breakpoint #}
-<aside class="fixed inset-y-0 left-0 z-30 flex-shrink-0 w-64 text-white transition-all duration-300 transform -translate-x-full bg-gradient-to-b from-primary-900 to-secondary-900 sidebar-transition lg:translate-x-0 lg:relative"
+<aside class="fixed inset-y-0 left-0 z-50 flex-shrink-0 w-64 text-white transition-all duration-300 transform -translate-x-full bg-gradient-to-b from-primary-900 to-secondary-900 sidebar-transition lg:translate-x-0 lg:relative lg:z-auto"
        x-data="{ isDesktop: window.innerWidth >= 1024, collapsed: false }"
        @resize.window="isDesktop = window.innerWidth >= 1024; if (isDesktop) sidebarOpen = false"
        :class="[sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0', collapsed ? 'w-20' : 'w-64']">
@@ -61,22 +61,6 @@
         {# ==================== MENU ==================== #}
         <nav class="flex-1 min-h-0 p-3 space-y-1 overflow-y-auto scrollbar-thin">
 
-
-            {# ==================== SÉLECTEUR DE VAGUE DE RECRUTEMENT ==================== #}
-            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY') %}
-                {% set sessions_consultables = session_context.sessions %}
-                {% if sessions_consultables|length > 0 %}
-                    <form method="get" action="{{ app.request.pathInfo }}" class="px-1 pb-2" :class="collapsed ? 'hidden' : 'block'">
-                        <label for="select-session" class="block mb-1 text-xs uppercase tracking-wide text-white/60">Vague de recrutement</label>
-                        <select id="select-session" name="session" onchange="this.form.submit()"
-                                class="w-full px-2 py-1.5 text-sm text-slate-800 rounded-lg border-0">
-                            {% for s in sessions_consultables %}
-                                <option value="{{ s.id }}" {{ session_context.currentSession and session_context.currentSession.id == s.id ? 'selected' : '' }}>{{ s.nom }}</option>
-                            {% endfor %}
-                        </select>
-                    </form>
-                {% endif %}
-            {% endif %}
 
             {# ==================== TABLEAU DE BORD ==================== #}
             <a href="{{ path('app_dashboard') }}"
@@ -200,9 +184,10 @@
                             </a>
 
 
+                        {% if is_granted('ROLE_ADMIN') %}
                             {# Admis définitifs #}
-                            <a href="{{ path(is_granted('ROLE_ADMIN') ? 'app_admis_index' : 'app_admis_etablissement') }}"
-                               class="flex items-center gap-3 p-2 rounded-lg text-sm transition {{ app.current_route in ['app_admis_index', 'app_admis_etablissement'] ? nav_classes.active_link : nav_classes.inactive_link }} pl-12">
+                            <a href="{{ path('app_admis_index') }}"
+                               class="flex items-center gap-3 p-2 rounded-lg text-sm transition {{ app.current_route == 'app_admis_index' ? nav_classes.active_link : nav_classes.inactive_link }} pl-12">
 
                                 <i class="w-4 fas fa-medal"></i>
 
@@ -211,42 +196,13 @@
                                 </span>
 
                             </a>
+                        {% endif %}
 
                         {% endif %}
 
                     </div>
 
                 </div>
-
-            {% endif %}
-
-
-            {# ==================== INSCRIPTION DÉFINITIVE ==================== #}
-            {% if is_granted('ROLE_ENT') and not is_granted('ROLE_ADMIN') %}
-
-                <a href="{{ path('app_admis_inscription') }}"
-                   class="{{ nav_classes.base_link }} {{ app.current_route == 'app_admis_inscription' ? nav_classes.active_link : nav_classes.inactive_link }}"
-                   :class="collapsed ? 'justify-center' : 'gap-3'"
-                   x-data="{ tooltip: false }"
-                   @mouseenter="tooltip = true"
-                   @mouseleave="tooltip = false">
-
-                    <div class="flex items-center justify-center flex-shrink-0 w-10 h-10 rounded-xl bg-red-500/20">
-                        <i class="text-lg text-red-300 fas fa-user-plus"></i>
-                    </div>
-
-                    <span class="text-sm font-medium nav-text whitespace-nowrap"
-                          :class="collapsed ? 'hidden' : 'block'">
-                        Inscription définitive
-                    </span>
-
-                    <div x-show="collapsed && tooltip"
-                         x-cloak
-                         class="absolute z-50 px-2 py-1 ml-2 text-xs text-white bg-gray-800 rounded left-full whitespace-nowrap">
-                        Inscription définitive
-                    </div>
-
-                </a>
 
             {% endif %}
 
@@ -536,7 +492,7 @@
 <div x-show="sidebarOpen"
      x-cloak
      @click="sidebarOpen = false"
-     class="fixed inset-0 z-20 bg-black/50 lg:hidden"
+     class="fixed inset-0 z-40 bg-black/50 lg:hidden"
      x-transition:enter="transition ease-out duration-300"
      x-transition:enter-start="opacity-0"
      x-transition:enter-end="opacity-100"

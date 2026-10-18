@@ -182,16 +182,9 @@
                     <td class="px-5 py-4">
                         <div class="flex items-center gap-2">
                             {% if item.admis is null %}
-                                {% if is_granted('ROLE_ENT') and not is_granted('ROLE_ADMIN') %}
-                                    <a href="{{ path('app_admis_inscription') }}?candidature={{ item.id }}"
-                                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 text-red-600 border border-red-500 text-xs font-bold hover:bg-red-600 hover:text-white transition-all">
-                                        <i class="fas fa-user-plus text-[10px]"></i> Inscrire définitivement
-                                    </a>
-                                {% elseif is_granted('ROLE_ADMIN') %}
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-600 border border-amber-500 text-xs font-bold">
-                                        <i class="fas fa-clock text-[10px]"></i> Pas encore inscrit
-                                    </span>
-                                {% endif %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 text-amber-600 border border-amber-500 text-xs font-bold">
+                                    <i class="fas fa-clock text-[10px]"></i> Pas encore inscrit
+                                </span>
                             {% else %}
                                 <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-500 text-xs font-bold">
                                     <i class="fas fa-check text-[10px]"></i> Déjà inscrit

@@ -155,6 +155,21 @@ class CandidatureType extends AbstractType
 
             $form->add('metier', EntityType::class, $metierOptions);
 
+            $form->add('diplome', ChoiceType::class, [
+                'label' => 'Diplôme',
+                'choices' => [
+                    'CAP' => 'CAP',
+                    'BT' => 'BT',
+                    'BTS' => 'BTS',
+                    'Relevé de notes / autres documents' => 'Relevé de notes / autres documents',
+                ],
+                'placeholder' => '-- Sélectionnez votre diplôme --',
+                'required' => true,
+                'attr' => [
+                    'class' => 'w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition'
+                ]
+            ]);
+
             // Champ caché pour stocker la valeur du niveau
             $form->add('niveau', HiddenType::class, [
                 'data' => $this->getNiveauRequis($etablissement)

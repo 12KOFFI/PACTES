@@ -16,10 +16,14 @@ class SmsNotifier
     public function __construct(HttpClientInterface $httpClient)
     {
         $this->httpClient = $httpClient;
-        $this->client = SMSClient::getInstance(
-            'eWNK5VDgFXa2bkLL6mcEoL2Orngealmp', 
-            'oWJB6ChQB3t0zivlBScZEftolXVJXVxNxq5AviT61RIg'
-        );
+        try {
+            $this->client = SMSClient::getInstance(
+                'eWNK5VDgFXa2bkLL6mcEoL2Orngealmp', 
+                'oWJB6ChQB3t0zivlBScZEftolXVJXVxNxq5AviT61RIg'
+            );
+        } catch (\Throwable $e) {
+            $this->client = null;
+        }
     }
 
     public function processMessageQueue($priority = 1, $timeout = 30)

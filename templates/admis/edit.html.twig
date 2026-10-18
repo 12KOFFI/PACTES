@@ -15,7 +15,7 @@
         <div class="absolute -top-14 -right-14 w-52 h-52 rounded-full bg-white/5 pointer-events-none"></div>
         <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div class="flex items-center gap-4">
-                <a href="{{ is_granted('ROLE_ADMIN') ? path('app_admis_index') : path('app_admis_etablissement') }}" class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center hover:bg-white/25 transition">
+                <a href="{{ is_granted('ROLE_ADMIN') ? path('app_admis_index') : path('app_dashboard') }}" class="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center hover:bg-white/25 transition">
                     <i class="fas fa-arrow-left"></i>
                 </a>
                 <div>
@@ -160,7 +160,7 @@
 
         {# 4. Boutons #}
         <div class="flex items-center justify-between order-4">
-            <a href="{{ is_granted('ROLE_ADMIN') ? path('app_admis_index') : path('app_admis_etablissement') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 text-sm font-medium transition">
+            <a href="{{ is_granted('ROLE_ADMIN') ? path('app_admis_index') : path('app_dashboard') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 text-sm font-medium transition">
                 <i class="fas fa-times"></i> Annuler
             </a>
             <button type="submit" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 text-sm font-semibold transition shadow-lg shadow-indigo-200">

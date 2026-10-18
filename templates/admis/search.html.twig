@@ -393,7 +393,7 @@
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Enregistrement…';
 
-        fetch('{{ path("app_admis_inscription") }}', {
+        fetch('#', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
             body: JSON.stringify(payload),

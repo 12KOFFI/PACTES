@@ -301,10 +301,26 @@ class DashboardController extends AbstractController
     private function getParticipationFeminine(?Etablissement $etablissement): array
     {
         $etapes = [
-            ['libelle' => 'Candidatures', 'condition' => null],
-            ['libelle' => 'Admissibles à l\'entretien (entstatut = 2)', 'condition' => 'c.entstatut = 2'],
-            ['libelle' => 'Retenus par le jury (decisionJury = 2)', 'condition' => 'c.decisionJury = 2'],
-            ['libelle' => 'Admis (résultat final = 2)', 'condition' => 'c.resultat = 2'],
+            [
+                'libelle' => 'Candidatures déposées',
+                'sous_titre' => 'Total des candidatures',
+                'condition' => null,
+            ],
+            [
+                'libelle' => 'Admissibles à l\'entretien',
+                'sous_titre' => 'Retenus après étude de dossier',
+                'condition' => 'c.entstatut = 2',
+            ],
+            [
+                'libelle' => 'Retenus par le jury',
+                'sous_titre' => 'Après entretien de sélection',
+                'condition' => 'c.decisionJury = 2',
+            ],
+            [
+                'libelle' => 'Candidats admis',
+                'sous_titre' => 'Admission finale',
+                'condition' => 'c.resultat = 2',
+            ],
         ];
 
         $resultat = [];
@@ -323,6 +339,7 @@ class DashboardController extends AbstractController
             $feminin = (int) $row['feminin'];
             $resultat[] = [
                 'libelle' => $etape['libelle'],
+                'sous_titre' => $etape['sous_titre'],
                 'total' => $total,
                 'feminin' => $feminin,
                 'pourcentage' => $total > 0 ? round($feminin * 100 / $total, 1) : null,

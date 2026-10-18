@@ -2,14 +2,15 @@
      x-data="{ profileOpen: false }">
   <div class="flex items-center justify-between h-16 px-4 lg:px-6">
 
-    <button id="sidebarToggle"
-            class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-indigo-600 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            aria-label="Toggle sidebar">
-      <i class="fas fa-bars text-base"></i>
-    </button>
+    <div class="flex items-center gap-3">
+      <button id="sidebarToggle"
+              class="p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-indigo-600 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              aria-label="Toggle sidebar">
+        <i class="fas fa-bars text-base"></i>
+      </button>
 
-    <div class="hidden md:flex items-center gap-2">
-      {% set route = app.request.attributes.get('_route') %}
+      <div class="hidden md:flex items-center gap-2">
+        {% set route = app.request.attributes.get('_route') %}
 
       {% set routeMap = {
         'app_dashboard':                    {'icon': 'chart-line',        'label': 'Tableau de bord'},
@@ -30,8 +31,6 @@
         'app_localite_index':               {'icon': 'map-marker-alt',    'label': 'Localités'},
         'app_admis_index':                  {'icon': 'user-graduate',     'label': 'Inscriptions définitives'},
         'app_admis_new':                    {'icon': 'user-plus',         'label': 'Nouvelle inscription'},
-        'app_admis_etablissement':          {'icon': 'list',              'label': 'Admis définitifs'},
-        'app_admis_inscription':            {'icon': 'user-graduate',     'label': 'Inscription définitive'},
         'app_admis_search':                 {'icon': 'search',            'label': 'Recherche candidat'},
       } %}
 
@@ -48,20 +47,49 @@
           <span class="text-sm font-semibold text-slate-600">{{ fallback }}</span>
         </div>
       {% endif %}
+      </div>
     </div>
 
-    {% if app.user %}
-    <div class="relative">
+    <div class="flex items-center gap-3">
+      {# ==================== SÉLECTEUR DE VAGUE DE RECRUTEMENT ==================== #}
+      {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY') %}
+        {% set sessions_consultables = session_context.sessions %}
+        {% if sessions_consultables|length > 0 %}
+          <form method="get" action="{{ app.request.pathInfo }}" class="m-0 flex items-center">
+            <div class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-100/80 border border-slate-200/80 hover:border-indigo-300 hover:bg-indigo-50/50 transition group shadow-sm">
+              <span class="flex items-center justify-center w-6 h-6 rounded-lg bg-indigo-100 text-indigo-600 shrink-0">
+                <i class="fas fa-layer-group text-xs"></i>
+              </span>
+              <div class="flex flex-col text-left">
+                <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 group-hover:text-indigo-600 transition leading-none">Vague</span>
+                <select id="select-session" name="session" onchange="this.form.submit()"
+                        class="bg-transparent text-xs font-bold text-slate-800 border-0 p-0 pr-4 focus:ring-0 cursor-pointer -mt-0.5">
+                  {% for s in sessions_consultables %}
+                    <option value="{{ s.id }}" {{ session_context.currentSession and session_context.currentSession.id == s.id ? 'selected' : '' }}>
+                      {{ s.nom }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </form>
+        {% endif %}
+      {% endif %}
+
+      {% if app.user %}
+      {% set userFullName = (app.user.nom or app.user.prenoms) ? ((app.user.nom ~ ' ' ~ app.user.prenoms)|trim) : app.user.email %}
+      {% set userInitials = (app.user.nom or app.user.prenoms) ? ((app.user.nom|first|upper) ~ (app.user.prenoms|first|upper)) : (app.user.email|first|upper) %}
+      <div class="relative">
       <button @click="profileOpen = !profileOpen"
               class="flex items-center gap-2.5 pl-1.5 pr-2.5 py-1.5 rounded-xl hover:bg-slate-100 transition focus:outline-none focus:ring-2 focus:ring-indigo-400"
               :class="{ 'bg-slate-100': profileOpen }">
 
         <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-sm">
-          {{ app.user.nom|first|upper }}{{ app.user.prenoms|first|upper }}
+          {{ userInitials }}
         </div>
 
         <div class="hidden lg:flex flex-col items-start leading-tight">
-          <span class="text-sm font-semibold text-slate-800">{{ app.user.nom }} {{ app.user.prenoms }}</span>
+          <span class="text-sm font-semibold text-slate-800">{{ userFullName }}</span>
           <span class="text-[10px] text-slate-400">{{ app.user.email }}</span>
         </div>
 
@@ -94,10 +122,10 @@
         <div class="px-4 py-4 bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-slate-100">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-sm shrink-0">
-              {{ app.user.nom|first|upper }}{{ app.user.prenoms|first|upper }}
+              {{ userInitials }}
             </div>
             <div class="min-w-0">
-              <p class="text-sm font-bold text-slate-800 truncate">{{ app.user.nom }} {{ app.user.prenoms }}</p>
+              <p class="text-sm font-bold text-slate-800 truncate">{{ userFullName }}</p>
               <p class="text-xs text-slate-400 truncate mt-0.5">{{ app.user.email }}</p>
               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold mt-1.5
                 {% if is_granted('ROLE_ADMIN') %}bg-red-100 text-red-700
@@ -146,6 +174,8 @@
       </div>
     </div>
     {% endif %}
+
+    </div>
 
   </div>
 </nav>

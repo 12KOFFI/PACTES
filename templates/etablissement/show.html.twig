@@ -327,10 +327,12 @@
                 </div>
                 <h2 class="text-base font-semibold text-slate-700 uppercase tracking-wider">5 derniers admis définitifs</h2>
             </div>
-            <a href="{{ path('app_admis_etablissement') }}" 
+            {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_admis_index') }}" 
                class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-200 border border-slate-400 text-emerald-600 text-sm font-medium hover:bg-emerald-500 hover:text-white transition">
                 <i class="fas fa-list text-xs"></i> Voir tout
             </a>
+            {% endif %}
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
