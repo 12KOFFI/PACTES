@@ -12,11 +12,15 @@
 *.sql
 *.py
 *.log
+error_log
+*.bak
 *.cache
 .php-cs-fixer.cache
 /npm-debug.log
 /yarn-error.log
+/cgi-bin/
 ###> phpunit/phpunit ###
 /phpunit.xml
 /.phpunit.cache/
 ###< phpunit/phpunit ###
+
