@@ -43,6 +43,9 @@ class Constant
     public $sexe = ['MASCULIN' => 'MASCULIN', 'FEMININ' => 'FEMININ'];
     public $situationmat = ['CELIBATAIRE' => 'CELIBATAIRE', 'UNION LIBRE' => 'UNION LIBRE', 'MARIE(E)' => 'MARIE(E)', 'VEUF(VE)' => 'VEUF(VE)'];
 
+    /** Taille maximale par pièce justificative : 5 Mo (doit rester <= upload_max_filesize de PHP) */
+    public const UPLOAD_MAX_BYTES = 5 * 1024 * 1024;
+
     public $document_labels = [
         'fpiece' => [
             'icon' => 'id-card',

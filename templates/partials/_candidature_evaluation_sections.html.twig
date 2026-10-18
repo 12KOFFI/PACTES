@@ -1,11 +1,28 @@
+{% import _self as ui %}
+{% macro actions(section, label) %}
+    <div class="mt-6 pt-5 border-t border-slate-200 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3">
+        <button type="button" data-step-prev class="hidden px-5 py-2.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold transition items-center justify-center focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <i class="fas fa-arrow-left mr-2" aria-hidden="true"></i> Précédent
+        </button>
+        <div class="flex flex-col sm:flex-row gap-3 sm:ml-auto">
+            <button type="submit" name="section" value="{{ section }}" data-save-btn data-label="{{ label }}" class="px-6 py-2.5 bg-indigo-700 hover:bg-indigo-800 disabled:opacity-70 disabled:cursor-wait text-white text-sm font-semibold rounded-lg transition shadow flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <i class="fas fa-save mr-2" data-save-icon aria-hidden="true"></i>
+                <span data-save-label>{{ label }}</span>
+            </button>
+            <button type="button" data-step-next class="hidden px-5 py-2.5 rounded-lg border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 text-sm font-semibold transition items-center justify-center focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                Suivant <i class="fas fa-arrow-right ml-2" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+{% endmacro %}
 {% set input_class = input_class|default('w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition') %}
 
 <!-- SECTION 3: POUR ENT ET ADMIN - Étude de dossier -->
 {% if is_granted('ROLE_ENT') or is_granted('ROLE_ADMIN') %}
-    <div id="section-dossier" class="scroll-mt-24">
-        <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-5 flex items-center border-b border-slate-200 pb-3">
+    <div id="section-dossier" data-step-panel="dossier" role="tabpanel" aria-labelledby="step-title-dossier" class="scroll-mt-28">
+        <h3 id="step-title-dossier" tabindex="-1" class="text-base sm:text-lg font-bold text-slate-800 mb-5 flex items-center border-b border-slate-200 pb-3 focus:outline-none">
             <span class="w-7 h-7 bg-amber-100 text-amber-800 rounded-lg flex items-center justify-center mr-2.5 text-xs font-bold shrink-0">1</span>
-            <span>1 — Analyse du dossier</span>
+            <span>Analyse du dossier</span>
         </h3>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -18,15 +35,16 @@
             {{ form_widget(form.etucom, {'attr': {'class': input_class, 'placeholder': 'Commentaire sur le dossier...'}}) }}
         </div>
         </div>
+    {{ ui.actions('dossier', 'Enregistrer l\'analyse du dossier') }}
     </div>
 {% endif %}
 
 <!-- SECTION 4: POUR JURY, ENT ET ADMIN - Évaluation entretien -->
 {% if is_granted('ROLE_JURY') or is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') %}
-    <div id="section-entretien" class="scroll-mt-24 pt-4 border-t border-slate-200">
-        <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-5 flex items-center border-b border-slate-200 pb-3">
+    <div id="section-entretien" data-step-panel="entretien" role="tabpanel" aria-labelledby="step-title-entretien" class="scroll-mt-28">
+        <h3 id="step-title-entretien" tabindex="-1" class="text-base sm:text-lg font-bold text-slate-800 mb-5 flex items-center border-b border-slate-200 pb-3 focus:outline-none">
             <span class="w-7 h-7 bg-blue-100 text-blue-800 rounded-lg flex items-center justify-center mr-2.5 text-xs font-bold shrink-0">2</span>
-            <span>2 — Entretien de sélection</span>
+            <span>Entretien de sélection</span>
         </h3>
 
     {# Date et lieu de l'entretien #}
@@ -103,16 +121,17 @@
             <label class="block text-sm font-medium text-slate-700 mb-1">Commentaire entretien</label>
             {{ form_widget(form.entcom, {'attr': {'class': input_class, 'rows': 3, 'placeholder': "Observations sur l'entretien..."}}) }}
         </div>
+    {{ ui.actions('entretien', 'Enregistrer l\'entretien') }}
     </div>
 {% endif %}
 
 <!-- SECTION 5: Visite médicale et résultat final -->
 {% if is_granted('ROLE_ENT') or is_granted('ROLE_JURY') or is_granted('ROLE_ADMIN') %}
-    <div id="section-visite" class="scroll-mt-24 pt-4 border-t border-slate-200">
+    <div id="section-visite" data-step-panel="visite" role="tabpanel" aria-labelledby="step-title-visite" class="scroll-mt-28">
         <div class="bg-slate-50 rounded-xl border border-slate-200 p-5 sm:p-6">
-            <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-5 flex items-center border-b border-slate-200 pb-3">
+            <h3 id="step-title-visite" tabindex="-1" class="text-base sm:text-lg font-bold text-slate-800 mb-5 flex items-center border-b border-slate-200 pb-3 focus:outline-none">
                 <span class="w-7 h-7 bg-emerald-100 text-emerald-800 rounded-lg flex items-center justify-center mr-2.5 text-xs font-bold shrink-0">3</span>
-                <span>3 — Visite médicale & Résultat final</span>
+                <span>Visite médicale & Résultat final</span>
             </h3>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -140,6 +159,7 @@
                 {{ form_widget(form.viscom, {'attr': {'class': input_class, 'placeholder': 'Commentaire visite...'}}) }}
             </div>
         </div>
+    {{ ui.actions('visite', 'Enregistrer la visite et le résultat') }}
     </div>
 </div>
 {% endif %}

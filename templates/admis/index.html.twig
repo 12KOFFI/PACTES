@@ -175,7 +175,7 @@
         {% set bg  = type == 'success' ? 'bg-green-50 border-green-200 text-green-700' : (type in ['error','danger'] ? 'bg-red-50 border-red-200 text-red-700' : 'bg-blue-50 border-blue-200 text-blue-700') %}
         {% set ico = type == 'success' ? 'check-circle' : (type in ['error','danger'] ? 'exclamation-circle' : 'info-circle') %}
         <div class="flex items-center gap-3 px-5 py-3.5 rounded-xl border mb-5 text-sm font-medium {{ bg }}">
-            <i class="fas fa-{{ ico }}"></i> {{ message|raw }}
+            <i class="fas fa-{{ ico }}"></i> {{ message }}
         </div>
     {% endfor %}
 {% endfor %}

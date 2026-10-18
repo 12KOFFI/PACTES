@@ -39,10 +39,10 @@
                     'class': 'hidden file-input',
                     'data-field': field,
                     'accept': config.accept,
-                    'data-max-size': '10485760',
+                    'data-max-size': '5242880',
                     'data-current-file': fileName ?? ''
                 }}) }}
-                {# 10 Mo (à ajuster selon votre limite) #}
+                {# 5 Mo : doit rester aligné sur Constant::UPLOAD_MAX_BYTES #}
                     
                     <label class="block text-sm font-semibold text-slate-700 mb-1">
                         {{ config.text }}

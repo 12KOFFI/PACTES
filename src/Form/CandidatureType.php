@@ -196,7 +196,8 @@ class CandidatureType extends AbstractType
                     ],
                     'constraints' => [
                         new File([
-                            'maxSize' => '2M',
+                            'maxSize' => \App\Service\Constant::UPLOAD_MAX_BYTES,
+                            'maxSizeMessage' => 'Le fichier est trop volumineux ({{ size }} {{ suffix }}). La taille maximale autorisée est de {{ limit }} {{ suffix }}.',
                             'mimeTypes' => $mimeTypes,
                             'mimeTypesMessage' => 'Format ' . $config['formats'] . ' requis'
                         ])

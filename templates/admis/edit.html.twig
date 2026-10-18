@@ -32,7 +32,7 @@
             {% set colors = type == 'success' ? 'bg-green-50 border-green-300 text-green-700' : (type == 'error' ? 'bg-red-50 border-red-300 text-red-700' : 'bg-blue-50 border-blue-300 text-blue-700') %}
             <div class="flex items-center gap-3 px-5 py-4 rounded-xl border mb-6 text-sm font-medium {{ colors }}">
                 <i class="fas fa-{{ type == 'success' ? 'check-circle' : 'exclamation-circle' }}"></i>
-                {{ message|raw }}
+                {{ message }}
             </div>
         {% endfor %}
     {% endfor %}

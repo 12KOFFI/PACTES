@@ -8,7 +8,7 @@
             </button>
             <div class="flex items-center">
                 <i class="fas fa-{{ type == 'success' ? 'check-circle' : (type == 'error' ? 'exclamation-circle' : (type == 'warning' ? 'exclamation-triangle' : 'info-circle')) }} text-{{ type == 'success' ? 'green' : (type == 'error' ? 'red' : (type == 'warning' ? 'amber' : 'blue')) }}-500 mr-3"></i>
-                <p class="text-{{ type == 'success' ? 'green' : (type == 'error' ? 'red' : (type == 'warning' ? 'amber' : 'blue')) }}-700 pr-6">{{ message|raw }}</p>
+                <p class="text-{{ type == 'success' ? 'green' : (type == 'error' ? 'red' : (type == 'warning' ? 'amber' : 'blue')) }}-700 pr-6">{{ message }}</p>
             </div>
         </div>
     {% endfor %}

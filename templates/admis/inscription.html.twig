@@ -58,7 +58,7 @@
                    : (type == 'error'   ? 'exclamation-circle'
                    : (type == 'warning' ? 'exclamation-triangle' : 'info-circle')) %}
         <div class="flex items-center gap-3 px-5 py-3.5 rounded-xl border mb-5 text-sm font-medium {{ bg }}">
-            <i class="fas fa-{{ ico }}"></i> {{ message|raw }}
+            <i class="fas fa-{{ ico }}"></i> {{ message }}
         </div>
     {% endfor %}
 {% endfor %}

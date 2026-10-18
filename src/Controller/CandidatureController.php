@@ -367,13 +367,33 @@ class CandidatureController extends AbstractController
             ]);
         }
 
+        $section = (string) $request->request->get('section', '');
+        $sectionFields = self::evaluationSectionFields();
+        if ($section !== '' && !isset($sectionFields[$section])) {
+            $this->addFlash('error', 'Section de formulaire inconnue.');
+            return $this->redirectToRoute('app_candidature_edit', ['id' => $candidature->getId()]);
+        }
+        // L'analyse du dossier est réservée aux rôles ENT et ADMIN
+        if ($section === 'dossier' && !$this->isGranted('ROLE_ENT') && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $safeRedirectTo = $this->sanitizeRedirectTarget($request->get('redirect_to'), $request);
+
         if ($isStaff) {
-            $form->handleRequest($request);
-            
+            if ($section !== '' && $request->isMethod('POST')) {
+                // Enregistrement indépendant d'une étape : seuls les champs de la section (et le jeton CSRF) sont soumis au formulaire
+                $submitted = $request->request->all($form->getName());
+                $allowed = array_flip(array_merge($sectionFields[$section], ['_token']));
+                $form->submit(array_intersect_key($submitted, $allowed), false);
+            } else {
+                $form->handleRequest($request);
+            }
+
             if ($form->isSubmitted() && $form->isValid()) {
                 // ✅ Règle métier : on ne peut admettre un candidat que si sa visite médicale a été effectuée
                 $nouveauResultat = $candidature->getResultat();
-                if ($nouveauResultat !== null && $candidature->getVisstatut() !== 2) {
+                if (($section === '' || $section === 'visite') && $nouveauResultat !== null && $candidature->getVisstatut() !== 2) {
                     $this->addFlash('error', 'Impossible de définir le résultat final : la visite médicale doit d\'abord être marquée comme effectuée.');
                     return $this->redirectToRoute('app_candidature_edit', ['id' => $candidature->getId()]);
                 }
@@ -383,33 +403,83 @@ class CandidatureController extends AbstractController
                 $this->entityManager->flush();
                 $this->addFlash('success', 'Évaluation mise à jour avec succès.');
 
-                // --- DEBUT DE LA REDIRECTION DYNAMIQUE ---
-                // 1. On cherche d'abord la valeur envoyée dans le formulaire/query string
-                $redirectTo = $request->get('redirect_to');
-
-                // 2. Si non présent, on vérifie l'en-tête HTTP Referer
-                if (!$redirectTo) {
-                    $redirectTo = $request->headers->get('referer');
+                // Enregistrement d'une étape : on reste sur la page, à la même étape
+                if ($section !== '') {
+                    return $this->redirectToRoute('app_candidature_edit', [
+                        'id' => $candidature->getId(),
+                        'redirect_to' => $safeRedirectTo,
+                        'step' => $section,
+                    ]);
                 }
 
-                // 3. Si une URL valide existe, on redirige vers elle, sinon fallback vers l'index
-                if ($redirectTo) {
-                    return $this->redirect($redirectTo);
-                }
+                // Redirection dynamique : paramètre redirect_to, sinon Referer du même hôte, sinon index
+                $redirectTo = $safeRedirectTo
+                    ?? $this->sanitizeRedirectTarget($request->headers->get('referer'), $request);
 
-                return $this->redirectToRoute('app_candidature_index');
-                // --- FIN DE LA REDIRECTION DYNAMIQUE ---
+                return $redirectTo
+                    ? $this->redirect($redirectTo)
+                    : $this->redirectToRoute('app_candidature_index');
             }
         }
 
+        $activeStep = (string) $request->get('step', $section);
+        if (!isset($sectionFields[$activeStep])) {
+            $activeStep = '';
+        }
         return $this->render('candidature/form.html.twig', [
             'candidature' => $candidature,
             'form' => $form,
             'document_labels' => $this->constant->document_labels,
-            'redirect_to' => $request->get('redirect_to') // transmis à la vue si nécessaire
+            'redirect_to' => $safeRedirectTo, // URL interne validée, transmise à la vue
+            'active_step' => $activeStep,
         ]);
     }
 
+    /**
+     * Champs du formulaire d'évaluation regroupés par étape (enregistrement indépendant).
+     *
+     * @return array<string, string[]>
+     */
+    private static function evaluationSectionFields(): array
+    {
+        $notes = [];
+        for ($i = 1; $i <= 13; $i++) {
+            $notes[] = 'note' . $i;
+        }
+
+        return [
+            'dossier' => ['etustatut', 'etucom'],
+            'entretien' => array_merge(
+                ['entdate', 'entlieu', 'jury', 'creneauEntretien', 'entstatut', 'decisionJury', 'entcom'],
+                $notes
+            ),
+            'visite' => ['visdate', 'vislieu', 'visstatut', 'resultat', 'viscom'],
+        ];
+    }
+
+    /**
+     * Anti open-redirect : n'accepte qu'un chemin interne (ou une URL du même hôte, ramenée à son chemin).
+     */
+    private function sanitizeRedirectTarget(?string $url, Request $request): ?string
+    {
+        if ($url === null || $url === '' || preg_match('/[\x00-\x1F\x7F\\\\]/', $url)) {
+            return null;
+        }
+
+        if (preg_match('#^https?://#i', $url)) {
+            $parts = parse_url($url);
+            if (!$parts || ($parts['host'] ?? null) !== $request->getHost()) {
+                return null;
+            }
+            $url = ($parts['path'] ?? '/') . (isset($parts['query']) ? '?' . $parts['query'] : '');
+        }
+
+        if ($url[0] !== '/' || str_starts_with($url, '//')) {
+            return null;
+        }
+
+        return $url;
+    }
     /**
      * Calcule la décision du jury (entstatut) à partir des 13 notes de la grille d'évaluation.
      * Barème : total sur 40, ramené à une moyenne sur 4 (total / 10).
@@ -592,6 +662,12 @@ class CandidatureController extends AbstractController
         foreach (['fpiece', 'fniveau', 'fautre'] as $field) {
             $file = $request->files->get($field);
             if ($file) {
+                // Validation serveur : type MIME réel (détecté sur le contenu) et taille max, comme dans CandidatureType
+                $allowedMimes = $this->constant->document_labels[$field]['mimeTypes'] ?? ['application/pdf', 'image/jpeg', 'image/pjpeg', 'image/png'];
+                if (!$file->isValid() || $file->getSize() > \App\Service\Constant::UPLOAD_MAX_BYTES || !in_array($file->getMimeType(), $allowedMimes, true)) {
+                    $this->addFlash('error', 'Fichier refusé : formats acceptés JPG, PNG ou PDF (5 Mo maximum).');
+                    return $this->redirectToRoute('app_candidature_edit', ['id' => $candidature->getId()]);
+                }
                 $getter = 'get' . ucfirst($field);
                 $setter = 'set' . ucfirst($field);
                 $oldFile = $candidature->$getter();
@@ -631,6 +707,7 @@ class CandidatureController extends AbstractController
     }
 
     #[Route('/{id}/reinitialiser-mdp', name: 'app_candidature_reinitialiser_mdp', methods: ['POST'], requirements: ['id' => '\\d+'])]
+    #[Security("is_granted('ROLE_ADMIN') or (is_granted('ROLE_ENT') and candidature.getEtablissement() and candidature.getEtablissement().getUser() == user)")]
     public function reinitialiserMdp(Request $request, Candidature $candidature): Response
     {
         if (!$this->isCsrfTokenValid('candidature_reinitialiser_mdp_' . $candidature->getId(), $request->request->get('_token'))) {

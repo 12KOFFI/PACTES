@@ -8,23 +8,6 @@
 
 {% block body %}
 
-{# Flash messages #}
-{% for label, messages in app.flashes %}
-    {% for message in messages %}
-        <div class="mb-4 p-4 rounded-lg border
-            {% if label == 'error' %}
-                bg-red-50 border-red-200 text-red-800
-            {% elseif label == 'success' %}
-                bg-green-50 border-green-200 text-green-800
-            {% else %}
-                bg-blue-50 border-blue-200 text-blue-800
-            {% endif %}
-        ">
-            {{ message|raw }}
-        </div>
-    {% endfor %}
-{% endfor %}
-
 <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 mb-8 text-white">
     <div class="flex items-center gap-4 mb-4">
         <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
@@ -145,68 +128,60 @@
 
     {% if is_edit_page and candidature is defined and candidature.id %}
 
-        {# ==================== MINI-MENU D'ACCÈS RAPIDE (STYLE ADMINISTRATIF) ==================== #}
-        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY') %}
-        <div class="sticky top-2 z-20 bg-white border border-slate-300 rounded-xl p-2.5 sm:p-3 mb-6 shadow-sm">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2.5">
-                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 shrink-0">
-                    <i class="fas fa-bookmark text-slate-400"></i>
-                    <span>Accès rapide :</span>
+        {# ==================== STEPS (menu d'accès rapide + assistant) ==================== #}
+        {% set is_staff = is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY') %}
+        {% set can_dossier = is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') %}
+        {% set tone = {
+            green: 'bg-green-100 text-green-800 border-green-200',
+            red: 'bg-red-100 text-red-800 border-red-200',
+            blue: 'bg-blue-100 text-blue-800 border-blue-200',
+            slate: 'bg-slate-200 text-slate-700 border-slate-300'
+        } %}
+        {% set steps = [] %}
+        {% if can_dossier %}
+            {% set steps = steps|merge([{
+                id: 'dossier', label: 'Analyse du dossier',
+                badge: candidature.etustatut == 2 ? 'OK' : (candidature.etustatut == 1 ? 'Rejeté' : 'En attente'),
+                tone: candidature.etustatut == 2 ? 'green' : (candidature.etustatut == 1 ? 'red' : 'slate')
+            }]) %}
+        {% endif %}
+        {% if is_staff %}
+            {% set steps = steps|merge([{
+                id: 'entretien', label: 'Entretien de sélection',
+                badge: candidature.entstatut == 2 ? 'Admissible' : (candidature.entstatut == 1 ? 'Non retenu' : 'À évaluer'),
+                tone: candidature.entstatut == 2 ? 'blue' : (candidature.entstatut == 1 ? 'red' : 'slate')
+            }, {
+                id: 'visite', label: 'Visite médicale & Résultat final',
+                badge: candidature.resultat == 2 ? 'Admis' : (candidature.resultat == 1 ? 'Non admis' : 'En attente'),
+                tone: candidature.resultat == 2 ? 'green' : (candidature.resultat == 1 ? 'red' : 'slate')
+            }]) %}
+        {% endif %}
+
+        {# ==================== MENU D'ACCÈS RAPIDE (fixe dans le viewport) ==================== #}
+        {% if is_staff %}
+        <div id="quick-access-anchor" aria-hidden="true"></div>
+        <nav id="quick-access" aria-label="Accès rapide aux étapes" class="sticky top-2 z-20 bg-white border border-slate-300 border-l-4 border-l-indigo-700 rounded-xl p-3 mb-6 shadow-md">
+            <div class="flex flex-col lg:flex-row lg:items-center gap-3">
+                <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 shrink-0">
+                    <i class="fas fa-compass text-indigo-700" aria-hidden="true"></i>
+                    <span>Accès rapide</span>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 flex-1">
-                    <!-- 1. Analyse du dossier -->
-                    <a href="#section-dossier"
-                       onclick="event.preventDefault(); document.getElementById('section-dossier')?.scrollIntoView({ behavior: 'smooth', block: 'start' });"
-                       class="flex items-center justify-between px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 text-slate-800 text-xs font-semibold transition group">
-                        <span class="flex items-center gap-2 truncate">
-                            <span class="w-5 h-5 rounded-full bg-slate-200 group-hover:bg-amber-100 group-hover:text-amber-800 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 transition">1</span>
-                            <span class="truncate">1 — Analyse du dossier</span>
-                        </span>
-                        {% if candidature.etustatut == 2 %}
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700 border border-green-200 shrink-0 ml-1">OK</span>
-                        {% elseif candidature.etustatut == 1 %}
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-700 border border-red-200 shrink-0 ml-1">Rejeté</span>
-                        {% else %}
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-200 text-slate-600 shrink-0 ml-1">En attente</span>
-                        {% endif %}
-                    </a>
-
-                    <!-- 2. Entretien de sélection -->
-                    <a href="#section-entretien"
-                       onclick="event.preventDefault(); document.getElementById('section-entretien')?.scrollIntoView({ behavior: 'smooth', block: 'start' });"
-                       class="flex items-center justify-between px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 text-slate-800 text-xs font-semibold transition group">
-                        <span class="flex items-center gap-2 truncate">
-                            <span class="w-5 h-5 rounded-full bg-slate-200 group-hover:bg-blue-100 group-hover:text-blue-800 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 transition">2</span>
-                            <span class="truncate">2 — Entretien de sélection</span>
-                        </span>
-                        {% if candidature.entstatut == 2 %}
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700 border border-blue-200 shrink-0 ml-1">Admissible</span>
-                        {% elseif candidature.entstatut == 1 %}
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-700 border border-red-200 shrink-0 ml-1">Non retenu</span>
-                        {% else %}
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-200 text-slate-600 shrink-0 ml-1">À évaluer</span>
-                        {% endif %}
-                    </a>
-
-                    <!-- 3. Visite médicale -->
-                    <a href="#section-visite"
-                       onclick="event.preventDefault(); document.getElementById('section-visite')?.scrollIntoView({ behavior: 'smooth', block: 'start' });"
-                       class="flex items-center justify-between px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 text-slate-800 text-xs font-semibold transition group">
-                        <span class="flex items-center gap-2 truncate">
-                            <span class="w-5 h-5 rounded-full bg-slate-200 group-hover:bg-emerald-100 group-hover:text-emerald-800 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0 transition">3</span>
-                            <span class="truncate">3 — Visite médicale</span>
-                        </span>
-                        {% if candidature.resultat == 2 %}
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700 border border-green-200 shrink-0 ml-1">Admis</span>
-                        {% elseif candidature.resultat == 1 %}
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-700 border border-red-200 shrink-0 ml-1">Non admis</span>
-                        {% else %}
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-slate-200 text-slate-600 shrink-0 ml-1">En attente</span>
-                        {% endif %}
-                    </a>
+                <div id="stepper-tabs" role="tablist" aria-label="Étapes d'évaluation" class="grid grid-cols-1 {{ steps|length >= 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2' }} gap-2 flex-1">
+                    {% for step in steps %}
+                        <button type="button" role="tab" id="tab-{{ step.id }}"
+                                data-step-target="{{ step.id }}"
+                                aria-controls="section-{{ step.id }}" aria-selected="false" tabindex="-1"
+                                class="step-tab group flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-400 text-slate-800 text-sm font-semibold text-left transition focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                            <span class="flex items-center gap-2 min-w-0">
+                                <span class="step-num w-6 h-6 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-bold shrink-0 transition">{{ loop.index }}</span>
+                                <span class="truncate">{{ step.label }}</span>
+                            </span>
+                            <span class="px-2 py-0.5 rounded border text-[11px] font-bold shrink-0 {{ tone[step.tone] }}">{{ step.badge }}</span>
+                        </button>
+                    {% endfor %}
                 </div>
             </div>
-        </div>
+        </nav>
         {% endif %}
 
         {# ===== PARTIE 1 : MISE À JOUR DES INFORMATIONS ===== #}
@@ -356,32 +331,36 @@
             </div>
         </div>
 
-        {# ===== PARTIE 2 : ANALYSE DU DOSSIER (réservée au staff) ===== #}
-        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY') %}
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+        {# ===== ASSISTANT : ÉTAPES D'ÉVALUATION (réservé au staff) ===== #}
+        {% if is_staff %}
+        <div id="wizard" data-active-step="{{ active_step|default('') }}" class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
             <div class="p-6 md:p-8">
-                {{ form_start(form, {'attr': {'class': 'space-y-10', 'id': 'candidature-form'}}) }}
+                {{ form_start(form, {'attr': {'class': 'space-y-6', 'id': 'candidature-form', 'novalidate': 'novalidate'}}) }}
 
-                    <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 md:p-5 mb-4">
-                        <p class="text-sm font-semibold text-amber-800 flex items-center">
-                            <i class="fas fa-clipboard-list mr-2"></i>
-                            Partie 2 — Analyse du dossier
-                        </p>
-                        <p class="text-sm text-amber-700 mt-1">Étudiez le dossier, évaluez le candidat et enregistrez le résultat.</p>
+                    <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 md:p-5">
+                        <div class="flex items-center justify-between gap-3">
+                            <p class="text-sm font-semibold text-slate-800 flex items-center">
+                                <i class="fas fa-clipboard-list mr-2 text-indigo-700" aria-hidden="true"></i>
+                                Évaluation de la candidature
+                            </p>
+                            <p id="wizard-counter" class="text-sm font-semibold text-indigo-800" aria-hidden="true"></p>
+                        </div>
+                        <div class="mt-3 h-2 w-full rounded-full bg-slate-200 overflow-hidden" role="progressbar" aria-label="Progression des étapes" aria-valuemin="1" aria-valuemax="{{ steps|length }}" aria-valuenow="1">
+                            <div id="wizard-progress" class="h-full bg-indigo-700 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2">Chaque étape s'enregistre indépendamment : utilisez le bouton d'enregistrement de l'étape en cours.</p>
                     </div>
+
+                    {# Les erreurs de validation globales du formulaire #}
+                    {{ form_errors(form) }}
 
                     {% include 'partials/_candidature_evaluation_sections.html.twig' %}
 
-                    <div class="flex flex-col md:flex-row justify-between items-center gap-4 pt-6 border-t border-slate-200">
-                        <div class="text-sm text-slate-500">
-                            <i class="fas fa-info-circle mr-1"></i>
-                            Les champs marqués d'une <span class="text-red-500">*</span> sont obligatoires
-                        </div>
-                        <button type="submit" class="px-7 py-2.5 bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-semibold rounded-lg transition shadow flex items-center">
-                            <i class="fas fa-save mr-2"></i>
-                            Enregistrer l'évaluation
-                        </button>
-                    </div>
+                    <p class="text-sm text-slate-500">
+                        <i class="fas fa-info-circle mr-1" aria-hidden="true"></i>
+                        Les champs marqués d'une <span class="text-red-500">*</span> sont obligatoires
+                    </p>
+                    <p id="wizard-status" class="sr-only" role="status" aria-live="polite"></p>
 
                 {{ form_end(form) }}
             </div>
@@ -848,7 +827,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     const form = document.getElementById('candidature-form');
-    if (form) {
+    {# En mode édition, la validation est gérée côté serveur (étapes indépendantes) #}
+    if (form && {{ is_edit_page ? 'false' : 'true' }}) {
         form.addEventListener('submit', function(e) {
             {% if not app.user %}
             e.preventDefault();
@@ -923,13 +903,169 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-{# Bouton flottant moderne pour remonter vers le menu du formulaire #}
+{# Bouton d'action flottant : remonte vers le menu d'accès rapide #}
+{% if is_edit_page and candidature is defined and candidature.id and (is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') or is_granted('ROLE_JURY')) %}
 <button id="scrollTopBtn"
         type="button"
-        onclick="window.scrollTo({ top: 0, behavior: 'smooth' });"
-        class="fixed bottom-6 right-6 z-50 p-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-2xl transition transform hover:scale-110 flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-indigo-300"
-        title="Remonter vers le menu">
-    <i class="fas fa-arrow-up text-base"></i>
+        aria-label="Remonter vers le menu d'accès rapide"
+        title="Remonter vers le menu d'accès rapide"
+        class="hidden fixed bottom-6 right-6 z-50 w-12 h-12 bg-indigo-700 hover:bg-indigo-800 text-white rounded-full shadow-xl transition items-center justify-center focus:outline-none focus:ring-4 focus:ring-indigo-300">
+    <i class="fas fa-arrow-up text-base" aria-hidden="true"></i>
 </button>
 
+<style>
+    .step-tab[aria-selected="true"] { background-color: #eef2ff; border-color: #4338ca; box-shadow: inset 0 -3px 0 #4338ca; color: #312e81; }
+    .step-tab[aria-selected="true"] .step-num { background-color: #4338ca; color: #fff; }
+    @media (prefers-reduced-motion: reduce) { #wizard-progress { transition: none; } }
+</style>
+
+<script>
+(function () {
+    var wizard = document.getElementById('wizard');
+    if (!wizard) { return; }
+
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var scrollBehavior = reduceMotion ? 'auto' : 'smooth';
+    var panels = Array.prototype.slice.call(wizard.querySelectorAll('[data-step-panel]'));
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[data-step-target]'));
+    var counter = document.getElementById('wizard-counter');
+    var progress = document.getElementById('wizard-progress');
+    var progressBar = progress ? progress.parentNode : null;
+    var status = document.getElementById('wizard-status');
+    var form = document.getElementById('candidature-form');
+    var current = -1;
+
+    function ids() { return panels.map(function (p) { return p.getAttribute('data-step-panel'); }); }
+
+    function show(index, opts) {
+        opts = opts || {};
+        if (index < 0 || index >= panels.length) { return; }
+        current = index;
+        panels.forEach(function (panel, i) { panel.hidden = (i !== index); });
+        tabs.forEach(function (tab) {
+            var active = tab.getAttribute('data-step-target') === panels[index].getAttribute('data-step-panel');
+            tab.setAttribute('aria-selected', active ? 'true' : 'false');
+            tab.tabIndex = active ? 0 : -1;
+            if (active) { tab.setAttribute('aria-current', 'step'); } else { tab.removeAttribute('aria-current'); }
+        });
+        panels.forEach(function (panel, i) {
+            var prev = panel.querySelector('[data-step-prev]');
+            var next = panel.querySelector('[data-step-next]');
+            if (prev) { prev.classList.toggle('hidden', i === 0); prev.classList.toggle('inline-flex', i !== 0); }
+            if (next) { next.classList.toggle('hidden', i === panels.length - 1); next.classList.toggle('inline-flex', i !== panels.length - 1); }
+        });
+        var label = 'Étape ' + (index + 1) + ' sur ' + panels.length;
+        if (counter) { counter.textContent = label; }
+        if (progress) { progress.style.width = (((index + 1) / panels.length) * 100) + '%'; }
+        if (progressBar) { progressBar.setAttribute('aria-valuenow', String(index + 1)); }
+        if (status) {
+            var title = panels[index].querySelector('h3');
+            status.textContent = label + ' : ' + (title ? title.textContent.trim() : '');
+        }
+        try {
+            var url = new URL(window.location.href);
+            url.searchParams.set('step', panels[index].getAttribute('data-step-panel'));
+            window.history.replaceState(null, '', url.toString());
+        } catch (e) { /* ignore */ }
+        if (opts.scroll) {
+            var title2 = panels[index].querySelector('h3');
+            wizard.scrollIntoView({ behavior: scrollBehavior, block: 'start' });
+            if (title2) { title2.focus({ preventScroll: true }); }
+        }
+    }
+
+    function indexOfId(id) { return ids().indexOf(id); }
+
+    tabs.forEach(function (tab, i) {
+        tab.addEventListener('click', function () {
+            var idx = indexOfId(tab.getAttribute('data-step-target'));
+            if (idx >= 0) { show(idx, { scroll: true }); }
+        });
+        tab.addEventListener('keydown', function (e) {
+            var dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : (e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0);
+            if (!dir) { return; }
+            e.preventDefault();
+            var n = tabs[(i + dir + tabs.length) % tabs.length];
+            n.focus();
+            n.click();
+        });
+    });
+
+    wizard.addEventListener('click', function (e) {
+        var prev = e.target.closest('[data-step-prev]');
+        var next = e.target.closest('[data-step-next]');
+        if (prev) { show(current - 1, { scroll: true }); }
+        if (next) { show(current + 1, { scroll: true }); }
+    });
+
+    // Entrée dans un champ : valide l'étape en cours (et non la première du formulaire)
+    wizard.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON' || e.target.tagName === 'A') { return; }
+        var panel = e.target.closest('[data-step-panel]');
+        var btn = panel ? panel.querySelector('[data-save-btn]') : null;
+        if (btn) { e.preventDefault(); btn.click(); }
+    });
+
+    // État de chargement lors de l'enregistrement
+    if (form) {
+        form.addEventListener('submit', function (e) {
+            var submitter = e.submitter || form.querySelector('[data-save-btn]');
+            if (submitter && submitter.value && !form.querySelector('input[type="hidden"][name="section"]')) {
+                var hidden = document.createElement('input');
+                hidden.type = 'hidden'; hidden.name = 'section'; hidden.value = submitter.value;
+                form.appendChild(hidden);
+            }
+            form.setAttribute('aria-busy', 'true');
+            if (status) { status.textContent = 'Enregistrement en cours…'; }
+            window.setTimeout(function () {
+                form.querySelectorAll('[data-save-btn]').forEach(function (btn) {
+                    btn.disabled = true;
+                    var icon = btn.querySelector('[data-save-icon]');
+                    if (icon) { icon.className = 'fas fa-spinner fa-spin mr-2'; }
+                    if (btn === submitter) {
+                        var lbl = btn.querySelector('[data-save-label]');
+                        if (lbl) { lbl.textContent = 'Enregistrement…'; }
+                    }
+                });
+            }, 0);
+        });
+        // Retour arrière du navigateur (bfcache) : on réactive les boutons
+        window.addEventListener('pageshow', function (ev) {
+            if (!ev.persisted) { return; }
+            form.removeAttribute('aria-busy');
+            form.querySelectorAll('[data-save-btn]').forEach(function (btn) {
+                btn.disabled = false;
+                var icon = btn.querySelector('[data-save-icon]');
+                if (icon) { icon.className = 'fas fa-save mr-2'; }
+                var lbl = btn.querySelector('[data-save-label]');
+                if (lbl) { lbl.textContent = btn.getAttribute('data-label'); }
+            });
+        });
+    }
+
+    // Étape initiale : paramètre ?step=, sinon première étape
+    var start = indexOfId(wizard.getAttribute('data-active-step') || '');
+    show(start >= 0 ? start : 0);
+
+    // Bouton flottant : remonte vers le menu d'accès rapide
+    var fab = document.getElementById('scrollTopBtn');
+    var menu = document.getElementById('quick-access-anchor');
+    if (fab) {
+        function toggleFab() {
+            var visible = window.scrollY > 400;
+            fab.classList.toggle('hidden', !visible);
+            fab.classList.toggle('flex', visible);
+        }
+        window.addEventListener('scroll', toggleFab, { passive: true });
+        toggleFab();
+        fab.addEventListener('click', function () {
+            var top = menu ? menu.getBoundingClientRect().top + window.scrollY - 16 : 0;
+            window.scrollTo({ top: Math.max(top, 0), behavior: scrollBehavior });
+            var active = document.querySelector('.step-tab[aria-selected="true"]');
+            if (active) { active.focus({ preventScroll: true }); }
+        });
+    }
+})();
+</script>
+{% endif %}
 {% endblock %}

@@ -52,7 +52,7 @@
         {% set icon = type == 'success' ? 'check-circle' : (type == 'error' ? 'exclamation-circle' : 'info-circle') %}
         <div class="flex items-center gap-3 px-5 py-4 rounded-xl border mb-4 text-sm font-medium {{ colors }}">
             <i class="fas fa-{{ icon }}"></i>
-            {{ message|raw }}
+            {{ message }}
         </div>
     {% endfor %}
 {% endfor %}
@@ -60,7 +60,7 @@
 {# ===== FILTRES ADMIN ===== #}
 {% if is_granted('ROLE_ADMIN') %}
 <div class="p-4 mb-6 bg-white border shadow-sm rounded-xl border-slate-200">
-    <form method="get" action="{{ path('app_candidature_index') }}" class="flex flex-wrap items-end gap-4">
+    <form method="get" action="{{ path('app_candidature_index') }}" data-turbo-frame="candidatures" class="flex flex-wrap items-end gap-4">
         <div class="flex-1 min-w-[200px]">
             <label class="block mb-1 text-sm font-medium text-slate-600">Établissement</label>
             <select name="etablissement" class="w-full px-3 py-2 text-sm border rounded-lg border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -83,7 +83,7 @@
             <button type="submit" class="px-4 py-2 text-sm font-medium text-white transition bg-indigo-600 rounded-lg hover:bg-indigo-700">
                 <i class="mr-1 fas fa-filter"></i> Filtrer
             </button>
-            <a href="{{ path('app_candidature_index') }}" class="px-4 py-2 text-sm font-medium transition rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">
+            <a href="{{ path('app_candidature_index') }}" data-turbo-frame="candidatures" class="px-4 py-2 text-sm font-medium transition rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">
                 <i class="mr-1 fas fa-undo"></i> Réinitialiser
             </a>
         </div>
@@ -94,7 +94,7 @@
 {# ===== FILTRES ENT ===== #}
 {% if is_granted('ROLE_ENT') and not is_granted('ROLE_ADMIN') %}
 <div class="p-4 mb-6 bg-white border shadow-sm rounded-xl border-slate-200">
-    <form method="get" action="{{ path('app_candidature_index') }}" class="flex flex-wrap items-end gap-4">
+    <form method="get" action="{{ path('app_candidature_index') }}" data-turbo-frame="candidatures" class="flex flex-wrap items-end gap-4">
         <div class="flex-1 min-w-[200px]">
             <label class="block mb-1 text-sm font-medium text-slate-600">Métier</label>
             <select name="metier" class="w-full px-3 py-2 text-sm border rounded-lg border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -116,7 +116,7 @@
             <button type="submit" class="px-4 py-2 text-sm font-medium text-white transition bg-indigo-600 rounded-lg hover:bg-indigo-700">
                 <i class="mr-1 fas fa-filter"></i> Filtrer
             </button>
-            <a href="{{ path('app_candidature_index') }}" class="px-4 py-2 text-sm font-medium transition rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">
+            <a href="{{ path('app_candidature_index') }}" data-turbo-frame="candidatures" class="px-4 py-2 text-sm font-medium transition rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">
                 <i class="mr-1 fas fa-undo"></i> Réinitialiser
             </a>
         </div>
@@ -125,7 +125,7 @@
 {% endif %}
 
 {# ===== TABLEAU ===== #}
-<div id="candidatures-container">
+<turbo-frame id="candidatures" data-turbo-action="advance">
 {% if candidatures.getTotalItemCount > 0 %}
 <div class="overflow-hidden bg-white border shadow-sm rounded-2xl border-slate-200">
 
@@ -134,7 +134,7 @@
         <form method="get" id="filterForm" class="flex flex-wrap items-center justify-between w-full gap-3">
             <div class="flex items-center gap-2 text-sm font-medium text-slate-500">
                 <span>Afficher</span>
-                <select name="limit" id="pageSizeSelect" onchange="document.getElementById('filterForm').submit();"
+                <select name="limit" id="pageSizeSelect" onchange="this.form.requestSubmit();"
                         class="px-2 py-1 text-sm font-medium bg-white border rounded-lg outline-none cursor-pointer border-slate-200 text-slate-700 focus:border-indigo-400">
                     <option value="10" {% if limit == 10 %}selected{% endif %}>10</option>
                     <option value="25" {% if limit == 25 %}selected{% endif %}>25</option>
@@ -146,6 +146,9 @@
             <div class="flex items-center gap-2 px-3 py-2 transition-all bg-white border border-slate-200 rounded-xl focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100">
                 <i class="text-xs fas fa-search text-slate-400"></i>
                 <input type="text" name="q" value="{{ searchTerm }}" placeholder="Rechercher…"
+                       {{ searchTerm ? 'autofocus' : '' }}
+                       onfocus="this.setSelectionRange(this.value.length, this.value.length);"
+                       oninput="clearTimeout(this._t); this._t = setTimeout(() => this.form.requestSubmit(), 350);"
                        class="text-sm bg-transparent outline-none text-slate-700 placeholder-slate-300 w-44">
             </div>
             <!-- Keep other query parameters if any -->
@@ -179,6 +182,7 @@
                     <td class="px-5 py-4 text-sm font-medium text-slate-400">{{ (candidatures.currentPageNumber - 1) * candidatures.itemNumberPerPage + loop.index }}</td>
                     <td class="px-5 py-4">
                         <a href="{{ path('app_candidature_edit', {'id': candidature.id}) }}"
+                           data-turbo-frame="_top"
                            class="font-mono text-xs bg-indigo-50 text-indigo-600 border border-indigo-100 px-2.5 py-1 rounded-lg hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition-all duration-150 inline-block font-medium">
                             {{ candidature.numero }}
                         </a>
@@ -239,6 +243,7 @@
                         <div class="flex items-center justify-end gap-1.5">
                             {% if is_admin or (is_granted('ROLE_CANDIDAT') and candidature.etustatut is null) %}
                             <a href="{{ path('app_candidature_edit', {'id': candidature.id, 'redirect_to': app.request.requestUri}) }}"
+                               data-turbo-frame="_top"
                                title="Modifier"
                                class="flex items-center justify-center w-8 h-8 text-sm transition-all duration-150 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white hover:-translate-y-px">
                                 <i class="fas fa-pen"></i>
@@ -270,6 +275,7 @@
                             {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') %}
                             <form method="post"
                                   action="{{ path('app_candidature_delete', {'id': candidature.id}) }}"
+                                  data-turbo-frame="_top"
                                   onsubmit="return confirm('Supprimer la candidature {{ candidature.numero }} ? Cette action est irréversible.');"
                                   class="inline">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ candidature.id) }}">
@@ -313,101 +319,13 @@
     </p>
     {% if not is_admin %}
     <a href="{{ path('app_candidature_new') }}"
+       data-turbo-frame="_top"
        class="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5 transition-all duration-200">
         <i class="fas fa-plus-circle"></i> Déposer ma première candidature
     </a>
     {% endif %}
 </div>
 {% endif %}
-</div>
+</turbo-frame>
 
-{% endblock %}
-
-{% block javascripts %}
-{{ parent() }}
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('candidatures-container');
-    if (!container) return;
-
-    let searchTimeout;
-
-    // Delegate events to the container since its contents will be replaced
-    container.addEventListener('submit', (e) => {
-        if (e.target.id === 'filterForm') {
-            e.preventDefault();
-            fetchResults(new URLSearchParams(new FormData(e.target)).toString());
-        }
-    });
-
-    container.addEventListener('input', (e) => {
-        if (e.target.name === 'q') {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                const form = document.getElementById('filterForm');
-                if (form) fetchResults(new URLSearchParams(new FormData(form)).toString());
-            }, 400); // 400ms debounce
-        }
-    });
-
-    container.addEventListener('change', (e) => {
-        if (e.target.name === 'limit') {
-            const form = document.getElementById('filterForm');
-            if (form) fetchResults(new URLSearchParams(new FormData(form)).toString());
-        }
-    });
-
-    container.addEventListener('click', (e) => {
-        const link = e.target.closest('.knp-pagination a');
-        if (link) {
-            e.preventDefault();
-            const url = new URL(link.href);
-            fetchResults(url.search);
-        }
-    });
-
-    function fetchResults(queryString) {
-        const url = `${window.location.pathname}?${queryString}`;
-        
-        // Update URL in browser (History API)
-        window.history.pushState({}, '', url);
-
-        // Add a loading state (e.g., slight opacity)
-        container.style.opacity = '0.5';
-        container.style.pointerEvents = 'none';
-
-        fetch(url, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.text())
-        .then(html => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const newContainer = doc.getElementById('candidatures-container');
-            
-            if (newContainer) {
-                container.innerHTML = newContainer.innerHTML;
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        })
-        .finally(() => {
-            container.style.opacity = '1';
-            container.style.pointerEvents = 'auto';
-            
-            // Refocus search input if it was active to not lose cursor
-            const searchInput = document.querySelector('input[name="q"]');
-            if (searchInput) {
-                const val = searchInput.value;
-                searchInput.focus();
-                // Move cursor to end
-                searchInput.setSelectionRange(val.length, val.length);
-            }
-        });
-    }
-});
-</script>
 {% endblock %}

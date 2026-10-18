@@ -185,7 +185,7 @@
                             </button>
                             <div class="flex items-center pr-8">
                                 <i class="fas {% if label == 'success' %}fa-check-circle text-green-500{% elseif label == 'error' %}fa-exclamation-circle text-red-500{% elseif label == 'warning' %}fa-exclamation-triangle text-amber-500{% else %}fa-info-circle text-blue-500{% endif %} mr-3 text-lg"></i>
-                                {{ message|raw }}
+                                {{ message }}
                             </div>
                         </div>
                     {% endfor %}
@@ -198,6 +198,21 @@
     
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Hotwired Turbo (Turbo Frames) -->
+    <style>
+        turbo-frame[busy] { opacity: 0.6; pointer-events: none; transition: opacity 0.15s ease-in-out; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@7.3.0/dist/turbo.es2017-umd.js"></script>
+    <script>
+        // Désactive Turbo Drive sur les liens classiques globaux pour préserver la navigation standard,
+        // tout en laissant les Turbo Frames (<turbo-frame>) 100% actifs et ultra-rapides.
+        if (window.Turbo) {
+            Turbo.session.drive = false;
+        } else {
+            document.addEventListener("turbo:load", function() { Turbo.session.drive = false; }, { once: true });
+        }
+    </script>
     
     {# jQuery / DataTables — chargés uniquement si nécessaire #}
     {% block datatables_js %}{% endblock %}
