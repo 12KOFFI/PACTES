@@ -93,7 +93,7 @@ class AdmisController extends AbstractController
         $totalFemmes = (int) ($statsGenre['total_femmes'] ?? 0);
 
         $qb->orderBy('c.modification', 'DESC');
-        $limit = $request->query->getInt('limit', 25);
+        $limit = $request->query->getInt('limit', 20);
         
         $candidaturesAdmises = $paginator->paginate($qb, $request->query->getInt('page', 1), $limit);
 
@@ -157,7 +157,7 @@ class AdmisController extends AbstractController
         $totalFemmes = (int) ($statsGenre['total_femmes'] ?? 0);
 
         $qb->orderBy('c.modification', 'DESC');
-        $limit = $request->query->getInt('limit', 25);
+        $limit = $request->query->getInt('limit', 20);
 
         $candidaturesAdmises = $paginator->paginate($qb, $request->query->getInt('page', 1), $limit);
 
@@ -292,7 +292,7 @@ class AdmisController extends AbstractController
 
         $qb->orderBy('a.dateInscription', 'DESC');
 
-        $limit = $request->query->getInt('limit', 25);
+        $limit = $request->query->getInt('limit', 20);
         $admis = $paginator->paginate($qb, $request->query->getInt('page', 1), $limit);
 
         // Récupérer les listes pour les select

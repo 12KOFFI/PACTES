@@ -30,12 +30,12 @@
             <!-- Actions -->
             <div class="flex items-center space-x-4">
                 {% if app.user %}
-                    <a href="{{ path('app_dashboard') }}" class="hidden md:flex items-center space-x-2 bg-gradient-to-r from-orange-300 to-orange-500 text-white px-6 py-2.5 rounded-xl hover:from-orange-400 hover:to-orange-600 transition shadow-lg">
+                    <a href="{{ path('app_dashboard') }}" class="hidden md:flex items-center space-x-2 text-white px-6 py-2.5 rounded-xl hover:opacity-90 transition shadow-lg" style="background-color: #EE9137;">
                         <i class="fas fa-tachometer-alt"></i>
                         <span>Dashboard</span>
                     </a>
                 {% else %}
-                    <a href="{{ path('app_login') }}" class="hidden md:flex items-center space-x-2 bg-gradient-to-r from-orange-300 to-orange-500 text-white px-6 py-2.5 rounded-xl hover:from-orange-400 hover:to-orange-600 transition shadow-lg">
+                    <a href="{{ path('app_login') }}" class="hidden md:flex items-center space-x-2 text-white px-6 py-2.5 rounded-xl hover:opacity-90 transition shadow-lg" style="background-color: #EE9137;">
                         <i class="fas fa-sign-in-alt"></i>
                         <span>Connexion</span>
                     </a>
@@ -88,7 +88,7 @@
                 {% if app.user %}
                     <a href="{{ path('app_dashboard') }}" 
                        @click="mobileMenu = false"
-                       class="flex items-center px-4 py-3 rounded-xl bg-gradient-to-r from-orange-300 to-orange-500 text-white font-medium">
+                       class="flex items-center px-4 py-3 rounded-xl text-white font-medium hover:opacity-90 transition" style="background-color: #EE9137;">
                         <i class="fas fa-tachometer-alt w-6 mr-3"></i>
                         Dashboard
                     </a>
@@ -101,7 +101,7 @@
                 {% else %}
                     <a href="{{ path('app_login') }}" 
                        @click="mobileMenu = false"
-                       class="flex items-center px-4 py-3 rounded-xl bg-gradient-to-r from-orange-300 to-orange-500 text-white font-medium">
+                       class="flex items-center px-4 py-3 rounded-xl text-white font-medium hover:opacity-90 transition" style="background-color: #EE9137;">
                         <i class="fas fa-sign-in-alt w-6 mr-3"></i>
                         Connexion
                     </a>

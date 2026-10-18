@@ -2,12 +2,11 @@
 
 <!-- SECTION 3: POUR ENT ET ADMIN - Étude de dossier -->
 {% if is_granted('ROLE_ENT') or is_granted('ROLE_ADMIN') %}
-    <h3 class="text-lg font-semibold text-amber-800 mb-5 flex items-center border-b pb-3">
-        <div class="w-8 h-8 bg-amber-200 rounded-lg flex items-center justify-center mr-3">
-            <i class="fas fa-clipboard-check text-amber-700"></i>
-        </div>
-        Étude de dossier (ENT)
-    </h3>
+    <div id="section-dossier" class="scroll-mt-24">
+        <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-5 flex items-center border-b border-slate-200 pb-3">
+            <span class="w-7 h-7 bg-amber-100 text-amber-800 rounded-lg flex items-center justify-center mr-2.5 text-xs font-bold shrink-0">1</span>
+            <span>1 — Analyse du dossier</span>
+        </h3>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -18,17 +17,17 @@
             <label class="block text-sm font-medium text-slate-700 mb-1">Commentaire</label>
             {{ form_widget(form.etucom, {'attr': {'class': input_class, 'placeholder': 'Commentaire sur le dossier...'}}) }}
         </div>
+        </div>
     </div>
 {% endif %}
 
 <!-- SECTION 4: POUR JURY, ENT ET ADMIN - Évaluation entretien -->
 {% if is_granted('ROLE_JURY') or is_granted('ROLE_ADMIN') or is_granted('ROLE_ENT') %}
-    <h3 class="text-lg font-semibold text-blue-800 mb-5 flex items-center border-b pb-3">
-        <div class="w-8 h-8 bg-blue-200 rounded-lg flex items-center justify-center mr-3">
-            <i class="fas fa-microphone-alt text-blue-700"></i>
-        </div>
-        Évaluation entretien
-    </h3>
+    <div id="section-entretien" class="scroll-mt-24 pt-4 border-t border-slate-200">
+        <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-5 flex items-center border-b border-slate-200 pb-3">
+            <span class="w-7 h-7 bg-blue-100 text-blue-800 rounded-lg flex items-center justify-center mr-2.5 text-xs font-bold shrink-0">2</span>
+            <span>2 — Entretien de sélection</span>
+        </h3>
 
     {# Date et lieu de l'entretien #}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -100,21 +99,21 @@
     </div>
     {% endif %}
 
-    <div class="mt-4 mb-6">
-        <label class="block text-sm font-medium text-slate-700 mb-1">Commentaire entretien</label>
-        {{ form_widget(form.entcom, {'attr': {'class': input_class, 'rows': 3, 'placeholder': "Observations sur l'entretien..."}}) }}
+        <div class="mt-4 mb-6">
+            <label class="block text-sm font-medium text-slate-700 mb-1">Commentaire entretien</label>
+            {{ form_widget(form.entcom, {'attr': {'class': input_class, 'rows': 3, 'placeholder': "Observations sur l'entretien..."}}) }}
+        </div>
     </div>
 {% endif %}
 
 <!-- SECTION 5: Visite médicale et résultat final -->
 {% if is_granted('ROLE_ENT') or is_granted('ROLE_JURY') or is_granted('ROLE_ADMIN') %}
-    <div class="bg-emerald-50 rounded-2xl border border-emerald-200 p-6">
-        <h3 class="text-lg font-semibold text-emerald-800 mb-5 flex items-center border-b border-emerald-200 pb-3">
-            <div class="w-8 h-8 bg-emerald-200 rounded-lg flex items-center justify-center mr-3">
-                <i class="fas fa-hospital text-emerald-700"></i>
-            </div>
-            VISITE MÉDICALE & Résultat final
-        </h3>
+    <div id="section-visite" class="scroll-mt-24 pt-4 border-t border-slate-200">
+        <div class="bg-slate-50 rounded-xl border border-slate-200 p-5 sm:p-6">
+            <h3 class="text-base sm:text-lg font-bold text-slate-800 mb-5 flex items-center border-b border-slate-200 pb-3">
+                <span class="w-7 h-7 bg-emerald-100 text-emerald-800 rounded-lg flex items-center justify-center mr-2.5 text-xs font-bold shrink-0">3</span>
+                <span>3 — Visite médicale & Résultat final</span>
+            </h3>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
@@ -142,6 +141,7 @@
             </div>
         </div>
     </div>
+</div>
 {% endif %}
 
 <!-- Javascript : calcul du total et de la moyenne (affichage uniquement) -->

@@ -114,6 +114,16 @@ class CandidatureController extends AbstractController
             $metierFiltre = $metierId ? $this->entityManager->getRepository(Metier::class)->find($metierId) : null;
             $sessionFiltre = $sessionId ? $this->entityManager->getRepository(SessionRecrutement::class)->find($sessionId) : null;
 
+            if ($etablissementFiltre) {
+                $qb->andWhere('c.etablissement = :etablissement')
+                    ->setParameter('etablissement', $etablissementFiltre);
+            }
+
+            if ($metierFiltre) {
+                $qb->andWhere('c.metier = :metier')
+                    ->setParameter('metier', $metierFiltre);
+            }
+
             if ($sessionFiltre) {
                 $qb->andWhere('c.session = :session')
                     ->setParameter('session', $sessionFiltre);
@@ -162,7 +172,7 @@ class CandidatureController extends AbstractController
 
         $qb->orderBy('c.id', 'DESC');
 
-        $limit = $request->query->getInt('limit', 25);
+        $limit = $request->query->getInt('limit', 20);
 
         $candidatures = $paginator->paginate(
             $qb,
@@ -1172,7 +1182,7 @@ class CandidatureController extends AbstractController
         $candidatures = $paginator->paginate(
             $qb,
             $request->query->getInt('page', 1),
-            25
+            20
         );
 
         return $this->render('candidature/en_attente.html.twig', [
@@ -1213,7 +1223,7 @@ class CandidatureController extends AbstractController
         $candidatures = $paginator->paginate(
             $qb,
             $request->query->getInt('page', 1),
-            25
+            20
         );
 
         return $this->render('candidature/entretien_non_effectue.html.twig', [
@@ -1254,7 +1264,7 @@ class CandidatureController extends AbstractController
         $candidatures = $paginator->paginate(
             $qb,
             $request->query->getInt('page', 1),
-            25
+            20
         );
 
         return $this->render('candidature/visite_non_effectuee.html.twig', [

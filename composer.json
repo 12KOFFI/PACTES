@@ -59,13 +59,16 @@
         "twig/twig": "^2.12|^3.0"
     },
     "config": {
+        "audit": {
+            "block-insecure": false
+        },
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
             "symfony/flex": true,
             "symfony/runtime": true,
             "endroid/installer": true
         },
-        "optimize-autoloader": true,
+        "optimize-autoloader": false,
         "preferred-install": {
             "*": "dist"
         },
@@ -111,6 +114,9 @@
         }
     },
     "require-dev": {
+        "phpunit/phpunit": "*",
+        "symfony/browser-kit": "6.2.*",
+        "symfony/css-selector": "6.2.*",
         "symfony/debug-bundle": "6.2.*",
         "symfony/maker-bundle": "^1.41",
         "symfony/stopwatch": "6.2.*",

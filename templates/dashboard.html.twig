@@ -69,44 +69,134 @@
     {% include 'partials/_flash_messages.html.twig' %}
 
     {% if participation_feminine is defined %}
-    <div class="p-4 sm:p-6 mb-6 sm:mb-8 bg-white border shadow-xl rounded-2xl border-slate-200">
-        <h2 class="text-base sm:text-lg font-bold text-slate-800">Participation féminine{% if session_consultee %} — {{ session_consultee.nom }}{% endif %}</h2>
-        <p class="mb-4 text-xs text-slate-500">Indicateur statistique : objectif de {{ objectif_feminin }} % , de participation féminine </p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+    <div class="p-5 sm:p-7 mb-6 sm:mb-8 bg-white border shadow-xl rounded-2xl border-slate-200">
+        <!-- En-tête de la section -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 mb-6 border-b border-slate-100">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-pink-50 text-pink-600">
+                        <i class="fas fa-venus text-sm"></i>
+                    </span>
+                    <h2 class="text-base sm:text-lg font-bold text-slate-800">
+                        Participation féminine{% if session_consultee %} — {{ session_consultee.nom }}{% endif %}
+                    </h2>
+                </div>
+                <p class="text-xs text-slate-500">
+                    Suivi statistique de la mixité et de la représentativité féminine à travers les quatre étapes du concours.
+                </p>
+            </div>
+            <div class="flex items-center gap-2 self-start sm:self-auto shrink-0">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    <i class="fas fa-bullseye text-emerald-600"></i>
+                    <span>Objectif national : <strong>{{ objectif_feminin }} %</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 Diagrammes Circulaires (Donuts) par étape -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             {% for etape in participation_feminine %}
-                <div class="p-3.5 sm:p-4 rounded-xl bg-slate-50 border border-slate-100 flex flex-col justify-between">
+                {% set index = loop.index0 %}
+                {% set masc = etape.total - etape.feminin %}
+                {% set atteint = (etape.pourcentage is not null and etape.pourcentage >= objectif_feminin) %}
+                <div class="p-4 rounded-xl bg-slate-50/70 border border-slate-200/80 hover:border-slate-300 transition-all flex flex-col justify-between">
                     <div>
-                        <span class="inline-block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Étape {{ loop.index }}</span>
-                        <p class="text-xs font-bold text-slate-700 leading-snug">{{ etape.libelle }}</p>
+                        <div class="flex items-center justify-between gap-1 mb-1">
+                            <span class="inline-block text-[11px] font-bold text-slate-400 uppercase tracking-wider">Jalon {{ loop.index }}</span>
+                            {% if etape.total > 0 %}
+                                {% if atteint %}
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-full">
+                                        <i class="fas fa-check text-[10px]"></i> Atteint
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-100/70 px-2 py-0.5 rounded-full">
+                                        <i class="fas fa-chart-line text-[10px]"></i> {{ etape.pourcentage is null ? '0' : etape.pourcentage }}%
+                                    </span>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-[11px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">En attente</span>
+                            {% endif %}
+                        </div>
+                        <h3 class="text-xs font-bold text-slate-800 leading-snug">{{ etape.libelle }}</h3>
                         {% if etape.sous_titre is defined and etape.sous_titre %}
                             <p class="text-[11px] text-slate-400 mt-0.5">{{ etape.sous_titre }}</p>
                         {% endif %}
                     </div>
-                    <div class="mt-3">
-                        <p class="text-xl sm:text-2xl font-extrabold {{ etape.pourcentage is not null and etape.pourcentage >= objectif_feminin ? 'text-green-600' : 'text-amber-600' }}">
-                            {{ etape.pourcentage is null ? '—' : etape.pourcentage ~ ' %' }}
-                        </p>
-                        <div class="flex items-center justify-between text-xs text-slate-500 mt-1">
-                            <span>{{ etape.feminin }} femmes</span>
-                            <span class="text-slate-400">sur {{ etape.total }}</span>
+
+                    <!-- Donut Chart & Valeur centrale -->
+                    <div class="my-4 flex items-center justify-center">
+                        <div class="relative w-28 h-28 flex items-center justify-center">
+                            <canvas id="gaugeDonut{{ index }}" width="112" height="112"></canvas>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                <span class="text-base font-extrabold tracking-tight {{ atteint ? 'text-emerald-700' : (etape.total > 0 ? 'text-slate-800' : 'text-slate-400') }}">
+                                    {{ etape.pourcentage is null ? '—' : etape.pourcentage ~ '%' }}
+                                </span>
+                                <span class="text-[9px] uppercase font-bold text-slate-400">Femmes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Détail chiffré -->
+                    <div class="pt-3 border-t border-slate-200/60 text-xs space-y-1">
+                        <div class="flex items-center justify-between text-slate-600">
+                            <span class="flex items-center gap-1.5 font-medium">
+                                <span class="w-2 h-2 rounded-full bg-pink-500 inline-block"></span>
+                                Femmes
+                            </span>
+                            <span class="font-bold text-slate-800">{{ etape.feminin }}</span>
+                        </div>
+                        <div class="flex items-center justify-between text-slate-600">
+                            <span class="flex items-center gap-1.5 font-medium">
+                                <span class="w-2 h-2 rounded-full bg-indigo-600 inline-block"></span>
+                                Hommes
+                            </span>
+                            <span class="font-semibold text-slate-600">{{ masc >= 0 ? masc : 0 }}</span>
+                        </div>
+                        <div class="flex items-center justify-between text-slate-400 pt-1 text-[11px]">
+                            <span>Total candidats</span>
+                            <span class="font-bold text-slate-700">{{ etape.total }}</span>
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
+
+        <!-- Histogramme comparatif et Taux de féminisation -->
+        <div class="p-4 sm:p-5 rounded-xl bg-slate-50/50 border border-slate-200/80">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                <div>
+                    <h3 class="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fas fa-chart-column text-indigo-600"></i>
+                        Histogramme comparatif des volumes et taux de féminisation
+                    </h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">
+                        Volume comparé des candidatures masculines et féminines, confronté à l'évolution du taux effectif et au seuil cible ({{ objectif_feminin }} %).
+                    </p>
+                </div>
+                <!-- Légende visuelle concise -->
+                <div class="flex flex-wrap items-center gap-3 text-xs text-slate-600">
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-pink-500 inline-block"></span> Femmes</span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-indigo-600 inline-block"></span> Hommes</span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-emerald-600 inline-block"></span> Taux réel (%)</span>
+                    <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 border-t-2 border-dashed border-amber-500 inline-block"></span> Cible ({{ objectif_feminin }}%)</span>
+                </div>
+            </div>
+
+            <div class="relative w-full" style="height: 280px;">
+                <canvas id="participationHistogramChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Données JSON sécurisées pour Chart.js -->
+        <script id="participation-data" type="application/json">
+            {{ participation_feminine|json_encode|raw }}
+        </script>
+        <script id="objectif-data" type="application/json">
+            {{ objectif_feminin|json_encode|raw }}
+        </script>
     </div>
     {% endif %}
 
-    {% if admis_par_etablissement is defined %}
-    <div class="p-4 sm:p-6 mb-6 sm:mb-8 bg-white border shadow-xl rounded-2xl border-slate-200">
-        <h2 class="mb-3 text-lg font-bold text-slate-800">Admis par établissement{% if session_consultee %} — {{ session_consultee.nom }}{% endif %}</h2>
-        {% for ligne in admis_par_etablissement %}
-            <div class="flex justify-between py-1 text-sm border-b border-slate-100"><span>{{ ligne.etablissement }}</span><strong>{{ ligne.admis }}</strong></div>
-        {% else %}
-            <p class="text-sm text-slate-500">Aucun admis pour cette session.</p>
-        {% endfor %}
-    </div>
-    {% endif %}
 
     <!-- Contenu principal -->
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -440,4 +530,221 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/chart.min.js') }}"></script>
+    <script>
+        (function() {
+            function loadScript(src, cb) {
+                var s = document.createElement('script');
+                s.src = src;
+                s.onload = cb;
+                document.head.appendChild(s);
+            }
+
+            function setupCharts() {
+                var dataEl = document.getElementById('participation-data');
+                var objEl = document.getElementById('objectif-data');
+                if (!dataEl || !objEl || typeof Chart === 'undefined') return;
+
+                var rawData = JSON.parse(dataEl.textContent);
+                var targetPercent = parseFloat(JSON.parse(objEl.textContent)) || 30;
+
+                // 1. Initialisation des 4 Donut Gauges
+                rawData.forEach(function(etape, index) {
+                    var canvas = document.getElementById('gaugeDonut' + index);
+                    if (!canvas) return;
+
+                    var total = etape.total || 0;
+                    var fem = etape.feminin || 0;
+                    var masc = Math.max(0, total - fem);
+
+                    var values = total > 0 ? [fem, masc] : [0, 1];
+                    var colors = total > 0 ? ['#ec4899', '#6366f1'] : ['#e2e8f0', '#e2e8f0'];
+
+                    new Chart(canvas, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Femmes', 'Hommes'],
+                            datasets: [{
+                                data: values,
+                                backgroundColor: colors,
+                                borderWidth: 0,
+                                hoverOffset: total > 0 ? 3 : 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            cutout: '74%',
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    enabled: total > 0,
+                                    callbacks: {
+                                        label: function(ctx) {
+                                            var val = ctx.raw;
+                                            var pct = total > 0 ? Math.round((val / total) * 100) : 0;
+                                            return ' ' + ctx.label + ' : ' + val + ' (' + pct + '%)';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+
+                // 2. Initialisation de l'Histogramme combiné (Bar + Line)
+                var histCanvas = document.getElementById('participationHistogramChart');
+                if (!histCanvas) return;
+
+                var labels = rawData.map(function(e) { return e.libelle; });
+                var dataFem = rawData.map(function(e) { return e.feminin || 0; });
+                var dataMasc = rawData.map(function(e) { return Math.max(0, (e.total || 0) - (e.feminin || 0)); });
+                var dataPct = rawData.map(function(e) { return e.pourcentage !== null ? e.pourcentage : 0; });
+                var dataTarget = rawData.map(function() { return targetPercent; });
+
+                new Chart(histCanvas, {
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                type: 'bar',
+                                label: 'Femmes',
+                                data: dataFem,
+                                backgroundColor: '#ec4899',
+                                borderRadius: 6,
+                                maxBarThickness: 42,
+                                order: 2,
+                                yAxisID: 'yVolume'
+                            },
+                            {
+                                type: 'bar',
+                                label: 'Hommes',
+                                data: dataMasc,
+                                backgroundColor: '#6366f1',
+                                borderRadius: 6,
+                                maxBarThickness: 42,
+                                order: 2,
+                                yAxisID: 'yVolume'
+                            },
+                            {
+                                type: 'line',
+                                label: 'Taux réel (%)',
+                                data: dataPct,
+                                borderColor: '#059669',
+                                backgroundColor: '#059669',
+                                borderWidth: 3,
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                pointBackgroundColor: '#ffffff',
+                                pointBorderColor: '#059669',
+                                pointBorderWidth: 2,
+                                tension: 0.3,
+                                order: 1,
+                                yAxisID: 'yPercentage'
+                            },
+                            {
+                                type: 'line',
+                                label: 'Cible (' + targetPercent + '%)',
+                                data: dataTarget,
+                                borderColor: '#f59e0b',
+                                borderWidth: 2,
+                                borderDash: [6, 4],
+                                pointRadius: 0,
+                                pointHoverRadius: 0,
+                                fill: false,
+                                order: 0,
+                                yAxisID: 'yPercentage'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#1e293b',
+                                titleFont: { size: 12, weight: 'bold' },
+                                bodyFont: { size: 12 },
+                                padding: 10,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(ctx) {
+                                        if (ctx.dataset.yAxisID === 'yPercentage') {
+                                            return ctx.dataset.label + ' : ' + ctx.raw + ' %';
+                                        }
+                                        return ctx.dataset.label + ' : ' + ctx.raw + ' candidats';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 11, weight: '600' },
+                                    color: '#475569'
+                                }
+                            },
+                            yVolume: {
+                                type: 'linear',
+                                position: 'left',
+                                beginAtZero: true,
+                                grid: { color: '#f1f5f9' },
+                                ticks: {
+                                    precision: 0,
+                                    font: { size: 11 },
+                                    color: '#64748b'
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Nombre de candidats',
+                                    font: { size: 11, weight: '600' },
+                                    color: '#64748b'
+                                }
+                            },
+                            yPercentage: {
+                                type: 'linear',
+                                position: 'right',
+                                beginAtZero: true,
+                                max: 100,
+                                grid: { display: false },
+                                ticks: {
+                                    font: { size: 11 },
+                                    color: '#059669',
+                                    callback: function(val) { return val + '%'; }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Taux (%)',
+                                    font: { size: 11, weight: '600' },
+                                    color: '#059669'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            if (typeof Chart === 'undefined') {
+                loadScript('https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js', function() {
+                    setupCharts();
+                });
+            } else {
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', setupCharts);
+                } else {
+                    setupCharts();
+                }
+            }
+        })();
+    </script>
 {% endblock %}

@@ -8,6 +8,11 @@ use App\Entity\SessionRecrutement;
 #[ORM\Entity()]
 #[ORM\UniqueConstraint(name: 'uniq_candidature_user_session', columns: ['user_id', 'session_id'])]
 #[ORM\UniqueConstraint(name: 'uniq_candidature_numero', columns: ['numero'])]
+#[ORM\Index(name: 'idx_candidature_etustatut', columns: ['etustatut'])]
+#[ORM\Index(name: 'idx_candidature_visstatut', columns: ['visstatut'])]
+#[ORM\Index(name: 'idx_candidature_resultat', columns: ['resultat'])]
+#[ORM\Index(name: 'idx_candidature_decision_jury', columns: ['decision_jury'])]
+#[ORM\Index(name: 'idx_candidature_creation', columns: ['creation'])]
 class Candidature
 {
     #[ORM\Id]
