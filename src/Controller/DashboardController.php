@@ -309,7 +309,7 @@ class DashboardController extends AbstractController
             [
                 'libelle' => 'Admissibles à l\'entretien',
                 'sous_titre' => 'Retenus après étude de dossier',
-                'condition' => 'c.entstatut = 2',
+                'condition' => 'c.etustatut = 2',
             ],
             [
                 'libelle' => 'Retenus par le jury',

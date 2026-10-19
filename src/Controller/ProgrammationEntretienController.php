@@ -91,7 +91,7 @@ class ProgrammationEntretienController extends AbstractController
                 $sheet = $spreadsheet->getActiveSheet();
                 $rows = $sheet->toArray();
 
-                // ✅ Détection intelligente du numéro DK dans n'importe quelle colonne
+                // ✅ Détection intelligente du numéro de candidature (PA... ou DK...) dans n'importe quelle colonne
                 $numeros = [];
                 foreach ($rows as $index => $row) {
                     if ($index === 0) continue;
@@ -99,10 +99,10 @@ class ProgrammationEntretienController extends AbstractController
                     $num = '';
                     foreach ($row as $cell) {
                         $cellStr = preg_replace('/[\x00-\x1F\x7F\xA0]/u', '', (string)$cell);
-                        $cellStr = trim(strtoupper($cellStr));
+                        $cellStr = trim($cellStr);
 
-                        if (preg_match('/^DK\d+/', $cellStr)) {
-                            $num = $cellStr;
+                        if (preg_match('/(PA|DK)\d+/i', $cellStr, $matches)) {
+                            $num = strtoupper($matches[0]);
                             break;
                         }
                     }

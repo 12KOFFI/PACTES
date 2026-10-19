@@ -148,8 +148,8 @@
         {% if is_staff %}
             {% set steps = steps|merge([{
                 id: 'entretien', label: 'Entretien de sélection',
-                badge: candidature.entstatut == 2 ? 'Admissible' : (candidature.entstatut == 1 ? 'Non retenu' : 'À évaluer'),
-                tone: candidature.entstatut == 2 ? 'blue' : (candidature.entstatut == 1 ? 'red' : 'slate')
+                badge: (candidature.decisionJury == 2 or candidature.entstatut == 2) ? 'Admissible' : (candidature.decisionJury == 1 ? 'Non retenu' : (candidature.entstatut == 1 ? 'Évalué' : 'À évaluer')),
+                tone: (candidature.decisionJury == 2 or candidature.entstatut == 2) ? 'green' : (candidature.decisionJury == 1 ? 'red' : 'slate')
             }, {
                 id: 'visite', label: 'Visite médicale & Résultat final',
                 badge: candidature.resultat == 2 ? 'Admis' : (candidature.resultat == 1 ? 'Non admis' : 'En attente'),
@@ -549,7 +549,7 @@
                         {{ form_widget(form.jury, {'attr': {'class': input_class, 'min': 1, 'max': 20}}) }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Créneau</label>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Vague</label>
                         {{ form_widget(form.creneauEntretien, {'attr': {'class': input_class, 'min': 1}}) }}
                     </div>
                     <div>

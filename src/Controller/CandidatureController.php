@@ -756,12 +756,27 @@ class CandidatureController extends AbstractController
     {
         // Vérifier le jeton
         $token = $request->query->get('token');
+        $user = $this->getUser();
     
         // Si l'utilisateur n'est PAS connecté, on exige le jeton
-        if (!$this->getUser()) {
-            if (!$token || strtoupper($token) !== strtoupper($candidature->getNumero())) {
+        if (!$user) {
+            if (!$token || strtoupper($token) !== strtoupper((string) $candidature->getNumero())) {
                 $this->addFlash('error', 'Accès non autorisé. Veuillez vérifier votre éligibilité.');
                 return $this->redirectToRoute('app_verifier_eligibilite');
+            }
+        } else {
+            // Utilisateur connecté : contrôle d'accès selon les rôles
+            if (!$this->isGranted('ROLE_ADMIN')) {
+                if ($this->isGranted('ROLE_ENT') || $this->isGranted('ROLE_JURY')) {
+                    $etablissementUser = $candidature->getEtablissement()?->getUser();
+                    if (!$etablissementUser || $etablissementUser->getId() !== $user->getId()) {
+                        throw $this->createAccessDeniedException('Vous n\'avez pas accès à la convocation de cet établissement.');
+                    }
+                } elseif ($this->isGranted('ROLE_CANDIDAT')) {
+                    if (!$candidature->getUser() || $candidature->getUser()->getId() !== $user->getId()) {
+                        throw $this->createAccessDeniedException('Vous ne pouvez consulter que votre propre convocation.');
+                    }
+                }
             }
         }
 
@@ -771,7 +786,7 @@ class CandidatureController extends AbstractController
             return $this->redirectToRoute('app_candidature_index');
         }
 
-        // ✅ Diagnostic détaillé en cas de programmation manquante
+        // Diagnostic détaillé en cas de programmation manquante
         if (!$candidature->getEntdate() || !$candidature->getJury()) {
             $details = sprintf(
                 'Entdate: %s | Jury: %s | Creneau: %s | Entlieu: %s',
@@ -786,11 +801,10 @@ class CandidatureController extends AbstractController
             $this->addFlash('warning', 
                 'La programmation de cet entretien n\'a pas encore été effectuée pour le candidat ' 
                 . $candidature->getNumero() 
-                . '. Veuillez d\'abord programmer les entretiens. ' 
-                . '(Détails : ' . $details . ')'
+                . '.'
             );
         
-            return $this->redirectToRoute('app_programmation_entretien');
+            return $this->redirectToRoute('app_candidature_index');
         }
 
         // Génère le PDF de la convocation
@@ -805,12 +819,27 @@ class CandidatureController extends AbstractController
     {
         // Vérifier le jeton
         $token = $request->query->get('token');
+        $user = $this->getUser();
 
         // Si l'utilisateur n'est PAS connecté, on exige le jeton
-        if (!$this->getUser()) {
-            if (!$token || strtoupper($token) !== strtoupper($candidature->getNumero())) {
+        if (!$user) {
+            if (!$token || strtoupper($token) !== strtoupper((string) $candidature->getNumero())) {
                 $this->addFlash('error', 'Accès non autorisé. Veuillez vérifier votre éligibilité.');
                 return $this->redirectToRoute('app_verifier_eligibilite');
+            }
+        } else {
+            // Utilisateur connecté : contrôle d'accès selon les rôles
+            if (!$this->isGranted('ROLE_ADMIN')) {
+                if ($this->isGranted('ROLE_ENT') || $this->isGranted('ROLE_JURY')) {
+                    $etablissementUser = $candidature->getEtablissement()?->getUser();
+                    if (!$etablissementUser || $etablissementUser->getId() !== $user->getId()) {
+                        throw $this->createAccessDeniedException('Vous n\'avez pas accès à la convocation de cet établissement.');
+                    }
+                } elseif ($this->isGranted('ROLE_CANDIDAT')) {
+                    if (!$candidature->getUser() || $candidature->getUser()->getId() !== $user->getId()) {
+                        throw $this->createAccessDeniedException('Vous ne pouvez consulter que votre propre convocation.');
+                    }
+                }
             }
         }
 
@@ -833,8 +862,7 @@ class CandidatureController extends AbstractController
             $this->addFlash('warning',
                 'La programmation de la visite médicale n\'a pas encore été effectuée pour le candidat '
                 . $candidature->getNumero()
-                . '. Veuillez d\'abord programmer la visite médicale. '
-                . '(Détails : ' . $details . ')'
+                . '.'
             );
 
             return $this->redirectToRoute('app_candidature_index');
@@ -1176,6 +1204,7 @@ class CandidatureController extends AbstractController
         $statsData = $statsQb
             ->select(
                 'SUM(CASE WHEN c.etustatut IS NULL THEN 1 ELSE 0 END) as nb_attente',
+                'SUM(CASE WHEN c.etustatut = 2 THEN 1 ELSE 0 END) as nb_dossier_valide',
                 'SUM(CASE WHEN c.decisionJury = 2 THEN 1 ELSE 0 END) as nb_admissible',
                 'SUM(CASE WHEN c.resultat = 2 THEN 1 ELSE 0 END) as nb_admis',
                 'SUM(CASE WHEN c.visstatut = 2 THEN 1 ELSE 0 END) as nb_visite',
@@ -1187,6 +1216,7 @@ class CandidatureController extends AbstractController
 
         $stats = [
             'attente'                => (int) ($statsData['nb_attente'] ?? 0),
+            'dossier_valide'         => (int) ($statsData['nb_dossier_valide'] ?? 0),
             'admissible'             => (int) ($statsData['nb_admissible'] ?? 0),
             'admis'                  => (int) ($statsData['nb_admis'] ?? 0),
             'visite'                 => (int) ($statsData['nb_visite'] ?? 0),

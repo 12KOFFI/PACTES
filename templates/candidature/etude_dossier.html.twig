@@ -30,7 +30,7 @@
 </div>
 
 {# ===== STATISTIQUES RAPIDES ===== #}
-<div class="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+<div class="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
     <!-- En attente -->
     <div class="p-4 bg-white border shadow-sm border-slate-200 rounded-xl">
         <div class="flex items-center justify-between mb-2">
@@ -40,6 +40,17 @@
             </div>
         </div>
         <div class="text-2xl font-bold text-slate-800">{{ stats.attente }}</div>
+    </div>
+
+    <!-- Dossiers validés -->
+    <div class="p-4 bg-white border shadow-sm border-slate-200 rounded-xl">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold uppercase text-slate-400">Dossiers validés</span>
+            <div class="flex items-center justify-center w-8 h-8 text-sm text-emerald-600 rounded-lg bg-emerald-50">
+                <i class="fas fa-clipboard-check"></i>
+            </div>
+        </div>
+        <div class="text-2xl font-bold text-slate-800">{{ stats.dossier_valide }}</div>
     </div>
 
     <!-- Admissibles -->
@@ -78,7 +89,7 @@
     <!-- Entretien Effectué -->
     <div class="p-4 bg-white border shadow-sm border-slate-200 rounded-xl">
         <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-semibold uppercase text-slate-400">Entretien éffectué</span>
+            <span class="text-xs font-semibold uppercase text-slate-400">Entretien effectué</span>
             <div class="flex items-center justify-center w-8 h-8 text-sm text-purple-600 rounded-lg bg-purple-50">
                 <i class="fas fa-comments"></i>
             </div>

@@ -92,16 +92,16 @@ class ProgrammationVisiteMedicaleController extends AbstractController
                     if ($index === 0) continue; // en-tête
                     foreach ($row as $cell) {
                         $cellStr = preg_replace('/[\x00-\x1F\x7F\xA0]/u', '', (string) $cell);
-                        $cellStr = trim(strtoupper($cellStr));
-                        if (preg_match('/^DK\d+/', $cellStr)) {
-                            $numeros[] = $cellStr;
+                        $cellStr = trim($cellStr);
+                        if (preg_match('/(PA|DK)\d+/i', $cellStr, $matches)) {
+                            $numeros[] = strtoupper($matches[0]);
                             break;
                         }
                     }
                 }
 
                 if (empty($numeros)) {
-                    $this->addFlash('error', 'Aucun numéro de candidature (DK…) trouvé dans le fichier.');
+                    $this->addFlash('error', 'Aucun numéro de candidature trouvé dans le fichier.');
                     return $this->redirectToRoute('app_programmation_visite');
                 }
 

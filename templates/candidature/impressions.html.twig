@@ -903,7 +903,7 @@
             initDynamicMetiers(
                 'export-liste-etablissement',
                 'export-liste-metier',
-                '{{ app.request.request.get('metier_liste ')|default('TOUS ') }}'
+                '{{ app.request.request.get('metier_liste')|default('TOUS') }}'
             );
             // Liste des candidats éligibles
             initDynamicMetiers(
@@ -921,15 +921,98 @@
             initDynamicMetiers(
                 'export-admis-etablissement',
                 'export-admis-metier',
-                '{{ app.request.request.get('metier_admis ')|default('TOUS ') }}'
+                '{{ app.request.request.get('metier_admis')|default('TOUS') }}'
             );
             // Liste des candidats admis définitifs
             initDynamicMetiers(
                 'export-admis-def-etablissement',
                 'export-admis-def-metier',
-                '{{ app.request.request.get('metier_admis_def ')|default('TOUS ') }}'
+                '{{ app.request.request.get('metier_admis_def')|default('TOUS') }}'
             );
         });
     </script>
     {% endif %}
+
+    {# === Gestionnaire de téléchargement d'exports Excel – contourne Turbo === #}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Sélectionner tous les formulaires d'export (ceux avec data-turbo="false")
+        var exportForms = document.querySelectorAll('form[data-turbo="false"]');
+        
+        exportForms.forEach(function(form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                
+                var submitBtn = form.querySelector('button[type="submit"]');
+                var originalHTML = submitBtn ? submitBtn.innerHTML : '';
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Chargement...';
+                }
+                
+                var formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: form.method || 'POST',
+                    body: formData,
+                    redirect: 'follow'
+                })
+                .then(function(response) {
+                    var contentType = response.headers.get('Content-Type') || '';
+                    
+                    // Vérifier si la réponse est un fichier téléchargeable
+                    if (contentType.indexOf('spreadsheet') !== -1 ||
+                        contentType.indexOf('octet-stream') !== -1 ||
+                        contentType.indexOf('zip') !== -1) {
+                        
+                        // Extraire le nom du fichier depuis Content-Disposition
+                        var disposition = response.headers.get('Content-Disposition') || '';
+                        var filename = 'export.xlsx';
+                        if (disposition) {
+                            // Chercher filename*=UTF-8'' d'abord (RFC 5987)
+                            var utf8Match = disposition.match(/filename\*\s*=\s*UTF-8''([^;\s]+)/i);
+                            if (utf8Match && utf8Match[1]) {
+                                filename = decodeURIComponent(utf8Match[1]);
+                            } else {
+                                // Fallback sur filename="..."
+                                var stdMatch = disposition.match(/filename\s*=\s*"?([^";\n]+)"?/i);
+                                if (stdMatch && stdMatch[1]) {
+                                    filename = stdMatch[1].trim();
+                                }
+                            }
+                        }
+                        
+                        return response.blob().then(function(blob) {
+                            var url = window.URL.createObjectURL(blob);
+                            var a = document.createElement('a');
+                            a.style.display = 'none';
+                            a.href = url;
+                            a.download = filename;
+                            document.body.appendChild(a);
+                            a.click();
+                            setTimeout(function() {
+                                window.URL.revokeObjectURL(url);
+                                a.remove();
+                            }, 200);
+                        });
+                    } else {
+                        // Réponse HTML (redirection/flash message) – recharger la page
+                        window.location.reload();
+                    }
+                })
+                .catch(function(err) {
+                    console.error('Erreur export:', err);
+                    alert('Erreur lors de l\'export. Veuillez réessayer.');
+                })
+                .finally(function() {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalHTML;
+                    }
+                });
+            }, true); // Phase de capture – s'exécute AVANT Turbo
+        });
+    });
+    </script>
     {% endblock %}
