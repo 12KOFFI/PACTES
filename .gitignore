@@ -3,8 +3,11 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/vendor/
-/var/
+/var/cache/*
+!/var/cache/.gitkeep
+/var/log/*
+!/var/log/.gitkeep
+/var/coverage/
 /public/build/
 /node_modules/
 /public/media/
