@@ -8,7 +8,6 @@
 /var/log/*
 !/var/log/.gitkeep
 /var/coverage/
-/public/build/
 /node_modules/
 /public/media/
 /.env
