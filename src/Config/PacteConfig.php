@@ -12,7 +12,7 @@ final class PacteConfig
     public const DUREE_FORMATION_MOIS = 6;
     public const CERTIFICATION = 'CQP';
     public const OBJECTIF_FEMININ_POURCENT = 40;
-    public const SITE_WEB = 'www.daip.ci';
+    public const SITE_WEB = 'pacte.daip.ci';
     public const INFOLINE = null;
     public const EMAIL_CONTACT = null;
 }
