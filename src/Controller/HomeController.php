@@ -341,14 +341,116 @@ class HomeController extends AbstractController
 
     private function getPartenaires(): array
     {
-        return [
-            [
-                'nom' => 'Projet PACTE',
+        $knownPartners = [
+            'Logo MENAET.png' => [
+                'nom' => 'MENAET',
+                'signification' => 'Ministère de l’Éducation Nationale, de l’Alphabétisation et de l’Enseignement Technique',
+                'lien' => 'https://enseignement-technique.gouv.ci/',
+                'type' => 'Partenaire Institutionnel',
+                'badge' => 'bg-sky-50 text-sky-800 border-sky-200/80',
+                'ordre' => 1,
+            ],
+            'logo-pacte.png' => [
+                'nom' => 'Programme d’Action pour les Compétences en Transition Energétique',
                 'signification' => 'Programme d’Action pour les Compétences en Transition Énergétique',
-                'image' => '/image/pacte.png',
-                'lien' => '#'
-            ]
+                'lien' => 'https://pacte.daip.ci/',
+                'type' => 'Programme Initiateur',
+                'badge' => 'bg-amber-50 text-amber-800 border-amber-200/80',
+                'ordre' => 2,
+            ],
+            'LOGO_INES.png' => [
+                'nom' => 'INES',
+                'signification' => 'Institut National de l’Énergie Solaire',
+                'lien' => 'https://www.ines-solaire.org/',
+                'type' => 'Expertise Solaire & Ingénierie',
+                'badge' => 'bg-emerald-50 text-emerald-800 border-emerald-200/80',
+                'ordre' => 3,
+            ],
+            'Eurocham.png' => [
+                'nom' => 'Eurocham Côte d\'Ivoire',
+                'signification' => 'Chambre de Commerce Européenne en Côte d’Ivoire',
+                'lien' => 'https://eurocham-ci.org/',
+                'type' => 'Secteur Privé & Entreprises',
+                'badge' => 'bg-slate-100 text-slate-800 border-slate-200',
+                'ordre' => 4,
+            ],
+            'INCLUDE.png' => [
+                'nom' => 'Programme INCLUDE',
+                'signification' => 'Inclusion & Transition Énergétique',
+                'lien' => '#',
+                'type' => 'Partenaire Technique',
+                'badge' => 'bg-teal-50 text-teal-800 border-teal-200/80',
+                'ordre' => 5,
+            ],
+            'Mundus.png' => [
+                'nom' => 'Mundus',
+                'signification' => 'Développement des Compétences & Formation',
+                'lien' => '#',
+                'type' => 'Partenaire Formation',
+                'badge' => 'bg-indigo-50 text-indigo-800 border-indigo-200/80',
+                'ordre' => 6,
+            ],
         ];
+
+        $partnersDir = $this->getParameter('kernel.project_dir') . '/public/image/partenaire';
+        $partenaires = [];
+
+        if (is_dir($partnersDir)) {
+            $files = scandir($partnersDir);
+            foreach ($files as $file) {
+                if ($file === '.' || $file === '..') {
+                    continue;
+                }
+                $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                if (in_array($ext, ['png', 'jpg', 'jpeg', 'svg', 'webp', 'avif'])) {
+                    $meta = null;
+                    foreach ($knownPartners as $knownFile => $knownMeta) {
+                        if (strcasecmp($knownFile, $file) === 0) {
+                            $meta = $knownMeta;
+                            break;
+                        }
+                    }
+
+                    $nom = $meta['nom'] ?? ucfirst(pathinfo($file, PATHINFO_FILENAME));
+                    $signification = $meta['signification'] ?? 'Partenaire officiel du projet PACTE';
+                    $lien = $meta['lien'] ?? '#';
+                    $type = $meta['type'] ?? 'Partenaire';
+                    $badge = $meta['badge'] ?? 'bg-slate-100 text-slate-700 border-slate-200';
+                    $ordre = $meta['ordre'] ?? 99;
+
+                    $partenaires[] = [
+                        'nom' => $nom,
+                        'signification' => $signification,
+                        'image' => '/image/partenaire/' . str_replace(' ', '%20', $file),
+                        'lien' => $lien,
+                        'type' => $type,
+                        'badge' => $badge,
+                        'ordre' => $ordre,
+                        'filename' => $file,
+                    ];
+                }
+            }
+
+            usort($partenaires, fn($a, $b) => $a['ordre'] <=> $b['ordre']);
+        }
+
+        // Si le dossier est vide ou inaccessible, secours sur la liste de configuration
+        if (empty($partenaires)) {
+            foreach ($knownPartners as $file => $meta) {
+                $partenaires[] = [
+                    'nom' => $meta['nom'],
+                    'signification' => $meta['signification'],
+                    'image' => '/image/partenaire/' . str_replace(' ', '%20', $file),
+                    'lien' => $meta['lien'],
+                    'type' => $meta['type'],
+                    'badge' => $meta['badge'] ?? 'bg-slate-100 text-slate-700 border-slate-200',
+                    'ordre' => $meta['ordre'],
+                    'filename' => $file,
+                ];
+            }
+        }
+
+        return $partenaires;
     }
 
     #[Route('/etablissements', name: 'app_etablissements_list')]
