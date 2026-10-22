@@ -153,29 +153,26 @@
                 </div>
             </div>
             
-            <!-- Colonne droite : Illustration (Agrandie 50%) -->
-            <div class="gsap-image-col relative hidden sm:block">
-                <!-- Illustration principale -->
-                <div class="relative rounded-2xl overflow-hidden shadow-2xl">
-                    <img src="{{ asset('svg/solar_installation.svg') }}" alt="Illustration installateur systèmes solaires énergies renouvelables" class="w-full h-auto object-cover" onerror="this.onerror=null; this.src='{{ asset('svg/solar_installation.svg') }}'">
+            <!-- Colonne droite : Illustration -->
+            <div class="gsap-image-col relative flex items-center justify-center mt-6 lg:mt-0">
+                <!-- Illustration principale circulaire avec motif de pointillés -->
+                <div class="relative w-full max-w-[480px] lg:max-w-[540px] flex items-center justify-center">
+                    <picture>
+                        <source srcset="{{ asset('image/recrutement_solaire_cqp.webp') }}" type="image/webp">
+                        <img src="{{ asset('image/recrutement_solaire_cqp.png') }}" 
+                             alt="Recrutement formation installateur de systèmes solaires photovoltaïques" 
+                             class="w-full h-auto object-contain select-none transition-transform duration-500 hover:scale-[1.02] drop-shadow-sm"
+                             loading="lazy">
+                    </picture>
                     
-                    <!-- Overlay léger -->
-                    <div class="absolute inset-0 bg-gradient-to-tr from-indigo-600/10 to-purple-600/10 mix-blend-overlay"></div>
-                </div>
-                
-                <!-- Éléments décoratifs flottants -->
-                <div class="absolute -top-6 -right-6 w-20 h-20 bg-indigo-200 rounded-full opacity-20 animate-pulse-glow"></div>
-                <div class="absolute -bottom-6 -left-6 w-28 h-28 bg-purple-200 rounded-full opacity-20 animate-pulse-glow animation-delay-2000"></div>
-                
-                <!-- Badge flottant avec statistique -->
-                <div class="gsap-float absolute -bottom-4 -right-4 bg-white rounded-xl shadow-lg p-3">
-                    <div class="flex items-center gap-2">
-                        <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                    <!-- Badge flottant avec statistique -->
+                    <div class="gsap-float absolute -bottom-2 right-2 sm:bottom-2 sm:right-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl p-3 sm:p-3.5 border border-slate-100 flex items-center gap-3">
+                        <div class="w-10 h-10 sm:w-11 sm:h-11 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
                             <i class="fas fa-graduation-cap text-indigo-600 text-lg"></i>
                         </div>
                         <div>
-                            <p class="text-xl font-bold text-indigo-600">{{ stats.places|default(250) }}</p>
-                            <p class="text-xs sm:text-sm font-medium text-slate-600">jeunes formés</p>
+                            <p class="text-xl sm:text-2xl font-extrabold text-indigo-600 leading-none">{{ stats.places|default(250) }}</p>
+                            <p class="text-xs sm:text-sm font-semibold text-slate-700 mt-1">jeunes formés</p>
                         </div>
                     </div>
                 </div>
@@ -467,25 +464,55 @@
             </div>
         </div>
 
-        <!-- Encadré Valorisation des Candidatures Féminines & Information Gratuité -->
-        <div class="mt-8 p-6 sm:p-7 bg-gradient-to-r from-amber-50/90 via-rose-50/80 to-amber-50/90 border border-amber-200/90 rounded-2xl shadow-sm">
-            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 text-center sm:text-left">
-                <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-300/50 text-amber-700 flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <i class="fas fa-venus text-2xl"></i>
+        <!-- Encadré Valorisation des Candidatures Féminines (Promotion du genre & Inclusion) -->
+        <div class="mt-8 p-6 sm:p-8 bg-slate-50 border border-slate-200/90 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
+                <!-- Texte & Détails -->
+                <div class="flex-1 text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs sm:text-sm font-extrabold bg-indigo-100 text-indigo-700 uppercase tracking-wider mb-3">
+                        <i class="fas fa-venus text-sm"></i>
+                        <span>Promotion du genre & Inclusion</span>
+                    </div>
+
+                    <h3 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug mb-4">
+                        Les femmes aussi ont toute leur place dans l’énergie solaire !
+                    </h3>
+
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm flex-shrink-0 mt-0.5">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <p class="text-base sm:text-lg text-slate-800 leading-snug">
+                                <strong>Notre ambition :</strong> au moins <strong>40 %</strong> de femmes parmi les participants.
+                            </p>
+                        </div>
+                        
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
+                                <i class="fas fa-check-double"></i>
+                            </div>
+                            <p class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                                Les candidatures féminines sont vivement encouragées !
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-4 border-t border-slate-200/80 text-xs sm:text-sm text-slate-600 flex items-center gap-2">
+                        <i class="fas fa-check-circle text-emerald-600 flex-shrink-0"></i>
+                        <span><strong>Formation 100 % gratuite</strong> : inscription, cours et immersion pratique pris en charge pour tous les apprenants retenus.</span>
+                    </div>
                 </div>
-                <div class="flex-1">
-                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-extrabold bg-amber-100/90 text-amber-900 uppercase tracking-wider mb-2.5">
-                        <i class="fas fa-bullhorn text-xs text-amber-700"></i>
-                        Promotion du genre & Inclusion
-                    </div>
-                    <p class="text-base sm:text-lg md:text-xl font-black text-slate-900 tracking-wide uppercase leading-snug">
-                        « LES CANDIDATURES FÉMININES SONT FORTEMENT ENCOURAGÉES. NOUS ENVISAGEONS 40 % DE PARTICIPATION FÉMININE AUX FORMATIONS. »
-                    </p>
-                   
-                    <div class="mt-4 pt-3.5 border-t border-amber-200/90 text-sm sm:text-base text-slate-800 flex flex-wrap sm:flex-nowrap items-center gap-2.5">
-                        <i class="fas fa-check-circle text-emerald-600 flex-shrink-0 text-base"></i>
-                        <span><strong>Gratuité intégrale :</strong> L’inscription et l’ensemble de la formation (théorique et pratique) sont <strong>100 % gratuites</strong> pour tous les apprenants retenus.</span>
-                    </div>
+
+                <!-- Image Circulaire Professionnelle Extraite du Document Officiel -->
+                <div class="flex-shrink-0 flex items-center justify-center">
+                    <picture>
+                        <source srcset="{{ asset('image/promotion_femmes_solaire.webp') }}" type="image/webp">
+                        <img src="{{ asset('image/promotion_femmes_solaire.png') }}" 
+                             alt="Les femmes aussi ont toute leur place dans l’énergie solaire !" 
+                             class="w-44 h-44 sm:w-52 sm:h-52 md:w-60 md:h-60 object-contain drop-shadow-md select-none transition-transform duration-500 hover:scale-105"
+                             loading="lazy">
+                    </picture>
                 </div>
             </div>
         </div>
