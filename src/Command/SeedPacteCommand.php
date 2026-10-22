@@ -23,7 +23,7 @@ class SeedPacteCommand extends Command
 
     /** Ordre significatif : EtablissementsActifsConfig::ACTIFS_IDS = [1, 2, 3]. */
     private const ETABLISSEMENTS = [
-        1 => ['nom' => 'Lycée Professionnel des Métiers de l\'Énergie Renouvelable', 'localite' => null, 'places' => 90],
+        1 => ['nom' => 'Lycée Professionnel des Métiers de l\'Énergie Renouvelable', 'localite' => 'Yopougon', 'places' => 90],
         2 => ['nom' => 'Lycée Professionnel de Jacqueville', 'localite' => 'Jacqueville', 'places' => 80],
         3 => ['nom' => 'Lycée Professionnel de Korhogo', 'localite' => 'Korhogo', 'places' => 80],
     ];
@@ -42,7 +42,7 @@ class SeedPacteCommand extends Command
         try {
             // Localités
             $localites = [];
-            foreach (['Jacqueville', 'Korhogo'] as $nom) {
+            foreach (['Yopougon', 'Jacqueville', 'Korhogo'] as $nom) {
                 $localite = $this->em->getRepository(Localite::class)->findOneBy(['nom' => $nom]);
                 if (!$localite) {
                     $localite = (new Localite())->setNom($nom)->setType('ville');
@@ -65,6 +65,10 @@ class SeedPacteCommand extends Command
                     $this->em->persist($etab);
                     $this->em->flush();
                     $io->text('Établissement créé : ' . $def['nom']);
+                } elseif ($def['localite'] && (!$etab->getLocalite() || $etab->getLocalite()->getNom() !== $def['localite'])) {
+                    $etab->setLocalite($localites[$def['localite']]);
+                    $this->em->persist($etab);
+                    $this->em->flush();
                 }
                 if ($etab->getId() !== $idAttendu) {
                     throw new \RuntimeException(sprintf(

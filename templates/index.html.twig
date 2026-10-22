@@ -13,29 +13,23 @@
 
 
 <!-- ==================== HERO SECTION ==================== -->
-<section class="hero relative min-h-[600px] flex items-center justify-center bg-gradient-to-br from-indigo-700 via-purple-700 to-blue-700 py-16">
+<section class="hero relative min-h-[600px] flex items-center justify-center text-white py-16" style="background: linear-gradient(135deg, #0A3D91 0%, #0052CC 60%, #1D4ED8 100%);">
     
-    <!-- Éléments décoratifs -->
+    <!-- Éléments décoratifs sobres -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-0 left-0 w-64 h-64 rounded-full bg-indigo-50 filter blur-3xl opacity-5 animate-pulse-glow"></div>
-        <div class="absolute bottom-0 right-0 w-64 h-64 rounded-full bg-purple-50 filter blur-3xl opacity-5 animate-pulse-glow animation-delay-2000"></div>
-        <div class="absolute bg-purple-400 rounded-full -top-40 -right-40 w-80 h-80 mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div class="absolute bg-indigo-400 rounded-full -bottom-40 -left-40 w-80 h-80 mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div class="absolute transform -translate-x-1/2 -translate-y-1/2 bg-pink-400 rounded-full top-1/2 left-1/2 w-80 h-80 mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div class="absolute top-0 left-0 w-72 h-72 rounded-full bg-blue-300 filter blur-3xl opacity-15 animate-pulse-glow"></div>
+        <div class="absolute bottom-0 right-0 w-72 h-72 rounded-full bg-sky-300 filter blur-3xl opacity-15 animate-pulse-glow animation-delay-2000"></div>
+        <div class="absolute bg-blue-400 rounded-full -bottom-40 -left-40 w-80 h-80 mix-blend-screen filter blur-3xl opacity-20"></div>
     </div>
     
     <div class="container relative z-10 w-full max-w-full px-4 mx-auto">
         <div class="max-w-4xl mx-auto text-center">
-            <!-- Badge -->
-            <div class="hero-badge inline-flex items-center rounded-full border px-4 py-1.5 text-sm font-semibold bg-white text-purple-600 border-white mb-6 shadow-sm">
-                <span class="flex w-2 h-2 mr-2 bg-green-400 rounded-full animate-pulse"></span>
-                RECRUTEMENT PACTE 2026
-            </div>
+           
             
-            <!-- Titre avec la police et le dégradé existant -->
+            <!-- Titre avec la police sobre et accents clairs -->
             <h1 class="hero-title text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight break-words">
                 Recrutement de 250 jeunes 
-                <span class="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">
+                <span class="text-sky-200">
                     pour la formation au métier d’installateur de systèmes solaires photovoltaïques.
                 </span>
             </h1>
@@ -58,25 +52,25 @@
                     <div class="text-xl sm:text-3xl font-extrabold text-white">
                         <span class="stat-counter" data-target="{{ stats.metiers }}">{{ stats.metiers }}</span>
                     </div>
-                    <div class="text-xs sm:text-sm font-medium text-indigo-100 mt-1">Métier(s)</div>
+                    <div class="text-xs sm:text-sm font-medium text-blue-100 mt-1">Métier(s)</div>
                 </div>
                 <div class="stat-card p-3 sm:p-4 border bg-white/10 backdrop-blur-md rounded-2xl border-white/20 transition-transform hover:-translate-y-1 shadow-sm">
                     <div class="text-xl sm:text-3xl font-extrabold text-white">
                         <span class="stat-counter" data-target="{{ stats.etablissements }}">{{ stats.etablissements }}</span>
                     </div>
-                    <div class="text-xs sm:text-sm font-medium text-indigo-100 mt-1">Établissements</div>
+                    <div class="text-xs sm:text-sm font-medium text-blue-100 mt-1">Établissements</div>
                 </div>
                 <div class="stat-card p-3 sm:p-4 border bg-white/10 backdrop-blur-md rounded-2xl border-white/20 transition-transform hover:-translate-y-1 shadow-sm">
                     <div class="text-xl sm:text-3xl font-extrabold text-white">
                         <span class="stat-counter" data-target="{{ stats.places }}">{{ stats.places }}</span>
                     </div>
-                    <div class="text-xs sm:text-sm font-medium text-indigo-100 mt-1">Postes ouverts</div>
+                    <div class="text-xs sm:text-sm font-medium text-blue-100 mt-1">Postes ouverts</div>
                 </div>
                 <div class="stat-card p-3 sm:p-4 border bg-white/10 backdrop-blur-md rounded-2xl border-white/20 transition-transform hover:-translate-y-1 shadow-sm">
                     <div class="text-xl sm:text-3xl font-extrabold text-white">
                         <span class="stat-counter" data-target="{{ stats.candidatures }}">{{ stats.candidatures }}</span>
                     </div>
-                    <div class="text-xs sm:text-sm font-medium text-indigo-100 mt-1">Candidatures</div>
+                    <div class="text-xs sm:text-sm font-medium text-blue-100 mt-1">Candidatures</div>
                 </div>
             </div>
         </div>
@@ -96,19 +90,30 @@
     <div id="graffiti-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
     
     <div class="container mx-auto px-4 relative z-10 w-full max-w-full">
-        <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
             <!-- Colonne gauche : Texte -->
             <div class="gsap-text-col space-y-5 text-slate-700 leading-relaxed">
-                <p class="text-base sm:text-lg md:text-xl text-slate-800 font-light leading-relaxed">
+                <!-- Eyebrow & Titre de section européen sobre -->
+                <div>
+                    <div class="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50/80 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-blue-900 mb-3.5 shadow-2xs">
+                        <i class="fas fa-solar-panel text-blue-700"></i>
+                        <span>RECRUTEMENT & FORMATION CQP 2026</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                        Formation au métier d'installateur de systèmes solaires photovoltaïques
+                    </h2>
+                </div>
+
+                <p class="text-base sm:text-lg text-slate-700 leading-relaxed font-normal">
                     Il est ouvert, au titre de l'année 2026, un recrutement de 
                     <span class="relative inline-block px-2">
-                        <span class="absolute inset-0 bg-indigo-100 rounded-lg -rotate-1"></span>
-                        <strong class="relative text-indigo-700 font-bold">deux cent cinquante (250) jeunes</strong>
+                        <span class="absolute inset-0 bg-blue-100/80 rounded-lg -rotate-1"></span>
+                        <strong class="relative text-blue-950 font-bold">deux cent cinquante (250) jeunes</strong>
                     </span>
                     pour la formation au métier d'<strong>installateur de systèmes solaires photovoltaïques</strong>. 
                 </p>
                 
-                <p class="text-sm sm:text-base md:text-lg text-slate-600 leading-relaxed">
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
                     La formation, dispensée selon la modalité de l’<strong>Apprentissage</strong>, durera <strong>six (06) mois</strong> et sera sanctionnée d’un <strong>Certificat de Qualification Professionnelle (CQP)</strong>. 
                     Les formations théoriques se dérouleront au sein des lycées professionnels partenaires et les formations pratiques en immersion directe dans les entreprises partenaires.
                 </p>
@@ -116,7 +121,7 @@
                 <!-- 3 atouts clés du programme -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2">
                     <div class="p-3.5 sm:p-4 bg-slate-50 border border-slate-200/90 rounded-2xl flex items-center gap-3 shadow-xs">
-                        <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center flex-shrink-0 text-base">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center flex-shrink-0 text-base">
                             <i class="fas fa-clock"></i>
                         </div>
                         <div>
@@ -125,7 +130,7 @@
                         </div>
                     </div>
                     <div class="p-3.5 sm:p-4 bg-slate-50 border border-slate-200/90 rounded-2xl flex items-center gap-3 shadow-xs">
-                        <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center flex-shrink-0 text-base">
+                        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center flex-shrink-0 text-base">
                             <i class="fas fa-award"></i>
                         </div>
                         <div>
@@ -146,8 +151,8 @@
 
                 <!-- Bouton d'accès direct aux critères d'éligibilité -->
                 <div class="pt-3">
-                    <a href="#eligibilite" class="inline-flex items-center gap-2.5 px-5 py-3.5 bg-indigo-50 border border-indigo-200/90 text-indigo-700 font-bold rounded-xl text-sm sm:text-base hover:bg-indigo-100 hover:border-indigo-300 transition-all duration-200 shadow-xs">
-                        <i class="fas fa-user-check text-sm"></i>
+                    <a href="#eligibilite" class="inline-flex items-center gap-2.5 px-5 py-3.5 bg-blue-50 border border-blue-200 text-blue-900 font-bold rounded-xl text-sm sm:text-base hover:bg-blue-100 hover:border-blue-300 transition-all duration-200 shadow-xs">
+                        <i class="fas fa-user-check text-sm text-blue-700"></i>
                         <span>Consulter les conditions d'éligibilité</span>
                     </a>
                 </div>
@@ -167,14 +172,71 @@
                     
                     <!-- Badge flottant avec statistique -->
                     <div class="gsap-float absolute -bottom-2 right-2 sm:bottom-2 sm:right-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl p-3 sm:p-3.5 border border-slate-100 flex items-center gap-3">
-                        <div class="w-10 h-10 sm:w-11 sm:h-11 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-graduation-cap text-indigo-600 text-lg"></i>
+                        <div class="w-10 h-10 sm:w-11 sm:h-11 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-graduation-cap text-[#0B1C76] text-lg"></i>
                         </div>
                         <div>
-                            <p class="text-xl sm:text-2xl font-extrabold text-indigo-600 leading-none">{{ stats.places|default(250) }}</p>
+                            <p class="text-xl sm:text-2xl font-extrabold text-[#0B1C76] leading-none">{{ stats.places|default(250) }}</p>
                             <p class="text-xs sm:text-sm font-semibold text-slate-700 mt-1">jeunes formés</p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== SECTION PROMOTION DU GENRE & INCLUSION ==================== -->
+<section id="genre" class="py-12 bg-slate-50 border-t border-slate-200">
+    <div class="container mx-auto px-4 w-full max-w-6xl">
+        <div class="p-6 sm:p-8 md:p-10 bg-white border border-slate-200/90 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
+                <!-- Texte & Détails -->
+                <div class="flex-1 text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-extrabold bg-blue-50 border border-blue-200/80 text-[#0B1C76] uppercase tracking-wider mb-3">
+                        <i class="fas fa-venus text-blue-700"></i>
+                        <span>Promotion du genre & Inclusion</span>
+                    </div>
+
+                    <h3 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug mb-4">
+                        Les femmes aussi ont toute leur place dans l’énergie solaire !
+                    </h3>
+
+                    <div class="space-y-3.5">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-100 text-[#0B1C76] flex items-center justify-center font-black text-sm flex-shrink-0 mt-0.5">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <p class="text-base sm:text-lg text-slate-800 leading-snug">
+                                <strong>Notre ambition :</strong> au moins <strong>40 %</strong> de femmes parmi les participants.
+                            </p>
+                        </div>
+                        
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-900 flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
+                                <i class="fas fa-check-double text-amber-700"></i>
+                            </div>
+                            <p class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                                Les candidatures féminines sont vivement encouragées !
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-4 border-t border-slate-100 text-xs sm:text-sm text-slate-600 flex items-center gap-2">
+                        <i class="fas fa-check-circle text-emerald-600 flex-shrink-0"></i>
+                        <span><strong>Formation 100 % gratuite</strong> : inscription, cours et immersion pratique pris en charge pour tous les apprenants retenus.</span>
+                    </div>
+                </div>
+
+                <!-- Image Circulaire Professionnelle Extraite du Document Officiel -->
+                <div class="flex-shrink-0 flex items-center justify-center">
+                    <picture>
+                        <source srcset="{{ asset('image/promotion_femmes_solaire.webp') }}" type="image/webp">
+                        <img src="{{ asset('image/promotion_femmes_solaire.png') }}" 
+                             alt="Les femmes aussi ont toute leur place dans l’énergie solaire !" 
+                             class="w-44 h-44 sm:w-52 sm:h-52 md:w-60 md:h-60 object-contain drop-shadow-md select-none transition-transform duration-500 hover:scale-105"
+                             loading="lazy">
+                    </picture>
                 </div>
             </div>
         </div>
@@ -185,8 +247,8 @@
 <section id="etablissements" class="py-12 bg-slate-100 sm:py-20 border-t border-slate-200">
     <div class="container w-full max-w-6xl px-4 mx-auto">
         <div class="mb-10 text-center">
-            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-white px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm">
-                <i class="mr-2 fas fa-school"></i>
+            <div class="inline-flex items-center rounded-full border border-blue-200 bg-white px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-blue-900 mb-4 shadow-sm">
+                <i class="mr-2 fas fa-school text-blue-700"></i>
                 STRUCTURES DE FORMATION
             </div>
             <h2 class="text-2xl font-bold sm:text-3xl md:text-4xl text-slate-900">
@@ -200,14 +262,20 @@
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {% for etablissement in etablissements %}
                 <article class="gsap-card-etablissement group flex flex-col overflow-hidden bg-white border border-slate-200 rounded-2xl shadow-sm transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-xl">
-                    <header class="p-6 bg-gradient-to-br from-indigo-600 to-blue-700 text-white">
-                        <div class="flex items-center justify-center w-11 h-11 mb-3 rounded-xl bg-white/15 group-hover:scale-110 transition-transform duration-300">
-                            <i class="text-xl fas fa-university"></i>
+                    <header class="p-6 text-white" style="background: linear-gradient(135deg, #0A3D91 0%, #0052CC 100%);">
+                        <div class="flex items-center justify-between gap-3 mb-3">
+                            <div class="flex items-center justify-center w-11 h-11 rounded-xl bg-white/15 backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+                                <i class="text-xl fas fa-university"></i>
+                            </div>
+                            <!-- Badge Localité bien mis en valeur -->
+                           
                         </div>
                         <h3 class="text-lg sm:text-xl font-bold leading-snug">{{ etablissement.nom }}</h3>
-                        <p class="mt-1.5 text-xs sm:text-sm text-indigo-100 font-medium">
-                            <i class="mr-1.5 fas fa-map-marker-alt"></i>
-                            {% if etablissement.localite %}{{ etablissement.localite.nom }}{% else %}Localité : À COMPLÉTER{% endif %}
+                        <p class="mt-2 text-xs sm:text-sm text-blue-100 font-medium flex items-center gap-1.5">
+                            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black tracking-wide uppercase shadow-md" style="background-color: #ffffff; color: #0A3D91 !important; border: 1px solid #ffffff;">
+                                <i class="fas fa-map-marker-alt" style="color: #EE9137;"></i>
+                                <span style="color: #0A3D91 !important; font-weight: 900;"> Lieu de formation: {{ etablissement.localite ? etablissement.localite.nom : (etablissement.id == 1 ? 'Yopougon' : 'Localité non définie') }}</span>
+                            </span>
                         </p>
                     </header>
 
@@ -218,9 +286,9 @@
                                 <p class="mt-1 text-base sm:text-lg font-extrabold text-slate-900 leading-snug">{{ em.metier.nom }}</p>
 
                                 <dl class="grid grid-cols-2 gap-3 mt-4 text-sm">
-                                    <div class="p-3 sm:p-3.5 rounded-xl bg-indigo-50/80 border border-indigo-100/60">
+                                    <div class="p-3 sm:p-3.5 rounded-xl bg-blue-50/80 border border-blue-100/70">
                                         <dt class="text-xs sm:text-sm font-semibold text-slate-600">Postes ouverts</dt>
-                                        <dd class="text-xl sm:text-2xl font-black text-indigo-700 mt-0.5">{{ em.nbrplace ?? '—' }}</dd>
+                                        <dd class="text-xl sm:text-2xl font-black text-[#0052CC] mt-0.5">{{ em.nbrplace ?? '—' }}</dd>
                                     </div>
                                     <div class="p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200/70">
                                         <dt class="text-xs sm:text-sm font-semibold text-slate-600">Durée formation</dt>
@@ -255,8 +323,8 @@
 <section id="eligibilite" class="py-14 sm:py-20 scroll-mt-24 bg-white border-t border-slate-200">
     <div class="container w-full max-w-5xl px-4 mx-auto">
         <div class="mb-10 text-center">
-            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50/80 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-3 shadow-sm">
-                <i class="mr-2 fas fa-user-check"></i>
+            <div class="inline-flex items-center rounded-full border border-blue-200 bg-blue-50/80 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-blue-900 mb-3 shadow-sm">
+                <i class="mr-2 fas fa-user-check text-blue-700"></i>
                 CRITÈRES D'ADMISSIBILITÉ
             </div>
             <h2 class="text-2xl font-extrabold sm:text-3xl md:text-4xl text-slate-900 tracking-tight">
@@ -274,10 +342,10 @@
                 <!-- Critère 1 : Nationalité -->
                 <div class="flex flex-col justify-between p-6 sm:p-7 bg-slate-50 border border-slate-200/90 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200">
                     <div>
-                        <div class="flex items-center justify-center w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl mb-4">
+                        <div class="flex items-center justify-center w-12 h-12 bg-blue-100 text-[#0B1C76] rounded-xl mb-4">
                             <i class="fas fa-flag text-lg"></i>
                         </div>
-                        <span class="text-xs sm:text-sm font-extrabold text-indigo-600 uppercase tracking-wider">Critère n°1</span>
+                        <span class="text-xs sm:text-sm font-extrabold text-[#0B1C76] uppercase tracking-wider">Critère n°1</span>
                         <h3 class="font-bold text-lg sm:text-xl text-slate-900 mt-1.5 mb-2">Nationalité ivoirienne</h3>
                         <p class="text-sm sm:text-base text-slate-700 leading-relaxed">
                             Être obligatoirement de nationalité ivoirienne (justifiée par une pièce d'identité officielle en cours de validité).
@@ -288,10 +356,10 @@
                 <!-- Critère 2 : Tranche d'âge -->
                 <div class="flex flex-col justify-between p-6 sm:p-7 bg-slate-50 border border-slate-200/90 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200">
                     <div>
-                        <div class="flex items-center justify-center w-12 h-12 bg-purple-100 text-purple-700 rounded-xl mb-4">
+                        <div class="flex items-center justify-center w-12 h-12 bg-amber-100 text-amber-800 rounded-xl mb-4">
                             <i class="fas fa-birthday-cake text-lg"></i>
                         </div>
-                        <span class="text-xs sm:text-sm font-extrabold text-purple-600 uppercase tracking-wider">Critère n°2</span>
+                        <span class="text-xs sm:text-sm font-extrabold text-amber-800 uppercase tracking-wider">Critère n°2</span>
                         <h3 class="font-bold text-lg sm:text-xl text-slate-900 mt-1.5 mb-2">Tranche d'âge requise</h3>
                         <p class="text-sm sm:text-base text-slate-700 leading-relaxed">
                             Être âgé(e) de <strong>18 à 35 ans inclus</strong> au 31 décembre 2026.
@@ -464,57 +532,16 @@
             </div>
         </div>
 
-        <!-- Encadré Valorisation des Candidatures Féminines (Promotion du genre & Inclusion) -->
-        <div class="mt-8 p-6 sm:p-8 bg-slate-50 border border-slate-200/90 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
-                <!-- Texte & Détails -->
-                <div class="flex-1 text-left">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs sm:text-sm font-extrabold bg-indigo-100 text-indigo-700 uppercase tracking-wider mb-3">
-                        <i class="fas fa-venus text-sm"></i>
-                        <span>Promotion du genre & Inclusion</span>
-                    </div>
-
-                    <h3 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug mb-4">
-                        Les femmes aussi ont toute leur place dans l’énergie solaire !
-                    </h3>
-
-                    <div class="space-y-3">
-                        <div class="flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-sm flex-shrink-0 mt-0.5">
-                                <i class="fas fa-bullseye"></i>
-                            </div>
-                            <p class="text-base sm:text-lg text-slate-800 leading-snug">
-                                <strong>Notre ambition :</strong> au moins <strong>40 %</strong> de femmes parmi les participants.
-                            </p>
-                        </div>
-                        
-                        <div class="flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
-                                <i class="fas fa-check-double"></i>
-                            </div>
-                            <p class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
-                                Les candidatures féminines sont vivement encouragées !
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="mt-5 pt-4 border-t border-slate-200/80 text-xs sm:text-sm text-slate-600 flex items-center gap-2">
-                        <i class="fas fa-check-circle text-emerald-600 flex-shrink-0"></i>
-                        <span><strong>Formation 100 % gratuite</strong> : inscription, cours et immersion pratique pris en charge pour tous les apprenants retenus.</span>
-                    </div>
-                </div>
-
-                <!-- Image Circulaire Professionnelle Extraite du Document Officiel -->
-                <div class="flex-shrink-0 flex items-center justify-center">
-                    <picture>
-                        <source srcset="{{ asset('image/promotion_femmes_solaire.webp') }}" type="image/webp">
-                        <img src="{{ asset('image/promotion_femmes_solaire.png') }}" 
-                             alt="Les femmes aussi ont toute leur place dans l’énergie solaire !" 
-                             class="w-44 h-44 sm:w-52 sm:h-52 md:w-60 md:h-60 object-contain drop-shadow-md select-none transition-transform duration-500 hover:scale-105"
-                             loading="lazy">
-                    </picture>
-                </div>
+        <!-- Note de synthèse sur la gratuité & accès pièces -->
+        <div class="mt-8 p-4 sm:p-5 bg-slate-50 border border-slate-200/90 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-slate-700">
+            <div class="flex items-center gap-2.5">
+                <i class="fas fa-check-circle text-emerald-600 text-base"></i>
+                <span><strong>Formation 100 % prise en charge :</strong> L’ensemble des enseignements (théoriques en lycée et pratiques en entreprise) est entièrement gratuit.</span>
             </div>
+            <a href="#pieces" class="inline-flex items-center gap-1.5 font-bold text-blue-900 hover:text-blue-700 whitespace-nowrap">
+                <span>Consulter les pièces à fournir</span>
+                <i class="fas fa-arrow-right text-xs"></i>
+            </a>
         </div>
     </div>
 </section>
@@ -795,7 +822,7 @@
 </section>
 
 <!-- ==================== INFOLINE & CONTACT SECTION ==================== -->
-<section id="contact" class="py-12 text-white sm:py-16 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700">
+<section id="contact" class="py-12 text-white sm:py-16" style="background: linear-gradient(135deg, #0A3D91 0%, #0052CC 60%, #1D4ED8 100%);">
     <div class="container w-full max-w-4xl px-4 mx-auto text-center">
         <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center shadow-lg">
             <i class="text-2xl sm:text-3xl fas fa-headset text-white"></i>
@@ -803,20 +830,20 @@
         <h3 class="px-2 mb-2 text-2xl font-bold sm:text-3xl md:text-4xl text-white">
             Une question ? Besoin d'assistance ?
         </h3>
-        <p class="mb-8 text-base sm:text-lg text-indigo-100 font-medium max-w-xl mx-auto">
+        <p class="mb-8 text-base sm:text-lg text-blue-100 font-medium max-w-xl mx-auto">
             Notre équipe est à votre écoute du lundi au vendredi
         </p>
         
         <div class="flex flex-col flex-wrap justify-center items-center gap-4 px-2 sm:flex-row sm:gap-5">
-            <a href="tel:+2252722229600" class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm sm:text-base font-semibold border rounded-xl bg-white/15 backdrop-blur-sm border-white/25 text-white hover:bg-white hover:text-indigo-700 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5">
+            <a href="tel:+2252722229600" class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm sm:text-base font-semibold border rounded-xl bg-white/15 backdrop-blur-sm border-white/25 text-white hover:bg-white/30 hover:border-white/60 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5">
                 <i class="fas fa-phone"></i>
                 <span>27 22 22 96 00</span>
             </a>
-            <a href="tel:+2250565390459" class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm sm:text-base font-semibold border rounded-xl bg-white/15 backdrop-blur-sm border-white/25 text-white hover:bg-white hover:text-indigo-700 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5">
+            <a href="tel:+2250565390459" class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm sm:text-base font-semibold border rounded-xl bg-white/15 backdrop-blur-sm border-white/25 text-white hover:bg-white/30 hover:border-white/60 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5">
                 <i class="fas fa-mobile-alt"></i>
                 <span>05 65 39 04 59</span>
             </a>
-            <a href="mailto:contact@daip.ci" class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm sm:text-base font-semibold border rounded-xl bg-white/15 backdrop-blur-sm border-white/25 text-white hover:bg-white hover:text-indigo-700 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5">
+            <a href="mailto:contact@daip.ci" class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm sm:text-base font-semibold border rounded-xl bg-white/15 backdrop-blur-sm border-white/25 text-white hover:bg-white/30 hover:border-white/60 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5">
                 <i class="fas fa-envelope"></i>
                 <span>contact@daip.ci</span>
             </a>

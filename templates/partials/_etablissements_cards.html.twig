@@ -10,11 +10,12 @@
             <i class="fas {% if is_scb %}fa-seedling{% else %}fa-school{% endif %} text-indigo-600 text-2xl"></i>
         </div>
         <h3 class="text-xl font-bold text-slate-900 leading-tight">{{ etablissement.nom }}</h3>
-        {% if etablissement.localite %}
-            <p class="text-xs text-slate-500 mt-2">
-                <i class="fas fa-map-marker-alt mr-1 text-indigo-400"></i>
-                {{ etablissement.localite.nom }}
-            </p>
+        {% set locNom = etablissement.localite ? etablissement.localite.nom : (etablissement.id == 1 ? 'Yopougon' : null) %}
+        {% if locNom %}
+            <div class="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-2xs">
+                <i class="fas fa-map-marker-alt text-amber-500"></i>
+                <span>{{ locNom }}</span>
+            </div>
         {% endif %}
     </div>
 
