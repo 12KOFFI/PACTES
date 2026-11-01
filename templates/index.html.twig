@@ -10,32 +10,31 @@
 {% endblock %}
 
 {% block body %}
+<div class="pa-page">
 
-
-<!-- ==================== HERO SECTION ==================== -->
-<section class="hero relative min-h-[600px] flex items-center justify-center text-white py-16" style="background: linear-gradient(135deg, #0A3D91 0%, #0052CC 60%, #1D4ED8 100%);">
-    
-    <!-- Éléments décoratifs sobres -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-0 left-0 w-72 h-72 rounded-full bg-blue-300 filter blur-3xl opacity-15 animate-pulse-glow"></div>
-        <div class="absolute bottom-0 right-0 w-72 h-72 rounded-full bg-sky-300 filter blur-3xl opacity-15 animate-pulse-glow animation-delay-2000"></div>
-        <div class="absolute bg-blue-400 rounded-full -bottom-40 -left-40 w-80 h-80 mix-blend-screen filter blur-3xl opacity-20"></div>
-    </div>
-    
-    <div class="container relative z-10 w-full max-w-full px-4 mx-auto">
-        <div class="max-w-4xl mx-auto text-center">
-           
-            
-            <!-- Titre avec la police sobre et accents clairs -->
-            <h1 class="hero-title text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight break-words">
-                Recrutement de 250 jeunes 
-                <span class="text-sky-200">
-                    pour la formation au métier d’installateur de systèmes solaires photovoltaïques.
-                </span>
+<!-- ==================== HERO ==================== -->
+<section class="pa-hero hero">
+    <div class="pa-hero__inner">
+        <div class="pa-hero__text">
+            <h1 class="pa-hero__title hero-title">
+                Recrutement de 250 jeunes
+                <span>pour la formation au métier d’installateur de systèmes solaires photovoltaïques.</span>
             </h1>
 
+            <!-- Période de dépôt des dossiers -->
+            <div class="pa-date hero-date">
+                <span class="pa-date__cal" aria-hidden="true">
+                    <span class="pa-date__month">OCT</span>
+                    <span class="pa-date__day">31</span>
+                </span>
+                <span class="pa-date__text">
+                    <span class="pa-date__label">Dépôt des dossiers</span>
+                    <strong class="pa-date__value">du 19 au 31 octobre 2026</strong>
+                </span>
+            </div>
+
             <!-- Actions principales (Hero CTA) -->
-            <div class="hero-cta-group flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-10">
+            <div class="hero-cta-group flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
                 <a href="#etablissements" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-bold text-sm text-white shadow-lg transition-all duration-300 hover:opacity-90 hover:-translate-y-0.5 active:scale-95" style="background-color: #EE9137;">
                     <i class="fas fa-paper-plane"></i>
                     <span>Choisir un établissement & Postuler</span>
@@ -47,7 +46,7 @@
             </div>
 
             <!-- Stats rapides avec compteurs dynamiques GSAP -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5 max-w-3xl mx-auto mb-10">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5 max-w-3xl text-center">
                 <div class="stat-card p-3 sm:p-4 border bg-white/10 backdrop-blur-md rounded-2xl border-white/20 transition-transform hover:-translate-y-1 shadow-sm">
                     <div class="text-xl sm:text-3xl font-extrabold text-white">
                         <span class="stat-counter" data-target="{{ stats.metiers }}">{{ stats.metiers }}</span>
@@ -74,535 +73,326 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Scroll indicator -->
-    <a href="#presentation" class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div class="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center">
-            <div class="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse"></div>
-        </div>
-    </a>
-</section>
-
-<!-- ==================== PRÉSENTATION SECTION ==================== -->
-<section id="presentation" class="relative py-12 sm:py-20 bg-white w-full overflow-hidden">
-    <!-- Conteneur de graffitis animés -->
-    <div id="graffiti-container" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
-    
-    <div class="container mx-auto px-4 relative z-10 w-full max-w-full">
-        <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-            <!-- Colonne gauche : Texte -->
-            <div class="gsap-text-col space-y-5 text-slate-700 leading-relaxed">
-                <!-- Eyebrow & Titre de section européen sobre -->
-                <div>
-                    <div class="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50/80 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-blue-900 mb-3.5 shadow-2xs">
-                        <i class="fas fa-solar-panel text-blue-700"></i>
-                        <span>RECRUTEMENT & FORMATION CQP 2026</span>
-                    </div>
-                    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                        Formation au métier d'installateur de systèmes solaires photovoltaïques
-                    </h2>
-                </div>
-
-                <p class="text-base sm:text-lg text-slate-700 leading-relaxed font-normal">
-                    Il est ouvert, au titre de l'année 2026, un recrutement de 
-                    <span class="relative inline-block px-2">
-                        <span class="absolute inset-0 bg-blue-100/80 rounded-lg -rotate-1"></span>
-                        <strong class="relative text-blue-950 font-bold">deux cent cinquante (250) jeunes</strong>
-                    </span>
-                    pour la formation au métier d'<strong>installateur de systèmes solaires photovoltaïques</strong>. 
-                </p>
-                
-                <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
-                    La formation, dispensée selon la modalité de l’<strong>Apprentissage</strong>, durera <strong>six (06) mois</strong> et sera sanctionnée d’un <strong>Certificat de Qualification Professionnelle (CQP)</strong>. 
-                    Les formations théoriques se dérouleront au sein des lycées professionnels partenaires et les formations pratiques en immersion directe dans les entreprises partenaires.
-                </p>
-
-                <!-- 3 atouts clés du programme -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-2">
-                    <div class="p-3.5 sm:p-4 bg-slate-50 border border-slate-200/90 rounded-2xl flex items-center gap-3 shadow-xs">
-                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center flex-shrink-0 text-base">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm sm:text-base font-extrabold text-slate-900">06 mois</p>
-                            <p class="text-xs sm:text-sm font-medium text-slate-600 mt-0.5">en Apprentissage</p>
-                        </div>
-                    </div>
-                    <div class="p-3.5 sm:p-4 bg-slate-50 border border-slate-200/90 rounded-2xl flex items-center gap-3 shadow-xs">
-                        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center flex-shrink-0 text-base">
-                            <i class="fas fa-award"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm sm:text-base font-extrabold text-slate-900">Diplôme CQP</p>
-                            <p class="text-xs sm:text-sm font-medium text-slate-600 mt-0.5">Reconnu par l'État</p>
-                        </div>
-                    </div>
-                    <div class="p-3.5 sm:p-4 bg-slate-50 border border-slate-200/90 rounded-2xl flex items-center gap-3 shadow-xs">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 text-base">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div>
-                            <p class="text-sm sm:text-base font-extrabold text-slate-900">100% Gratuit</p>
-                            <p class="text-xs sm:text-sm font-medium text-slate-600 mt-0.5">Formation prise en charge</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bouton d'accès direct aux critères d'éligibilité -->
-                <div class="pt-3">
-                    <a href="#eligibilite" class="inline-flex items-center gap-2.5 px-5 py-3.5 bg-blue-50 border border-blue-200 text-blue-900 font-bold rounded-xl text-sm sm:text-base hover:bg-blue-100 hover:border-blue-300 transition-all duration-200 shadow-xs">
-                        <i class="fas fa-user-check text-sm text-blue-700"></i>
-                        <span>Consulter les conditions d'éligibilité</span>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Colonne droite : Illustration -->
-            <div class="gsap-image-col relative flex items-center justify-center mt-6 lg:mt-0">
-                <!-- Illustration principale circulaire avec motif de pointillés -->
-                <div class="relative w-full max-w-[480px] lg:max-w-[540px] flex items-center justify-center">
+        <!-- Illustration dans son cadre blanc -->
+        <div class="pa-hero__media hero-media">
+            <figure class="pa-hero__figure">
+                <span class="pa-hero__plate" aria-hidden="true"></span>
+                <div class="pa-hero__frame">
                     <picture>
                         <source srcset="{{ asset('image/recrutement_solaire_cqp.webp') }}" type="image/webp">
-                        <img src="{{ asset('image/recrutement_solaire_cqp.png') }}" 
-                             alt="Recrutement formation installateur de systèmes solaires photovoltaïques" 
-                             class="w-full h-auto object-contain select-none transition-transform duration-500 hover:scale-[1.02] drop-shadow-sm"
-                             loading="lazy">
+                        <img src="{{ asset('image/recrutement_solaire_cqp.png') }}" alt="Deux techniciens en équipement de sécurité devant des panneaux solaires" width="1155" height="1400">
                     </picture>
-                    
-                    <!-- Badge flottant avec statistique -->
-                    <div class="gsap-float absolute -bottom-2 right-2 sm:bottom-2 sm:right-4 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl p-3 sm:p-3.5 border border-slate-100 flex items-center gap-3">
-                        <div class="w-10 h-10 sm:w-11 sm:h-11 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                            <i class="fas fa-graduation-cap text-[#0B1C76] text-lg"></i>
-                        </div>
-                        <div>
-                            <p class="text-xl sm:text-2xl font-extrabold text-[#0B1C76] leading-none">{{ stats.places|default(250) }}</p>
-                            <p class="text-xs sm:text-sm font-semibold text-slate-700 mt-1">jeunes formés</p>
-                        </div>
-                    </div>
                 </div>
-            </div>
+                <figcaption class="pa-hero__badge gsap-float">
+                    <span class="pa-hero__badge-icon" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C2620F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg>
+                    </span>
+                    <span class="pa-hero__badge-text">
+                        <strong>Diplôme CQP</strong>
+                        <span>6 mois en apprentissage</span>
+                    </span>
+                </figcaption>
+            </figure>
         </div>
     </div>
 </section>
 
-<!-- ==================== SECTION PROMOTION DU GENRE & INCLUSION ==================== -->
-<section id="genre" class="py-12 bg-slate-50 border-t border-slate-200">
-    <div class="container mx-auto px-4 w-full max-w-6xl">
-        <div class="p-6 sm:p-8 md:p-10 bg-white border border-slate-200/90 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10">
-                <!-- Texte & Détails -->
-                <div class="flex-1 text-left">
-                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-extrabold bg-blue-50 border border-blue-200/80 text-[#0B1C76] uppercase tracking-wider mb-3">
-                        <i class="fas fa-venus text-blue-700"></i>
-                        <span>Promotion du genre & Inclusion</span>
-                    </div>
-
-                    <h3 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug mb-4">
-                        Les femmes aussi ont toute leur place dans l’énergie solaire !
-                    </h3>
-
-                    <div class="space-y-3.5">
-                        <div class="flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-blue-100 text-[#0B1C76] flex items-center justify-center font-black text-sm flex-shrink-0 mt-0.5">
-                                <i class="fas fa-bullseye"></i>
-                            </div>
-                            <p class="text-base sm:text-lg text-slate-800 leading-snug">
-                                <strong>Notre ambition :</strong> au moins <strong>40 %</strong> de femmes parmi les participants.
-                            </p>
-                        </div>
-                        
-                        <div class="flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-900 flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
-                                <i class="fas fa-check-double text-amber-700"></i>
-                            </div>
-                            <p class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
-                                Les candidatures féminines sont vivement encouragées !
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="mt-5 pt-4 border-t border-slate-100 text-xs sm:text-sm text-slate-600 flex items-center gap-2">
-                        <i class="fas fa-check-circle text-emerald-600 flex-shrink-0"></i>
-                        <span><strong>Formation 100 % gratuite</strong> : inscription, cours et immersion pratique pris en charge pour tous les apprenants retenus.</span>
-                    </div>
-                </div>
-
-                <!-- Image Circulaire Professionnelle Extraite du Document Officiel -->
-                <div class="flex-shrink-0 flex items-center justify-center">
-                    <picture>
-                        <source srcset="{{ asset('image/promotion_femmes_solaire.webp') }}" type="image/webp">
-                        <img src="{{ asset('image/promotion_femmes_solaire.png') }}" 
-                             alt="Les femmes aussi ont toute leur place dans l’énergie solaire !" 
-                             class="w-44 h-44 sm:w-52 sm:h-52 md:w-60 md:h-60 object-contain drop-shadow-md select-none transition-transform duration-500 hover:scale-105"
-                             loading="lazy">
-                    </picture>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ==================== SECTION ÉTABLISSEMENTS : UNE CARTE PAR ÉTABLISSEMENT ==================== -->
-<section id="etablissements" class="py-12 bg-slate-100 sm:py-20 border-t border-slate-200">
-    <div class="container w-full max-w-6xl px-4 mx-auto">
-        <div class="mb-10 text-center">
-            <div class="inline-flex items-center rounded-full border border-blue-200 bg-white px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-blue-900 mb-4 shadow-sm">
-                <i class="mr-2 fas fa-school text-blue-700"></i>
-                STRUCTURES DE FORMATION
-            </div>
-            <h2 class="text-2xl font-bold sm:text-3xl md:text-4xl text-slate-900">
-                Choisissez votre établissement
-            </h2>
-            <p class="max-w-2xl mx-auto mt-2 text-sm sm:text-base text-slate-600">
-                Chaque établissement dispose de ses propres postes. Vous déposez votre candidature dans <strong>un seul établissement</strong> : celui que vous sélectionnez ci-dessous.
+<!-- ==================== PRÉSENTATION + PROMOTION DU GENRE ==================== -->
+<section id="presentation" class="pa-section scroll-mt-24" style="background: #FFFFFF;">
+    <div class="pa-container pa-pres">
+        <div class="pa-pres__text">
+            <h2 class="pa-pres__title" data-reveal-title>Formation au métier d'installateur de systèmes solaires photovoltaïques</h2>
+            <p class="pa-pres__p1" data-reveal>
+                Il est ouvert, au titre de l'année 2026, un recrutement de <strong class="pa-blue">deux cent cinquante (250) jeunes</strong>
+                pour la formation au métier d'<strong>installateur de systèmes solaires photovoltaïques</strong>.
             </p>
+            <p class="pa-pres__p2" data-reveal>
+                La formation, dispensée selon la modalité de l’<strong>Apprentissage</strong>, durera <strong>six (06) mois</strong> et sera sanctionnée d’un <strong>Certificat de Qualification Professionnelle (CQP)</strong>.
+                Les formations théoriques se dérouleront au sein des lycées professionnels partenaires et les formations pratiques en immersion directe dans les entreprises partenaires.
+            </p>
+
+            <dl class="pa-facts" data-reveal>
+                <div class="pa-fact pa-fact--blue">
+                    <dt><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0052CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>en Apprentissage</dt>
+                    <dd>06 mois</dd>
+                </div>
+                <div class="pa-fact pa-fact--sky">
+                    <dt><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FE6800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg>Reconnu par l'État</dt>
+                    <dd>Diplôme CQP</dd>
+                </div>
+                <div class="pa-fact pa-fact--green">
+                    <dt><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3F8F1C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="m8.5 12.3 2.4 2.4 4.6-5"/></svg>Formation prise en charge</dt>
+                    <dd>100 % sponsorisée</dd>
+                </div>
+            </dl>
+
+            <a href="#eligibilite" class="pa-link-arrow" data-reveal>
+                Consulter les conditions d'éligibilité
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <!-- Promotion du genre & inclusion -->
+        <aside class="pa-genre" aria-labelledby="genre-titre" data-reveal>
+            <div class="pa-genre__band">
+                <svg aria-hidden="true" viewBox="0 0 480 104" preserveAspectRatio="none"><path d="M0 82 C 120 62, 360 62, 480 82 L480 104 L0 104 Z" fill="#FFFFFF"/></svg>
+                <picture>
+                    <source srcset="{{ asset('image/promotion_femmes_solaire.webp') }}" type="image/webp">
+                    <img src="{{ asset('image/promotion_femmes_solaire.png') }}" class="pa-genre__photo" alt="Femmes techniciennes inspectant un panneau solaire" width="168" height="168" loading="lazy">
+                </picture>
+            </div>
+            <div class="pa-genre__body">
+                <h3 id="genre-titre" class="pa-genre__title">Les femmes aussi ont toute leur place dans l’énergie solaire !</h3>
+                <div class="pa-genre__goal">
+                    <p>
+                        <span><strong>Notre ambition :</strong> au moins</span>
+                        <span class="pa-genre__pct">40 %</span>
+                        <span>de femmes parmi les participants.</span>
+                    </p>
+                </div>
+                <p class="pa-genre__cheer">
+                    <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FE6800" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-9.2-9.4C1.7 8.3 3.8 5 7.2 5c2 0 3.6 1.1 4.8 2.8C13.2 6.1 14.8 5 16.8 5c3.4 0 5.5 3.3 4.4 6.6C19.5 16.4 12 21 12 21z"/></svg>
+                    <span>Les candidatures féminines sont vivement encouragées !</span>
+                </p>
+            </div>
+        </aside>
+    </div>
+</section>
+
+<!-- ==================== ÉTABLISSEMENTS : UNE CARTE PAR ÉTABLISSEMENT ==================== -->
+<section id="etablissements" class="pa-section pa-section--tint scroll-mt-24">
+    <div class="pa-container">
+        <div class="pa-head">
+            <div>
+                <p class="pa-eyebrow">Structures de formation</p>
+                <h2 class="pa-h2" data-reveal-title>Choisissez votre établissement</h2>
+            </div>
+            <div style="max-width: 500px;" data-reveal>
+                <p class="pa-lead">Chaque établissement dispose de ses propres postes. Comparez les {{ stats.etablissements }} lieux de formation, puis candidatez dans celui qui vous convient.</p>
+                <p class="pa-notice">
+                    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0052CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.4"/></svg>
+                    <span>Une candidature dans <strong>un seul établissement</strong> par personne.</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="pa-etabs">
             {% for etablissement in etablissements %}
-                <article class="gsap-card-etablissement group flex flex-col overflow-hidden bg-white border border-slate-200 rounded-2xl shadow-sm transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-xl">
-                    <header class="p-6 text-white" style="background: linear-gradient(135deg, #0A3D91 0%, #0052CC 100%);">
-                        <div class="flex items-center justify-between gap-3 mb-3">
-                            <div class="flex items-center justify-center w-11 h-11 rounded-xl bg-white/15 backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
-                                <i class="text-xl fas fa-university"></i>
-                            </div>
-                            <!-- Badge Localité bien mis en valeur -->
-                           
-                        </div>
-                        <h3 class="text-lg sm:text-xl font-bold leading-snug">{{ etablissement.nom }}</h3>
-                        <p class="mt-2 text-xs sm:text-sm text-blue-100 font-medium flex items-center gap-1.5">
-                            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black tracking-wide uppercase shadow-md" style="background-color: #ffffff; color: #0A3D91 !important; border: 1px solid #ffffff;">
-                                <i class="fas fa-map-marker-alt" style="color: #EE9137;"></i>
-                                <span style="color: #0A3D91 !important; font-weight: 900;"> Lieu de formation: {{ etablissement.localite ? etablissement.localite.nom : (etablissement.id == 1 ? 'Yopougon' : 'Localité non définie') }}</span>
+                {% set locNom = etablissement.localite ? etablissement.localite.nom : (etablissement.id == 1 ? 'Yopougon' : null) %}
+                <article class="pa-etab" data-reveal>
+                    <header class="pa-etab__head">
+                        <div class="pa-etab__top">
+                            <span class="pa-etab__icon" aria-hidden="true">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 4l9 5.5M5 10v8M9.7 10v8M14.3 10v8M19 10v8M3 20.5h18"/></svg>
                             </span>
-                        </p>
+                            {% if locNom %}
+                                <span class="pa-etab__place">
+                                    <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="#EE9137"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+                                    <span class="sr-only">Lieu de formation : </span>{{ locNom }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="pa-etab__name">
+                            <p>Établissement</p>
+                            <h3>{{ etablissement.nom }}</h3>
+                        </div>
                     </header>
 
-                    <div class="flex flex-col flex-1 p-6">
+                    <div class="pa-etab__body">
                         {% for em in etablissement.etablissementMetiers %}
-                            <div class="{{ not loop.first ? 'mt-5 pt-5 border-t border-slate-100' : '' }}">
-                                <p class="text-xs sm:text-sm font-bold tracking-wider uppercase text-slate-600">Métier proposé</p>
-                                <p class="mt-1 text-base sm:text-lg font-extrabold text-slate-900 leading-snug">{{ em.metier.nom }}</p>
-
-                                <dl class="grid grid-cols-2 gap-3 mt-4 text-sm">
-                                    <div class="p-3 sm:p-3.5 rounded-xl bg-blue-50/80 border border-blue-100/70">
-                                        <dt class="text-xs sm:text-sm font-semibold text-slate-600">Postes ouverts</dt>
-                                        <dd class="text-xl sm:text-2xl font-black text-[#0052CC] mt-0.5">{{ em.nbrplace ?? '—' }}</dd>
+                            {% set duree = em.dureeFormation ?: '—' %}
+                            {% set dureeParts = duree|split(' ', 2) %}
+                            <div class="pa-etab__offer">
+                                <div class="pa-metier">
+                                    <span class="pa-metier__icon" aria-hidden="true">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0A3D91" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5h15l2 9h-19z"/><path d="M9.5 5 9 14M14.5 5l.5 9M3.4 9.5h17.2M12 14v4M8 20h8"/></svg>
+                                    </span>
+                                    <div class="pa-metier__text">
+                                        <p class="pa-metier__label">Métier proposé</p>
+                                        <p class="pa-metier__name">{{ em.metier.nom }}</p>
                                     </div>
-                                    <div class="p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200/70">
-                                        <dt class="text-xs sm:text-sm font-semibold text-slate-600">Durée formation</dt>
-                                        <dd class="text-base sm:text-lg font-bold text-slate-800 mt-0.5">{{ em.dureeFormation ?: '—' }}</dd>
+                                </div>
+
+                                <dl class="pa-kpis">
+                                    <div class="pa-kpi pa-kpi--blue">
+                                        <dt><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0052CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 19.5c.8-3.2 3.1-5 6-5s5.2 1.8 6 5M15.5 5.2a3.2 3.2 0 0 1 0 5.6M17.5 14.8c1.8.7 3 2.3 3.5 4.7"/></svg>Postes ouverts</dt>
+                                        <dd>{{ em.nbrplace ?? '—' }}</dd>
+                                    </div>
+                                    <div class="pa-kpi pa-kpi--green">
+                                        <dt><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C2620F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>De formation</dt>
+                                        <dd>{{ dureeParts[0] }}{% if dureeParts|length > 1 %} <small>{{ dureeParts[1] }}</small>{% endif %}</dd>
                                     </div>
                                 </dl>
 
-                                <div class="mt-4">
-                                    {% set cible = path('app_candidature_new', {'etablissement': etablissement.id, 'metier': em.metier.id}) %}
-                                    <a href="{{ app.user ? cible : path('app_register') ~ '?redirect=' ~ cible|url_encode }}"
-                                       class="inline-flex items-center justify-center w-full gap-2 px-4 py-3.5 text-sm sm:text-base font-bold text-white transition-all shadow-md rounded-xl hover:opacity-95 active:scale-[0.99]"
-                                       style="background-color: #EE9137; color: #ffffff; background-image: none;">
-                                        <i class="fas fa-paper-plane text-white"></i>
-                                        <span class="text-white">Candidater ici</span>
-                                    </a>
-                                </div>
+                                {% set cible = path('app_candidature_new', {'etablissement': etablissement.id, 'metier': em.metier.id}) %}
+                                <a href="{{ app.user ? cible : path('app_register') ~ '?redirect=' ~ cible|url_encode }}" class="pa-etab__cta">
+                                    <span>Candidater ici</span>
+                                    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                                </a>
                             </div>
                         {% else %}
-                            <p class="text-sm text-slate-500">Aucun métier ouvert pour le moment.</p>
+                            <p style="margin: 0; color: #475569;">Aucun métier ouvert pour le moment.</p>
                         {% endfor %}
                     </div>
                 </article>
             {% else %}
-                <div class="p-8 text-center bg-white border col-span-full border-slate-200 rounded-2xl text-slate-500">
-                    Aucune structure de formation configurée pour le moment.
-                </div>
+                <p class="pa-empty">Aucune structure de formation configurée pour le moment.</p>
             {% endfor %}
         </div>
     </div>
 </section>
-<!-- ==================== CONDITIONS D'ÉLIGIBILITÉ SECTION ==================== -->
-<section id="eligibilite" class="py-14 sm:py-20 scroll-mt-24 bg-white border-t border-slate-200">
-    <div class="container w-full max-w-5xl px-4 mx-auto">
-        <div class="mb-10 text-center">
-            <div class="inline-flex items-center rounded-full border border-blue-200 bg-blue-50/80 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-blue-900 mb-3 shadow-sm">
-                <i class="mr-2 fas fa-user-check text-blue-700"></i>
-                CRITÈRES D'ADMISSIBILITÉ
-            </div>
-            <h2 class="text-2xl font-extrabold sm:text-3xl md:text-4xl text-slate-900 tracking-tight">
-                Conditions d'éligibilité
-            </h2>
-            <p class="max-w-2xl mx-auto mt-2 text-sm sm:text-base text-slate-600">
-                Peut faire acte de candidature, toute personne remplissant obligatoirement les critères suivants :
-            </p>
+
+<!-- ==================== CONDITIONS D'ÉLIGIBILITÉ ==================== -->
+<section id="eligibilite" class="pa-section pa-section--white scroll-mt-24">
+    <div class="pa-container pa-el">
+        <div class="pa-head">
+            <h2 class="pa-h2" data-reveal-title>Conditions d'éligibilité</h2>
+            <p class="pa-lead" data-reveal>Peut faire acte de candidature, toute personne remplissant obligatoirement les critères suivants :</p>
         </div>
 
-        <!-- Critères d'admissibilité (Liste des conditions dans le même style) -->
-        <div class="space-y-6">
-            <!-- Grille des Critères Généraux 1 & 2 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <!-- Critère 1 : Nationalité -->
-                <div class="flex flex-col justify-between p-6 sm:p-7 bg-slate-50 border border-slate-200/90 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200">
-                    <div>
-                        <div class="flex items-center justify-center w-12 h-12 bg-blue-100 text-[#0B1C76] rounded-xl mb-4">
-                            <i class="fas fa-flag text-lg"></i>
-                        </div>
-                        <span class="text-xs sm:text-sm font-extrabold text-[#0B1C76] uppercase tracking-wider">Critère n°1</span>
-                        <h3 class="font-bold text-lg sm:text-xl text-slate-900 mt-1.5 mb-2">Nationalité ivoirienne</h3>
-                        <p class="text-sm sm:text-base text-slate-700 leading-relaxed">
-                            Être obligatoirement de nationalité ivoirienne (justifiée par une pièce d'identité officielle en cours de validité).
-                        </p>
-                    </div>
+        <!-- Critères 1 ET 2 -->
+        <div class="pa-el-row">
+            <article class="pa-crit" data-reveal>
+                <div class="pa-crit__top">
+                    <span class="pa-num" aria-hidden="true">1</span>
+                    <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" stroke="#0052CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="12" width="44" height="32" rx="5"/><circle cx="19" cy="26" r="5"/><path d="M11 38c1.6-4 4.4-6 8-6s6.4 2 8 6M32 23h12M32 29h12M32 35h7"/></svg>
                 </div>
+                <h3><span class="sr-only">Critère n°1 : </span>Nationalité ivoirienne</h3>
+                <p>Être obligatoirement de nationalité ivoirienne (justifiée par une pièce d'identité officielle en cours de validité).</p>
+            </article>
 
-                <!-- Critère 2 : Tranche d'âge -->
-                <div class="flex flex-col justify-between p-6 sm:p-7 bg-slate-50 border border-slate-200/90 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200">
-                    <div>
-                        <div class="flex items-center justify-center w-12 h-12 bg-amber-100 text-amber-800 rounded-xl mb-4">
-                            <i class="fas fa-birthday-cake text-lg"></i>
-                        </div>
-                        <span class="text-xs sm:text-sm font-extrabold text-amber-800 uppercase tracking-wider">Critère n°2</span>
-                        <h3 class="font-bold text-lg sm:text-xl text-slate-900 mt-1.5 mb-2">Tranche d'âge requise</h3>
-                        <p class="text-sm sm:text-base text-slate-700 leading-relaxed">
-                            Être âgé(e) de <strong>18 à 35 ans inclus</strong> au 31 décembre 2026.
-                        </p>
-                    </div>
+            <div class="pa-and" aria-hidden="true"><span>ET</span></div>
+
+            <article class="pa-crit" data-reveal>
+                <div class="pa-crit__top">
+                    <span class="pa-num" aria-hidden="true">2</span>
+                    <p class="pa-crit__age" aria-hidden="true">18–35 <small>ans</small></p>
                 </div>
-            </div>
-
-            <!-- Critère 3 : Niveau scolaire et profil requis (Intégré comme critère à part entière, même style) -->
-            <div id="niveau-scolaire" class="p-6 sm:p-8 bg-slate-50 border border-slate-200/90 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-5 border-b border-slate-200/80 mb-6">
-                    <div class="flex items-center gap-4">
-                        <div class="flex items-center justify-center w-12 h-12 bg-teal-100 text-teal-700 rounded-xl flex-shrink-0">
-                            <i class="fas fa-graduation-cap text-xl"></i>
-                        </div>
-                        <div>
-                            <span class="text-xs sm:text-sm font-extrabold text-teal-600 uppercase tracking-wider">Critère n°3</span>
-                            <h3 class="font-bold text-lg sm:text-xl md:text-2xl text-slate-900 mt-0.5">Niveau scolaire et profil requis</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <p class="text-base sm:text-lg text-slate-700 mb-6 leading-relaxed font-normal">
-                    Pour faire acte de candidature, vous devez justifier de <strong>l’une des trois (03) conditions</strong> de profil scolaire ou professionnel suivantes :
-                </p>
-
-                <!-- Liste des 3 voies d'accès scolaire / qualification -->
-                <div class="space-y-5">
-                    <!-- Voie 1 : Titulaire d'un diplôme -->
-                    <div class="p-5 sm:p-6 bg-white border border-slate-200/90 rounded-2xl shadow-xs hover:border-slate-300 transition-all duration-200">
-                        <!-- En-tête de la voie avec repères intégrés -->
-                        <div class="flex items-center gap-3 pb-3.5 mb-3.5 border-b border-slate-100">
-                            <div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-200/60 text-indigo-700 flex items-center justify-center text-base flex-shrink-0">
-                                <i class="fas fa-certificate"></i>
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-indigo-100 text-indigo-800">
-                                    Voie 1
-                                </span>
-                                <h4 class="text-base sm:text-lg md:text-xl font-bold text-slate-900 tracking-tight">
-                                    Titulaire d'un diplôme requis
-                                </h4>
-                            </div>
-                        </div>
-
-                        <p class="text-sm sm:text-base text-slate-700 mb-4 font-medium leading-relaxed">
-                            Être titulaire de l'un des diplômes homologués ci-dessous :
-                        </p>
-
-                        <!-- Grille équilibrée des diplômes CAP, BT, BTS sous forme de listes lisibles -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
-                            <!-- Diplôme CAP -->
-                            <div class="flex flex-col p-4 bg-slate-50/90 rounded-xl border border-slate-200/80">
-                                <div class="flex items-center justify-between pb-2 mb-2.5 border-b border-slate-200/80">
-                                    <span class="text-sm sm:text-base font-extrabold text-indigo-950 uppercase tracking-wider">CAP</span>
-                                    <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-indigo-100 text-indigo-800">2 spécialités</span>
-                                </div>
-                                <ul class="space-y-2.5 text-sm sm:text-base text-slate-800 flex-1">
-                                    <li class="flex items-start gap-2.5">
-                                        <i class="fas fa-check text-xs sm:text-sm text-indigo-600 mt-1 flex-shrink-0"></i>
-                                        <span class="leading-relaxed">Électricité d’Équipement</span>
-                                    </li>
-                                    <li class="flex items-start gap-2.5">
-                                        <i class="fas fa-check text-xs sm:text-sm text-indigo-600 mt-1 flex-shrink-0"></i>
-                                        <span class="leading-relaxed">Électricité Bâtiment</span>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <!-- Diplôme BT -->
-                            <div class="flex flex-col p-4 bg-slate-50/90 rounded-xl border border-slate-200/80">
-                                <div class="flex items-center justify-between pb-2 mb-2.5 border-b border-slate-200/80">
-                                    <span class="text-sm sm:text-base font-extrabold text-indigo-950 uppercase tracking-wider">BT</span>
-                                    <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-indigo-100 text-indigo-800">4 spécialités</span>
-                                </div>
-                                <ul class="space-y-2.5 text-sm sm:text-base text-slate-800 flex-1">
-                                    <li class="flex items-start gap-2.5">
-                                        <i class="fas fa-check text-xs sm:text-sm text-indigo-600 mt-1 flex-shrink-0"></i>
-                                        <span class="leading-relaxed">Électrotechnique</span>
-                                    </li>
-                                    <li class="flex items-start gap-2.5">
-                                        <i class="fas fa-check text-xs sm:text-sm text-indigo-600 mt-1 flex-shrink-0"></i>
-                                        <span class="leading-relaxed">Électromécanique</span>
-                                    </li>
-                                    <li class="flex items-start gap-2.5">
-                                        <i class="fas fa-check text-xs sm:text-sm text-indigo-600 mt-1 flex-shrink-0"></i>
-                                        <span class="leading-relaxed">Électronique</span>
-                                    </li>
-                                    <li class="flex items-start gap-2.5">
-                                        <i class="fas fa-check text-xs sm:text-sm text-indigo-600 mt-1 flex-shrink-0"></i>
-                                        <span class="leading-relaxed">Maintenance des Équipements Électriques et Électroniques (MEEE)</span>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <!-- Diplôme BTS -->
-                            <div class="flex flex-col p-4 bg-slate-50/90 rounded-xl border border-slate-200/80">
-                                <div class="flex items-center justify-between pb-2 mb-2.5 border-b border-slate-200/80">
-                                    <span class="text-sm sm:text-base font-extrabold text-indigo-950 uppercase tracking-wider">BTS</span>
-                                    <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-indigo-100 text-indigo-800">4 spécialités</span>
-                                </div>
-                                <ul class="space-y-2.5 text-sm sm:text-base text-slate-800 flex-1">
-                                    <li class="flex items-start gap-2.5">
-                                        <i class="fas fa-check text-xs sm:text-sm text-indigo-600 mt-1 flex-shrink-0"></i>
-                                        <span class="leading-relaxed">Électrotechnique</span>
-                                    </li>
-                                    <li class="flex items-start gap-2.5">
-                                        <i class="fas fa-check text-xs sm:text-sm text-indigo-600 mt-1 flex-shrink-0"></i>
-                                        <span class="leading-relaxed">Génie Énergétique et Environnement (GEE)</span>
-                                    </li>
-                                    <li class="flex items-start gap-2.5">
-                                        <i class="fas fa-check text-xs sm:text-sm text-indigo-600 mt-1 flex-shrink-0"></i>
-                                        <span class="leading-relaxed">Maintenance des Systèmes de Production (MSP)</span>
-                                    </li>
-                                    <li class="flex items-start gap-2.5">
-                                        <i class="fas fa-check text-xs sm:text-sm text-indigo-600 mt-1 flex-shrink-0"></i>
-                                        <span class="leading-relaxed">Systèmes Électroniques et Informatiques (SEI)</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Voie 2 : Parcours sans diplôme -->
-                    <div class="p-5 sm:p-6 bg-white border border-slate-200/90 rounded-2xl shadow-xs hover:border-slate-300 transition-all duration-200">
-                        <!-- En-tête de la voie avec repères intégrés -->
-                        <div class="flex items-center gap-3 pb-3.5 mb-3.5 border-b border-slate-100">
-                            <div class="w-10 h-10 rounded-xl bg-purple-50 border border-purple-200/60 text-purple-700 flex items-center justify-center text-base flex-shrink-0">
-                                <i class="fas fa-file-alt"></i>
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-purple-100 text-purple-800">
-                                    Voie 2
-                                </span>
-                                <h4 class="text-base sm:text-lg md:text-xl font-bold text-slate-900 tracking-tight">
-                                    Parcours de formation sans diplôme obtenu
-                                </h4>
-                            </div>
-                        </div>
-
-                        <p class="text-sm sm:text-base md:text-lg text-slate-700 leading-relaxed">
-                            Avoir suivi un parcours de formation de niveau <strong>CAP, BT ou BTS en Génie Électrique</strong>, sans avoir obtenu le diplôme correspondant
-                            et le <strong>justifier  par la présentation des relevés de notes délivrés par l’établissement de formation</strong>.
-                        </p>
-                    </div>
-
-                    <!-- Voie 3 : Compétences professionnelles (VAE) -->
-                    <div class="p-5 sm:p-6 bg-white border border-slate-200/90 rounded-2xl shadow-xs hover:border-slate-300 transition-all duration-200">
-                        <!-- En-tête de la voie avec repères intégrés -->
-                        <div class="flex items-center gap-3 pb-3.5 mb-3.5 border-b border-slate-100">
-                            <div class="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200/60 text-teal-700 flex items-center justify-center text-base flex-shrink-0">
-                                <i class="fas fa-tools"></i>
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-teal-100 text-teal-800">
-                                    Voie 3
-                                </span>
-                                <h4 class="text-base sm:text-lg md:text-xl font-bold text-slate-900 tracking-tight">
-                                    Compétences professionnelles (VAE)
-                                </h4>
-                            </div>
-                        </div>
-
-                        <p class="text-sm sm:text-base md:text-lg text-slate-700 leading-relaxed">
-                      Justifier de compétences professionnelles dans les domaines concernés, attestées par une <strong>Validation des Acquis de l’Expérience (VAE)</strong>
-                      ou par tout autre document justifiant des compétences acquises dans l’exercice d’une activité professionnelle.
-                        </p>
-                    </div>
-                </div>
-            </div>
+                <h3><span class="sr-only">Critère n°2 : </span>Tranche d'âge requise</h3>
+                <p>Être âgé(e) de <strong>18 à 35 ans inclus</strong> au 31 décembre 2026.</p>
+                <figure class="pa-years">
+                    <div class="pa-years__track" aria-hidden="true"><span></span></div>
+                    <div class="pa-years__ends" aria-hidden="true"><span>1991</span><span>2008</span></div>
+                    <figcaption>Soit une naissance entre le 1<sup>er</sup> janvier 1991 et le 31 décembre 2008.</figcaption>
+                </figure>
+            </article>
         </div>
 
-        <!-- Note de synthèse sur la gratuité & accès pièces -->
-        <div class="mt-8 p-4 sm:p-5 bg-slate-50 border border-slate-200/90 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm text-slate-700">
-            <div class="flex items-center gap-2.5">
-                <i class="fas fa-check-circle text-emerald-600 text-base"></i>
-                <span><strong>Formation 100 % prise en charge :</strong> L’ensemble des enseignements (théoriques en lycée et pratiques en entreprise) est entièrement gratuit.</span>
+        <div class="pa-and pa-and--h" aria-hidden="true"><span>ET</span></div>
+
+        <!-- Critère 3 : l'une des trois voies -->
+        <article id="niveau-scolaire" class="pa-crit3" data-reveal>
+            <div class="pa-crit3__head">
+                <span class="pa-num" aria-hidden="true">3</span>
+                <div>
+                    <h3><span class="sr-only">Critère n°3 : </span>Niveau scolaire et profil requis</h3>
+                    <p>Pour faire acte de candidature, vous devez justifier de <strong>l’une des trois (03) conditions</strong> de profil scolaire ou professionnel suivantes :</p>
+                </div>
             </div>
-            <a href="#pieces" class="inline-flex items-center gap-1.5 font-bold text-blue-900 hover:text-blue-700 whitespace-nowrap">
-                <span>Consulter les pièces à fournir</span>
-                <i class="fas fa-arrow-right text-xs"></i>
-            </a>
-        </div>
+
+            <!-- Voie 1 -->
+            <div class="pa-voie pa-voie--1">
+                <div class="pa-voie__intro">
+                    <h4><span>Voie 1</span> · Titulaire d'un diplôme requis</h4>
+                    <p>Être titulaire de l'un des diplômes homologués ci-dessous :</p>
+                </div>
+                <div class="pa-diplomes">
+                    <div class="pa-diplome">
+                        <div class="pa-diplome__head"><p>CAP</p><p>2 spécialités</p></div>
+                        <ul class="pa-checklist">
+                            <li>Électricité d’Équipement</li>
+                            <li>Électricité Bâtiment</li>
+                        </ul>
+                    </div>
+                    <div class="pa-diplome">
+                        <div class="pa-diplome__head"><p>BT</p><p>4 spécialités</p></div>
+                        <ul class="pa-checklist">
+                            <li>Électrotechnique</li>
+                            <li>Électromécanique</li>
+                            <li>Électronique</li>
+                            <li>Maintenance des Équipements Électriques et Électroniques (MEEE)</li>
+                        </ul>
+                    </div>
+                    <div class="pa-diplome">
+                        <div class="pa-diplome__head"><p>BTS</p><p>4 spécialités</p></div>
+                        <ul class="pa-checklist">
+                            <li>Électrotechnique</li>
+                            <li>Génie Énergétique et Environnement (GEE)</li>
+                            <li>Maintenance des Systèmes de Production (MSP)</li>
+                            <li>Systèmes Électroniques et Informatiques (SEI)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pa-or pa-or--h" aria-hidden="true"><span>OU</span></div>
+
+            <!-- Voies 2 OU 3 -->
+            <div class="pa-el-row">
+                <div class="pa-voie">
+                    <h4><span>Voie 2</span> · Parcours de formation sans diplôme obtenu</h4>
+                    <p>Avoir suivi un parcours de formation de niveau <strong>CAP, BT ou BTS en Génie Électrique</strong>, sans avoir obtenu le diplôme correspondant et le <strong>justifier par la présentation des relevés de notes délivrés par l’établissement de formation</strong>.</p>
+                </div>
+                <div class="pa-or" aria-hidden="true"><span>OU</span></div>
+                <div class="pa-voie">
+                    <h4><span>Voie 3</span> · Compétences professionnelles (VAE)</h4>
+                    <p>Justifier de compétences professionnelles dans les domaines concernés, attestées par une <strong>Validation des Acquis de l’Expérience (VAE)</strong> ou par tout autre document justifiant des compétences acquises dans l’exercice d’une activité professionnelle.</p>
+                </div>
+            </div>
+        </article>
     </div>
 </section>
 
-<!-- ==================== PIÈCES À FOURNIR SECTION ==================== -->
-<section id="pieces" class="py-12 bg-slate-50 sm:py-20 border-t border-slate-200">
-    <div class="container w-full max-w-5xl px-4 mx-auto">
-        <div class="mb-10 text-center">
-            <div class="inline-flex items-center rounded-full border border-indigo-200 bg-white px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-semibold text-indigo-700 mb-4 shadow-sm">
-                <i class="mr-2 fas fa-file-alt"></i>
-                DOSSIER DE CANDIDATURE EN LIGNE
-            </div>
-            <h2 class="text-2xl font-bold sm:text-3xl md:text-4xl text-slate-900">
-                Les trois (03) pièces demandées
-            </h2>
-            <p class="max-w-2xl mx-auto mt-2 text-sm sm:text-base text-slate-600">
-                Le dossier de candidature en ligne devra comporter impérativement les pièces suivantes :
-            </p>
+<!-- ==================== PIÈCES À FOURNIR ==================== -->
+<section id="pieces" class="pa-section pa-section--tint scroll-mt-24">
+    <div class="pa-container pa-pieces">
+        <div class="pa-pieces__intro" data-reveal>
+            <h2 class="pa-h2">Les trois (03) pièces demandées</h2>
+            <p class="pa-lead">Le dossier de candidature en ligne devra comporter impérativement les pièces suivantes :</p>
+            <dl class="pa-pieces__facts">
+                <div><dt>Formats acceptés</dt><dd>JPG, PNG ou PDF</dd></div>
+                <div><dt>Taille maximale</dt><dd class="pa-tabular">5 Mo par fichier</dd></div>
+                <div><dt>Pièces obligatoires</dt><dd>Les trois</dd></div>
+            </dl>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Pièce 1 -->
-            <div class="gsap-piece-card p-6 sm:p-7 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition">
-                <div class="flex items-center justify-center w-12 h-12 mb-4 bg-indigo-100 rounded-xl">
-                    <i class="text-xl text-indigo-600 fas fa-id-card"></i>
+        <ol class="pa-pieces__list">
+            <li class="pa-piece" data-reveal>
+                <div class="pa-piece__sheet" aria-hidden="true">
+                    <span class="pa-piece__num">1</span>
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0A3D91" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><circle cx="8.5" cy="11" r="2.2"/><path d="M5 16c.7-1.6 2-2.4 3.5-2.4S11.3 14.4 12 16M14.5 10h4.5M14.5 13.5h3"/></svg>
                 </div>
-                <span class="inline-block text-xs sm:text-sm font-extrabold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md mb-2">Pièce n°1</span>
-                <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2">Pièce d'identité</h3>
-                <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
-                    Une copie de la Carte Nationale d’Identité (CNI) ou l’attestation d’identité ou le passeport.
-                </p>
-            </div>
-
-            <!-- Pièce 2 -->
-            <div class="gsap-piece-card p-6 sm:p-7 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition">
-                <div class="flex items-center justify-center w-12 h-12 mb-4 bg-purple-100 rounded-xl">
-                    <i class="text-xl text-purple-600 fas fa-graduation-cap"></i>
+                <div class="pa-piece__text">
+                    <h3><span class="sr-only">Pièce n°1 : </span>Pièce d'identité</h3>
+                    <p>Une copie de la Carte Nationale d’Identité (CNI) ou l’attestation d’identité ou le passeport.</p>
                 </div>
-                <span class="inline-block text-xs sm:text-sm font-extrabold uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-1 rounded-md mb-2">Pièce n°2</span>
-                <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2">Justificatif de niveau / compétence</h3>
-                <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
-                    Une copie du diplôme requis, de l’attestation de réussite, du relevé de notes ou tout autre document prouvant l’exercice d’une activité professionnelle liée au métier.
-                </p>
-            </div>
-
-            <!-- Pièce 3 -->
-            <div class="gsap-piece-card p-6 sm:p-7 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition">
-                <div class="flex items-center justify-center w-12 h-12 mb-4 bg-emerald-100 rounded-xl">
-                    <i class="text-xl text-emerald-600 fas fa-heartbeat"></i>
+            </li>
+            <li class="pa-piece" data-reveal>
+                <div class="pa-piece__sheet" aria-hidden="true">
+                    <span class="pa-piece__num">2</span>
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0A3D91" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 2 9l10 5 10-5z"/><path d="M6 11v4.5c1.7 1.5 3.7 2.2 6 2.2s4.3-.7 6-2.2V11M22 9v5"/></svg>
                 </div>
-                <span class="inline-block text-xs sm:text-sm font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md mb-2">Pièce n°3</span>
-                <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2">Couverture Maladie Universelle</h3>
-                <p class="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
-                    La carte de la Couverture Maladie Universelle (CMU).
-                </p>
-            </div>
-        </div>
+                <div class="pa-piece__text">
+                    <h3><span class="sr-only">Pièce n°2 : </span>Justificatif de niveau / compétence</h3>
+                    <p>Une copie du diplôme requis, de l’attestation de réussite, du relevé de notes ou tout autre document prouvant l’exercice d’une activité professionnelle liée au métier.</p>
+                </div>
+            </li>
+            <li class="pa-piece" data-reveal>
+                <div class="pa-piece__sheet" aria-hidden="true">
+                    <span class="pa-piece__num">3</span>
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0A3D91" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M12 8.5v7M8.5 12h7"/></svg>
+                </div>
+                <div class="pa-piece__text">
+                    <h3><span class="sr-only">Pièce n°3 : </span>Couverture Maladie Universelle</h3>
+                    <p>La carte de la Couverture Maladie Universelle (CMU).</p>
+                </div>
+            </li>
+        </ol>
     </div>
 </section>
 
-<!-- ==================== CALENDRIER DES OPÉRATIONS SECTION ==================== -->
+<!-- ==================== CALENDRIER DES OPÉRATIONS ==================== -->
 <section id="calendrier" class="py-12 sm:py-20 bg-gradient-to-br from-green-50 to-emerald-50 border-y border-green-200">
     <div class="container mx-auto px-4 w-full max-w-full">
         <div class="text-center mb-8 sm:mb-12">
@@ -619,21 +409,20 @@
         </div>
 
         <div class="grid lg:grid-cols-5 gap-6 lg:gap-8 items-start max-w-6xl mx-auto">
-            <!-- Colonne gauche : Illustration SVG -->
+            <!-- Colonne gauche : illustration dans son cadre -->
             <div class="relative col-span-2 hidden lg:block">
-                <div class="relative rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-white to-slate-100 p-8 border border-slate-100">
-                    <img src="{{ asset('svg/work-in-progress.svg') }}" alt="Calendrier des opérations" class="w-full h-auto object-contain" onerror="this.onerror=null; this.src='{{ asset('svg/done-checking.svg') }}'">
-                </div>
-                
-                <!-- Badge flottant -->
-                <div class="gsap-float absolute -bottom-4 -right-4 bg-white rounded-xl shadow-lg p-3 hidden md:block border border-slate-100">
-                    <div class="flex items-center gap-2">
-                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-clock text-green-600"></i>
+                <div class="pa-cal-media">
+                    <span class="pa-cal-media__plate" aria-hidden="true"></span>
+                    <div class="pa-cal-media__frame">
+                        <img src="{{ asset('svg/work-in-progress.svg') }}" alt="Calendrier des opérations" onerror="this.onerror=null; this.src='{{ asset('svg/done-checking.svg') }}'">
+                    </div>
+                    <div class="pa-cal-media__badge gsap-float">
+                        <div class="pa-cal-media__badge-icon">
+                            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5M9.5 2.5h5"/></svg>
                         </div>
                         <div>
-                            <p class="text-sm sm:text-base font-bold text-green-700">Ne tardez pas !</p>
-                            <p class="text-xs sm:text-sm text-slate-600 font-medium">Inscriptions limitées</p>
+                            <p class="text-base font-extrabold text-green-700">Ne tardez pas !</p>
+                            <p class="text-sm text-slate-600 font-medium">Inscriptions limitées</p>
                         </div>
                     </div>
                 </div>
@@ -705,289 +494,102 @@
     </div>
 </section>
 
-<!-- ==================== SECTION PARTENAIRES ==================== -->
-<section id="partenaires" class="py-14 sm:py-20 scroll-mt-24 bg-gradient-to-b from-slate-50/70 via-white to-slate-50/50 border-t border-slate-200">
-    <div class="container mx-auto px-4 w-full max-w-7xl">
-        <div class="text-center mb-10 sm:mb-14">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight text-center">
-                Nos partenaires institutionnels et techniques
-            </h2>
-            <p class="mt-3 text-sm sm:text-base text-slate-600 max-w-2xl mx-auto text-center leading-relaxed font-normal">
-                Des acteurs publics, techniques et économiques engagés aux côtés de la DAIP pour la réussite du projet PACTE.
-            </p>
+<!-- ==================== PARTENAIRES ==================== -->
+<section id="partenaires" class="pa-section pa-section--tint scroll-mt-24">
+    <div class="pa-container pa-partners">
+        <div>
+            <h2 class="pa-partners__title" data-reveal-title>Nos partenaires institutionnels et techniques</h2>
+            <p class="pa-partners__lead">Des acteurs publics, techniques et économiques engagés aux côtés de la DAIP pour la réussite du projet PACTE.</p>
         </div>
-
-        {% if partenaires|length <= 1 %}
-            <!-- Affichage centré élégant si un seul partenaire -->
-            <div class="flex justify-center items-center py-4">
-                {% for partenaire in partenaires %}
-                    <div class="w-72 sm:w-84 bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-6 shadow-sm flex flex-col items-center justify-between text-center">
-                        <div class="h-36 sm:h-44 w-full flex items-center justify-center p-6 bg-slate-50/80 rounded-xl sm:rounded-2xl border border-slate-100 mb-4">
-                            <img src="{{ asset(partenaire.image|default('image/partenaire/logo-pacte.png')) }}"
-                                 alt="{{ partenaire.nom|default('Programme d’Action pour les Compétences en Transition Energétique') }}"
-                                 class="max-h-20 sm:max-h-24 max-w-[80%] w-auto h-auto object-contain">
-                        </div>
-                        <h3 class="text-sm sm:text-base md:text-lg font-bold text-slate-800 tracking-tight text-center line-clamp-3 min-h-[3.5rem] sm:min-h-[4rem] flex items-center justify-center w-full px-2">
-                            {{ partenaire.nom|default('Programme d’Action pour les Compétences en Transition Energétique') }}
-                        </h3>
-                    </div>
-                {% else %}
-                    <div class="w-72 sm:w-84 bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-6 shadow-sm flex flex-col items-center justify-between text-center">
-                        <div class="h-36 sm:h-44 w-full flex items-center justify-center p-6 bg-slate-50 rounded-xl sm:rounded-2xl border border-slate-100 mb-4">
-                            <img src="{{ asset('image/partenaire/logo-pacte.png') }}"
-                                 alt="Programme d’Action pour les Compétences en Transition Energétique"
-                                 class="max-h-20 sm:max-h-24 max-w-[80%] w-auto h-auto object-contain">
-                        </div>
-                        <h3 class="text-sm sm:text-base md:text-lg font-bold text-slate-800 tracking-tight text-center line-clamp-3 min-h-[3.5rem] sm:min-h-[4rem] flex items-center justify-center w-full px-2">Programme d’Action pour les Compétences en Transition Energétique</h3>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <!-- CARROUSEL AVEC 3 CARDS VISIBLES SUR DESKTOP ET FLÈCHES FLUIDES -->
-            <div class="relative w-full"
-                 x-data="partenairesCarousel()"
-                 @mouseenter="stopAutoplay"
-                 @mouseleave="startAutoplay">
-                
-                <!-- Conteneur principal avec marge confortable pour les boutons -->
-                <div class="w-full relative px-5 sm:px-10 md:px-12">
-                    
-                    <!-- Bouton précédent -->
-                    <button x-show="maxSlide > 0"
-                            x-cloak
-                            @click="prevSlide; $el.blur()" 
-                            class="absolute -left-2 sm:-left-3 md:-left-4 top-1/2 transform -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white shadow-md hover:shadow-xl border border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center z-20 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                            title="Partenaire précédent"
-                            aria-label="Voir le partenaire précédent">
-                        <i class="fas fa-chevron-left text-sm sm:text-base"></i>
-                    </button>
-                    
-                    <!-- Conteneur du carrousel avec masquage du débordement -->
-                    <div class="overflow-hidden py-4 -mx-3 sm:-mx-4">
-                        <div class="flex transition-transform duration-500 ease-out" 
-                             :style="'transform: translateX(-' + (currentSlide * (100 / slidesPerView)) + '%)'">
-                            
-                            {% for partenaire in partenaires %}
-                                <!-- Slide avec largeur dynamique (33.333% sur desktop, 50% sur tablette, 100% sur mobile) -->
-                                <div class="flex-shrink-0 px-3 sm:px-4" :style="'width: ' + (100 / slidesPerView) + '%'">
-                                    <div class="h-full">
-                                        <div class="group h-full flex flex-col items-center justify-between bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-6 sm:p-7 shadow-sm hover:shadow-xl hover:border-slate-300 transition-all duration-300 hover:-translate-y-1.5">
-                                            
-                                            <!-- Cadre Logo Spacieux (Proportions généreuses et harmonieuses) -->
-                                            <div class="h-36 sm:h-40 md:h-44 w-full flex items-center justify-center p-6 bg-slate-50/80 rounded-xl sm:rounded-2xl border border-slate-100 group-hover:bg-slate-50 transition-colors">
-                                                <img src="{{ asset(partenaire.image|trim('/')) }}"
-                                                     alt="{{ partenaire.nom|default('Partenaire') }}"
-                                                     class="max-h-20 sm:max-h-24 max-w-[80%] w-auto h-auto object-contain transition-transform duration-300 group-hover:scale-105"
-                                                     loading="lazy"
-                                                     onerror="this.src='{{ asset('image/partenaire/logo-pacte.png') }}'">
-                                            </div>
-
-                                            <!-- Titre / Nom Partenaire (Très lisible, sans corps de texte ni lien) -->
-                                            <div class="w-full mt-4 sm:mt-5 text-center flex items-center justify-center min-h-[3.5rem] sm:min-h-[4rem]">
-                                                <h3 class="text-xs sm:text-sm md:text-base font-bold text-slate-800 group-hover:text-amber-600 transition-colors text-center tracking-tight leading-snug line-clamp-3 px-1">
-                                                    {{ partenaire.nom }}
-                                                </h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                    <!-- Bouton suivant -->
-                    <button x-show="maxSlide > 0"
-                            x-cloak
-                            @click="nextSlide; $el.blur()" 
-                            class="absolute -right-2 sm:-right-3 md:-right-4 top-1/2 transform -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white shadow-md hover:shadow-xl border border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center z-20 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                            title="Partenaire suivant"
-                            aria-label="Voir le partenaire suivant">
-                        <i class="fas fa-chevron-right text-sm sm:text-base"></i>
-                    </button>
-                </div>
-
-                <!-- Indicateurs de slide (dots) -->
-                <div x-show="maxSlide > 0" class="flex justify-center items-center mt-6 sm:mt-8 space-x-2.5">
-                    <template x-for="dotIndex in dots" :key="dotIndex">
-                        <button @click="goToSlide(dotIndex)" 
-                                class="h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-400"
-                                :class="currentSlide === dotIndex ? 'w-8 bg-slate-900' : 'w-2 bg-slate-300 hover:bg-slate-400'"
-                                :aria-label="'Aller à la slide ' + (dotIndex + 1)">
-                        </button>
-                    </template>
-                </div>
-            </div>
-        {% endif %}
-    </div>
-</section>
-
-<!-- ==================== INFOLINE & CONTACT SECTION ==================== -->
-<section id="contact" class="py-12 text-white sm:py-16" style="background: linear-gradient(135deg, #0A3D91 0%, #0052CC 60%, #1D4ED8 100%);">
-    <div class="container w-full max-w-4xl px-4 mx-auto text-center">
-        <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center shadow-lg">
-            <i class="text-2xl sm:text-3xl fas fa-headset text-white"></i>
-        </div>
-        <h3 class="px-2 mb-2 text-2xl font-bold sm:text-3xl md:text-4xl text-white">
-            Une question ? Besoin d'assistance ?
-        </h3>
-        <p class="mb-8 text-base sm:text-lg text-blue-100 font-medium max-w-xl mx-auto">
-            Notre équipe est à votre écoute du lundi au vendredi
-        </p>
-        
-        <div class="flex flex-col flex-wrap justify-center items-center gap-4 px-2 sm:flex-row sm:gap-5">
-            <a href="tel:+2252722229600" class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm sm:text-base font-semibold border rounded-xl bg-white/15 backdrop-blur-sm border-white/25 text-white hover:bg-white/30 hover:border-white/60 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5">
-                <i class="fas fa-phone"></i>
-                <span>27 22 22 96 00</span>
-            </a>
-            <a href="tel:+2250565390459" class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm sm:text-base font-semibold border rounded-xl bg-white/15 backdrop-blur-sm border-white/25 text-white hover:bg-white/30 hover:border-white/60 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5">
-                <i class="fas fa-mobile-alt"></i>
-                <span>05 65 39 04 59</span>
-            </a>
-            <a href="mailto:contact@daip.ci" class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm sm:text-base font-semibold border rounded-xl bg-white/15 backdrop-blur-sm border-white/25 text-white hover:bg-white/30 hover:border-white/60 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5">
-                <i class="fas fa-envelope"></i>
-                <span>contact@daip.ci</span>
-            </a>
+        <div class="pa-partners__box" data-reveal>
+            <picture>
+                <source srcset="{{ asset('image/partenaire/Footer_with_PACTE_FR.webp') }}" type="image/webp">
+                <img src="{{ asset('image/partenaire/Footer with PACTE FR.png') }}"
+                     alt="Initiative Team Europe « Compétences et formation professionnelle axées sur les opportunités en Afrique » (TEI OP-VET), mise en œuvre par Enabel, Expertise France, l'Agence nationale finlandaise pour l'éducation et la GIZ ; partenaires de mise en œuvre du PACTE : INCLUDE, Mundus, INES, Eurocham et le ministère de l'Enseignement technique"
+                     width="958" height="104" loading="lazy">
+            </picture>
         </div>
     </div>
 </section>
 
+<!-- ==================== INFOLINE & CONTACT ==================== -->
+<section id="contact" class="pa-contact scroll-mt-24">
+    <div class="pa-contact__inner">
+        <div data-reveal>
+            <h2>Une question ? Besoin d'assistance ?</h2>
+            <p>Notre équipe est à votre écoute du lundi au vendredi</p>
+        </div>
+        <div class="pa-contact__links" data-reveal>
+            <a href="tel:+2252722229600"><i class="fas fa-phone" aria-hidden="true"></i>27 22 22 96 00</a>
+            <a href="tel:+2250565390459"><i class="fas fa-mobile-alt" aria-hidden="true"></i>05 65 39 04 59</a>
+            <a href="mailto:contact@daip.ci" class="pa-contact__mail"><i class="fas fa-envelope" aria-hidden="true"></i>contact@daip.ci</a>
+        </div>
+    </div>
+</section>
 
-
-<script>
-// ==================== CARROUSEL PARTENAIRES ====================
-(function() {
-    const totalCount = {{ partenaires|length }};
-
-    function initCarousel() {
-        return {
-            totalItems: totalCount,
-            currentSlide: 0,
-            slidesPerView: 3,
-            autoplayInterval: null,
-            _eventListenersAdded: false,
-
-            init() {
-                if (this.totalItems === 0) return;
-                this.updateSlidesPerView();
-                if (!this._eventListenersAdded) {
-                    this._eventListenersAdded = true;
-                    window.addEventListener('resize', () => this.updateSlidesPerView());
-                }
-                this.startAutoplay();
-            },
-
-            updateSlidesPerView() {
-                const width = window.innerWidth;
-                let newValue;
-                if (width < 640) {
-                    newValue = 1; // Mobile : 1 card bien aérée et centrée
-                } else if (width < 1024) {
-                    newValue = 2; // Tablette : 2 cards lisibles
-                } else {
-                    newValue = 3; // Desktop : 3 cards simultanément
-                }
-                this.slidesPerView = Math.max(1, Math.min(newValue, this.totalItems));
-                if (this.currentSlide > this.maxSlide) {
-                    this.currentSlide = this.maxSlide;
-                }
-            },
-
-            get maxSlide() {
-                if (this.totalItems === 0) return 0;
-                return Math.max(0, this.totalItems - this.slidesPerView);
-            },
-
-            get dots() {
-                return Array.from({ length: this.maxSlide + 1 }, (_, i) => i);
-            },
-
-            startAutoplay() {
-                this.stopAutoplay();
-                if (this.maxSlide > 0) {
-                    this.autoplayInterval = setInterval(() => this.nextSlide(), 4500);
-                }
-            },
-
-            stopAutoplay() {
-                if (this.autoplayInterval) {
-                    clearInterval(this.autoplayInterval);
-                    this.autoplayInterval = null;
-                }
-            },
-
-            nextSlide() {
-                if (this.maxSlide <= 0) return;
-                this.currentSlide = (this.currentSlide >= this.maxSlide) ? 0 : this.currentSlide + 1;
-            },
-
-            prevSlide() {
-                if (this.maxSlide <= 0) return;
-                this.currentSlide = (this.currentSlide <= 0) ? this.maxSlide : this.currentSlide - 1;
-            },
-
-            goToSlide(index) {
-                this.currentSlide = Math.max(0, Math.min(index, this.maxSlide));
-            }
-        };
-    }
-
-    window.partenairesCarousel = initCarousel;
-    document.addEventListener('alpine:init', function() {
-        if (typeof Alpine !== 'undefined') {
-            Alpine.data('partenairesCarousel', initCarousel);
-        }
-    });
-})();
-</script>
-
+</div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('js/gsap.min.js') }}"></script>
     <script src="{{ asset('js/ScrollTrigger.min.js') }}"></script>
+    <!-- Lenis : défilement doux (même bibliothèque que pactecotedivoire.com) -->
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
     <script>
         (function() {
-            function initGSAPAnimations() {
+            function initAnimations() {
                 if (typeof gsap === 'undefined') return;
-                if (typeof ScrollTrigger !== 'undefined') {
+                var hasST = typeof ScrollTrigger !== 'undefined';
+                if (hasST) {
                     gsap.registerPlugin(ScrollTrigger);
                 }
 
-                // Respect du paramètre d'accessibilité prefers-reduced-motion
+                // Respect du paramètre d'accessibilité prefers-reduced-motion : aucun mouvement, contenu visible.
                 var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
                 if (prefersReducedMotion) {
                     return;
                 }
 
-                // 1. Séquence d'entrée dynamique du Hero (on load)
+                // 1. Défilement doux Lenis, synchronisé avec GSAP / ScrollTrigger
+                if (typeof Lenis !== 'undefined') {
+                    var lenis = new Lenis({
+                        duration: 1.2,
+                        easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+                        smoothWheel: true
+                    });
+                    if (hasST) {
+                        lenis.on('scroll', ScrollTrigger.update);
+                    }
+                    gsap.ticker.add(function(time) { lenis.raf(time * 1000); });
+                    gsap.ticker.lagSmoothing(0);
+
+                    // Ancres internes : défilement doux en tenant compte de l'en-tête fixe
+                    document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+                        link.addEventListener('click', function(event) {
+                            var hash = link.getAttribute('href');
+                            if (!hash || hash.length < 2) return;
+                            var target = document.querySelector(hash);
+                            if (!target) return;
+                            event.preventDefault();
+                            var header = document.querySelector('.pa-header');
+                            lenis.scrollTo(target, { offset: -((header ? header.offsetHeight : 0) + 8) });
+                            if (history.pushState) history.pushState(null, '', hash);
+                        });
+                    });
+                }
+
+                // 2. Séquence d'entrée du Hero (on load)
                 var heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+                heroTl.from('.hero-title', { y: 32, opacity: 0, duration: 1 })
+                      .from('.hero-date', { y: 20, opacity: 0, duration: 0.7 }, '-=0.6')
+                      .from('.hero-cta-group', { y: 20, opacity: 0, duration: 0.7 }, '-=0.5')
+                      .from('.stat-card', { y: 24, opacity: 0, stagger: 0.08, duration: 0.7, onComplete: initCounters }, '-=0.4')
+                      .from('.hero-media', { y: 40, opacity: 0, scale: 0.96, duration: 1.2 }, 0.2);
 
-                if (document.querySelector('.hero-badge')) {
-                    heroTl.from('.hero-badge', { y: -20, opacity: 0, duration: 0.7 });
-                }
-                if (document.querySelector('.hero-title')) {
-                    heroTl.from('.hero-title', { y: 30, opacity: 0, duration: 0.9 }, '-=0.4');
-                }
-                if (document.querySelector('.hero-cta-group')) {
-                    heroTl.from('.hero-cta-group', { y: 20, opacity: 0, duration: 0.6 }, '-=0.4');
-                }
-                if (document.querySelectorAll('.stat-card').length > 0) {
-                    heroTl.from('.stat-card', {
-                        y: 25,
-                        opacity: 0,
-                        stagger: 0.1,
-                        duration: 0.7,
-                        onComplete: initCounters
-                    }, '-=0.3');
-                } else {
-                    initCounters();
-                }
-
-                // 2. Compteurs de statistiques animés (Count-up)
+                // 3. Compteurs de statistiques animés (Count-up)
                 function initCounters() {
-                    var counters = document.querySelectorAll('.stat-counter');
-                    counters.forEach(function(counter) {
+                    document.querySelectorAll('.stat-counter').forEach(function(counter) {
                         var target = parseInt(counter.getAttribute('data-target'), 10) || 0;
                         if (target > 0) {
                             var obj = { val: 0 };
@@ -995,103 +597,67 @@
                                 val: target,
                                 duration: 1.8,
                                 ease: 'power2.out',
-                                onUpdate: function() {
-                                    counter.textContent = Math.floor(obj.val);
-                                }
+                                onUpdate: function() { counter.textContent = Math.floor(obj.val); }
                             });
                         }
                     });
                 }
 
-                // 3. Animation de flottement subtile pour les badges
-                gsap.to('.gsap-float', {
-                    y: -8,
-                    duration: 3,
-                    repeat: -1,
-                    yoyo: true,
-                    ease: 'sine.inOut'
+                // 4. Flottement subtil des badges
+                gsap.to('.gsap-float', { y: -8, duration: 3, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+
+                if (!hasST) return;
+
+                // 5. Révélations au défilement, comme sur pactecotedivoire.com
+                //    (montée + fondu, 1,3 s, courbe cubic-bezier(0.33, 1, 0.68, 1) ≈ power2.out)
+                var items = gsap.utils.toArray('[data-reveal]');
+                gsap.set(items, { y: 32, opacity: 0 });
+                ScrollTrigger.batch(items, {
+                    start: 'top 88%',
+                    once: true,
+                    onEnter: function(batch) {
+                        gsap.to(batch, { y: 0, opacity: 1, duration: 1.3, ease: 'power2.out', stagger: 0.08, overwrite: true, clearProps: 'transform' });
+                    }
                 });
 
-                if (typeof ScrollTrigger === 'undefined') return;
-
-                // 4. Section Présentation (Révélation au scroll)
-                gsap.from('#presentation .gsap-text-col > *', {
-                    scrollTrigger: {
-                        trigger: '#presentation',
-                        start: 'top 80%',
-                    },
-                    y: 25,
-                    opacity: 0,
-                    stagger: 0.12,
-                    duration: 0.8,
-                    ease: 'power2.out'
+                // 6. Titres : dévoilement par masque (clip-path)
+                gsap.utils.toArray('[data-reveal-title]').forEach(function(title) {
+                    gsap.fromTo(title,
+                        { clipPath: 'inset(0 0 100% 0)', y: 24 },
+                        { clipPath: 'inset(0 0 0% 0)', y: 0, duration: 1.3, ease: 'power2.out', clearProps: 'clipPath,transform',
+                          scrollTrigger: { trigger: title, start: 'top 88%', once: true } }
+                    );
                 });
 
-                gsap.from('#presentation .gsap-image-col', {
-                    scrollTrigger: {
-                        trigger: '#presentation',
-                        start: 'top 80%',
-                    },
-                    scale: 0.95,
-                    opacity: 0,
-                    duration: 1,
-                    ease: 'power3.out'
-                });
-
-                // 5. Section Établissements : affichage immédiat
-                // 6. Section Éligibilité : affichage immédiat et fiable
-                // 6b. Section Niveau scolaire requis : affichage immédiat et fiable
-                // 7. Section Pièces à fournir : affichage immédiat
-
-                // 8. Chronogramme (Défilement progressif de la timeline)
+                // 7. Chronogramme (défilement progressif de la timeline)
                 gsap.from('.gsap-timeline-item', {
-                    scrollTrigger: {
-                        trigger: '#calendrier',
-                        start: 'top 80%',
-                    },
+                    scrollTrigger: { trigger: '#calendrier', start: 'top 80%', once: true },
                     x: 25,
                     opacity: 0,
                     stagger: 0.14,
-                    duration: 0.7,
-                    ease: 'power2.out'
-                });
-
-                // 10. Infoline & Contact
-                gsap.from('#contact .container > *', {
-                    scrollTrigger: {
-                        trigger: '#contact',
-                        start: 'top 85%',
-                    },
-                    y: 20,
-                    opacity: 0,
-                    stagger: 0.12,
-                    duration: 0.8,
+                    duration: 0.9,
                     ease: 'power2.out'
                 });
 
                 // Recalcule les positions des déclencheurs une fois images/polices chargées
-                window.addEventListener('load', function() {
-                    ScrollTrigger.refresh();
-                });
+                window.addEventListener('load', function() { ScrollTrigger.refresh(); });
             }
 
-            // Fallback CDN si besoin
+            // Fallback CDN si GSAP local indisponible
             if (typeof gsap === 'undefined') {
                 var s1 = document.createElement('script');
                 s1.src = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js';
                 s1.onload = function() {
                     var s2 = document.createElement('script');
                     s2.src = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js';
-                    s2.onload = initGSAPAnimations;
+                    s2.onload = initAnimations;
                     document.head.appendChild(s2);
                 };
                 document.head.appendChild(s1);
+            } else if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initAnimations);
             } else {
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', initGSAPAnimations);
-                } else {
-                    initGSAPAnimations();
-                }
+                initAnimations();
             }
         })();
     </script>

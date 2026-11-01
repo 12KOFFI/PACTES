@@ -1,13 +1,14 @@
-<header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100 transition-all duration-300" 
+<header class="pa-header fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-gray-100 transition-all duration-300"
         x-data="{ scrolled: false, mobileMenu: false }" 
         x-init="() => { }"
         @scroll.window="scrolled = window.scrollY > 50">
     <div class="container mx-auto px-4">
         <div class="flex items-center justify-between h-20">
             <!-- Logo -->
-            <a href="{{ path('app_home') }}" class="flex items-center space-x-2 group">
-                <img src="{{ asset('image/metfpa.png') }}" class="relative h-10 w-auto" alt="METFPA">
-                <img src="{{ asset('image/logo.png') }}" class="relative h-10 w-auto" alt="DAIP">
+            <a href="{{ path('app_home') }}" class="flex items-center gap-4" aria-label="Accueil — METFPA et DAIP">
+                <img src="{{ asset('image/metfpa.png') }}" class="pa-header-logo-etat" alt="République de Côte d'Ivoire — METFPA">
+                <span class="pa-header-sep" aria-hidden="true"></span>
+                <img src="{{ asset('image/logo.png') }}" class="pa-header-logo-daip" alt="DAIP">
             </a>
             
             <!-- Navigation Desktop -->
@@ -29,6 +30,8 @@
             
             <!-- Actions -->
             <div class="flex items-center space-x-4">
+                <!-- Logos bailleurs : Global Gateway (UE) + Coopération allemande (obligatoire, toutes les pages) -->
+                <img src="{{ asset('image/partenaire/Header 2.png') }}" class="pa-bailleurs pa-bailleurs-desktop" alt="Global Gateway — Cofinancé par l'Union européenne — Coopération allemande">
                 {% if app.user %}
                     <a href="{{ path('app_dashboard') }}" class="hidden md:flex items-center space-x-2 text-white px-6 py-2.5 rounded-xl hover:opacity-90 transition shadow-lg" style="background-color: #EE9137;">
                         <i class="fas fa-tachometer-alt"></i>
@@ -52,7 +55,12 @@
             </div>
         </div>
     </div>
-    
+
+    <!-- Logos bailleurs sur mobile / tablette : ligne dédiée pour rester lisibles -->
+    <div class="pa-bailleurs-mobile">
+        <img src="{{ asset('image/partenaire/Header 2.png') }}" alt="Global Gateway — Cofinancé par l'Union européenne — Coopération allemande">
+    </div>
+
     <!-- Menu mobile -->
     <div x-show="mobileMenu" 
          x-cloak
@@ -62,7 +70,7 @@
          x-transition:leave="transition ease-in duration-200"
          x-transition:leave-start="opacity-100 translate-y-0"
          x-transition:leave-end="opacity-0 -translate-y-2"
-         class="lg:hidden absolute top-20 left-0 right-0 bg-white border-t border-gray-100 shadow-xl z-40 max-h-[calc(100vh-5rem)] overflow-y-auto">
+         class="pa-mobile-menu lg:hidden absolute top-20 left-0 right-0 bg-white border-t border-gray-100 shadow-xl z-40 max-h-[calc(100vh-5rem)] overflow-y-auto">
         <div class="container mx-auto px-4 py-6">
             <nav class="flex flex-col space-y-3">
                 <a href="{{ path('app_home') }}" 
@@ -119,7 +127,7 @@
 </header>
 
 <!-- Espace pour compenser le header fixe -->
-<div class="h-20"></div>
+<div class="pa-header-spacer"></div>
 
 <style>
     [x-cloak] { display: none !important; }

@@ -1,116 +1,56 @@
-<footer id="footer" class="bg-slate-900 text-white relative overflow-hidden">
-    <!-- Vague décorative -->
-    <div class="absolute top-0 left-0 right-0">
-        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
-            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#0f172a"/>
-        </svg>
-    </div>
-    
-    <!-- Particules décoratives -->
-    <div class="absolute inset-0 overflow-hidden opacity-10">
-        <div class="absolute top-20 left-10 w-32 h-32 bg-indigo-400 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-20 right-10 w-32 h-32 bg-purple-400 rounded-full blur-3xl"></div>
-    </div>
-    
-    <div class="container mx-auto px-4 pt-20 pb-12 relative z-10">
-        <div class="grid lg:grid-cols-4 gap-12">
-            <!-- À propos -->
-            <div class="space-y-4">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-white/10 p-2 rounded-xl">
-                        <img src="{{ asset('image/logo.png') }}" class="h-8 w-auto" alt="DAIP">
-                    </div>
-                    <div class="bg-white/10 p-2 rounded-xl">
-                        <img src="{{ asset('image/pacte.png') }}" class="h-8 w-auto" alt="PACTE">
-                    </div>
-                </div>
-                <p class="text-slate-400 leading-relaxed">
-                    Projet PACTE — Recrutement de jeunes pour la formation par apprentissage au métier d'installateur de systèmes solaires photovoltaïques.
+<footer id="footer" class="pa-footer">
+    <div class="pa-footer__inner">
+
+        <!-- Présentation de PACTE et mention de financement (texte officiel, obligatoire sur toutes les pages) -->
+        <div class="pa-footer__mention">
+            <a href="https://pactecotedivoire.com/" target="_blank" rel="noopener" class="pa-footer__pacte" aria-label="Site officiel du projet PACTE (nouvel onglet)">
+                <img src="{{ asset('image/pacte.png') }}" alt="PACTE">
+            </a>
+            <div class="pa-footer__mention-body">
+                <p class="pa-footer__funding">
+                    <span class="pa-footer__funding-tag">
+                        <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FE6800" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.4"/></svg>
+                        Mention de financement
+                    </span>
+                    PACTE s'inscrit dans le cadre de l'Initiative « Team Europe » sur les compétences axées sur les opportunités et l'enseignement et la formation professionnels en Afrique (TEI OP-VET), cofinancée par l'Union européenne au titre de l'initiative « Global Gateway » et par le ministère fédéral allemand de la Coopération économique et du Développement (BMZ). Le contenu de cette publication relève de la seule responsabilité des partenaires du projet PACTE et ne reflète pas nécessairement les opinions de l'Union européenne ou du BMZ.
                 </p>
-            </div>
-            
-            <!-- Liens rapides -->
-            <div>
-                <h4 class="text-lg font-semibold mb-4 text-white/90">Liens rapides</h4>
-                <ul class="space-y-3">
-                    <li>
-                        <a href="{{ path('app_home') }}" class="text-slate-400 hover:text-white transition flex items-center group">
-                            <i class="fas fa-chevron-right text-xs mr-2 group-hover:translate-x-1 transition"></i>
-                            Accueil
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('app_candidature_index') }}" class="text-slate-400 hover:text-white transition flex items-center group">
-                            <i class="fas fa-chevron-right text-xs mr-2 group-hover:translate-x-1 transition"></i>
-                            Candidatures
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ path('app_home') }}#partenaires" class="text-slate-400 hover:text-white transition flex items-center group">
-                            <i class="fas fa-chevron-right text-xs mr-2 group-hover:translate-x-1 transition"></i>
-                            Partenaires
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#contact" class="text-slate-400 hover:text-white transition flex items-center group">
-                            <i class="fas fa-chevron-right text-xs mr-2 group-hover:translate-x-1 transition"></i>
-                            Contact
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            
-            <!-- Contact -->
-            <div>
-                <h4 class="text-lg font-semibold mb-4 text-white/90">Contact</h4>
-                <ul class="space-y-4">
-                    <li class="flex items-start space-x-3 group">
-                        <i class="fas fa-clock text-indigo-400 mt-1 group-hover:scale-110 transition"></i>
-                        <span class="text-slate-400 group-hover:text-white transition">Du lundi au vendredi</span>
-                    </li>
-                    <li class="flex items-start space-x-3 group">
-                        <i class="fas fa-phone-alt text-indigo-400 mt-1 group-hover:scale-110 transition"></i>
-                        <span class="text-slate-400 group-hover:text-white transition">27 22 22 96 00 / 05 65 39 04 59</span>
-                    </li>
-                    <li class="flex items-start space-x-3 group">
-                        <i class="fas fa-envelope text-indigo-400 mt-1 group-hover:scale-110 transition"></i>
-                        <a href="mailto:contact@daip.ci" class="text-slate-400 hover:text-white transition">contact@daip.ci</a>
-                    </li>
-                </ul>
-            </div>
-            
-            <!-- Newsletter -->
-            <div>
-                <h4 class="text-lg font-semibold mb-4 text-white/90">Reseaux sociaux</h4>
-                <p class="text-slate-400 mb-4">Suivez nos dernières actualités</p>
-                
-                <div class="flex space-x-3">
-                    <a href="https://x.com/daipci?s=11" target="_blank" aria-label="X (Twitter)" class="w-11 h-11 rounded-lg bg-slate-800 hover:bg-black-600 flex items-center justify-center transition transform hover:scale-110 hover:rotate-6">
-                        <i class="fab fa-x"></i>
-                    </a>
-                     <a href="https://www.facebook.com/daip.net" target="_blank" aria-label="Facebook" class="w-11 h-11 rounded-lg bg-slate-800 hover:bg-indigo-600 flex items-center justify-center transition transform hover:scale-110 hover:rotate-6">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-                    <a href="https://www.youtube.com/channel/UCpzL2618RoQtoMTuywLz_aA" target="_blank" aria-label="YouTube" class="w-11 h-11 rounded-lg bg-slate-800 hover:bg-red-600 flex items-center justify-center transition transform hover:scale-110 hover:rotate-6">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                    <a href="https://www.tiktok.com/@daipci" target="_blank" aria-label="TikTok" class="w-11 h-11 rounded-lg bg-slate-800 hover:bg-pink-600 flex items-center justify-center transition transform hover:scale-110 hover:rotate-6">
-                        <i class="fab fa-tiktok"></i>
-                    </a>
-                </div>
+                <a href="https://pactecotedivoire.com/" target="_blank" rel="noopener" class="pa-footer__site">
+                    Découvrir le projet PACTE · pactecotedivoire.com
+                    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EE9137" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+                </a>
             </div>
         </div>
-        
-        <!-- Séparateur -->
-        <div class="border-t border-slate-800 my-8"></div>
-        
-        <!-- Copyright et liens légaux -->
-        <div class="flex flex-col md:flex-row justify-between items-center">
-            <p class="text-slate-400 text-sm">
-            </p>
-            <div class="flex space-x-6 mt-4 md:mt-0">
-                <a href="#" class="text-sm text-slate-400 hover:text-white transition">© {{ "now"|date('Y') }} PACTE. Tous droits réservés.</a>
+
+        <div class="pa-footer__cols">
+            <div class="pa-footer__col">
+                <p class="pa-footer__col-title">DAIP · Projet PACTE</p>
+                <p class="pa-muted">Recrutement de jeunes pour la formation par apprentissage au métier d'installateur de systèmes solaires photovoltaïques.</p>
+            </div>
+
+            <nav class="pa-footer__col" aria-label="Liens rapides">
+                <p class="pa-footer__col-title">Liens rapides</p>
+                <a href="{{ path('app_home') }}">Accueil</a>
+                <a href="{{ path('app_candidature_index') }}">Candidatures</a>
+                <a href="{{ path('app_home') }}#partenaires">Partenaires</a>
+                <a href="{{ path('app_home') }}#contact">Contact</a>
+            </nav>
+
+            <div class="pa-footer__col">
+                <p class="pa-footer__col-title">Contact</p>
+                <p>Du lundi au vendredi</p>
+                <p class="pa-tabular">27 22 22 96 00 / 05 65 39 04 59</p>
+                <a href="mailto:contact@daip.ci">contact@daip.ci</a>
+            </div>
+
+            <div class="pa-footer__col">
+                <p class="pa-footer__col-title">Réseaux sociaux</p>
+                <a href="https://x.com/daipci?s=11" target="_blank" rel="noopener">X (Twitter)</a>
+                <a href="https://www.facebook.com/daip.net" target="_blank" rel="noopener">Facebook</a>
+                <a href="https://www.youtube.com/channel/UCpzL2618RoQtoMTuywLz_aA" target="_blank" rel="noopener">YouTube</a>
+                <a href="https://www.tiktok.com/@daipci" target="_blank" rel="noopener">TikTok</a>
             </div>
         </div>
+
+        <p class="pa-footer__copy">© {{ "now"|date('Y') }} PACTE. Tous droits réservés.</p>
     </div>
 </footer>
