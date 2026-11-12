@@ -1,3 +1,4 @@
 framework:
     mailer:
-        dsn: '%env(MAILER_DSN)%'
+        # La plateforme n'envoie aucun e-mail : transport désactivé (aucune variable MAILER_DSN requise).
+        dsn: 'null://null'

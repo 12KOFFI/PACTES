@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Service\Constant;
-use App\Service\SmsNotifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,16 +19,13 @@ class UserController extends AbstractController
 {
     private $entityManager;
     private $passwordHasher;
-    private $smsNotifier;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $passwordHasher,
-        SmsNotifier $smsNotifier
+        UserPasswordHasherInterface $passwordHasher
     ) {
         $this->entityManager = $entityManager;
         $this->passwordHasher = $passwordHasher;
-        $this->smsNotifier = $smsNotifier;
     }
 
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
@@ -144,16 +140,6 @@ class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('app_user_index');
-    }
-
-    #[Route('/verify/email', name: 'app_user_verify_email', methods: ['GET'])]
-    public function verifyEmail(Request $request): JsonResponse
-    {
-        $this->smsNotifier->initializeBackgroundProcessing();
-
-        return $this->json([
-            'verified' => true
-        ]);
     }
 
     #[Route('/mon-compte/change-password', name: 'app_user_change_password', methods: ['GET', 'POST'])]
